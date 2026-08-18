@@ -1,6 +1,8 @@
 {
   "name": "football-card-aesthetics",
   "version": "0.1.0",
+  "description": "A private multilingual football card design-rating desktop app.",
+  "author": "Card Aesthetics",
   "private": true,
   "type": "module",
   "main": "desktop/main.mjs",
@@ -10,6 +12,8 @@
     "desktop:build": "node scripts/build-desktop.mjs",
     "desktop:prepare": "install-electron",
     "desktop:dev": "pnpm desktop:prepare && pnpm desktop:build && electron .",
+    "desktop:pack": "pnpm desktop:prepare && pnpm desktop:build && electron-builder --dir --win",
+    "desktop:dist": "pnpm desktop:prepare && pnpm desktop:build && node scripts/build-desktop-installer.mjs",
     "start": "next start",
     "lint": "tsc --noEmit",
     "test": "vitest run",
@@ -40,5 +44,32 @@
   "packageManager": "pnpm@10.17.1",
   "engines": {
     "node": ">=20.9.0"
+  },
+  "build": {
+    "appId": "com.cardaesthetics.desktop",
+    "productName": "Card Aesthetics",
+    "asar": true,
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "desktop/**/*",
+      "out/**/*",
+      "package.json"
+    ],
+    "win": {
+      "icon": "desktop/assets/icon.ico",
+      "target": [
+        "nsis"
+      ],
+      "artifactName": "Card Aesthetics Setup ${version}.${ext}"
+    },
+    "nsis": {
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Card Aesthetics",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 }

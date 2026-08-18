@@ -7,6 +7,8 @@ const hasLock = app.requestSingleInstanceLock();
 let mainWindow;
 let splashWindow;
 let localServer;
+let splashOpenedAt = 0;
+const MINIMUM_SPLASH_TIME = 1_300;
 
 if (!hasLock) app.quit();
 
@@ -22,6 +24,7 @@ function createSplash() {
     backgroundColor: "#07070a",
     webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: true },
   });
+  splashOpenedAt = Date.now();
   splashWindow.loadFile(splashPath);
   splashWindow.once("ready-to-show", () => splashWindow?.show());
 }
@@ -50,6 +53,10 @@ async function createMainWindow() {
     if (url.startsWith("https://")) shell.openExternal(url).catch(() => undefined);
     return { action: "deny" };
   });
+  mainWindow.webContents.on("page-title-updated", (event) => {
+    event.preventDefault();
+    mainWindow?.setTitle("Card Aesthetics");
+  });
   mainWindow.webContents.on("will-navigate", (event, url) => {
     if (!url.startsWith(localServer.origin)) {
       event.preventDefault();
@@ -57,9 +64,14 @@ async function createMainWindow() {
     }
   });
   mainWindow.once("ready-to-show", () => {
-    splashWindow?.close();
-    splashWindow = undefined;
-    mainWindow?.show();
+    const remaining = splashWindow
+      ? Math.max(0, MINIMUM_SPLASH_TIME - (Date.now() - splashOpenedAt))
+      : 0;
+    setTimeout(() => {
+      splashWindow?.close();
+      splashWindow = undefined;
+      mainWindow?.show();
+    }, remaining);
   });
   await mainWindow.loadURL(localServer.origin);
 }

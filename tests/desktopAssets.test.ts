@@ -17,4 +17,7 @@ it("has a landscape cover and installable icons", async () => {
   expect((coverMeta.width ?? 0) / (coverMeta.height ?? 1)).toBeGreaterThan(1.4);
   expect(iconMeta.width).toBe(512);
   expect(iconMeta.height).toBe(512);
+
+  const ico = fs.readFileSync(path.resolve("desktop/assets/icon.ico"));
+  expect(ico.readUInt16LE(4)).toBe(6);
 });
