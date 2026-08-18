@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import sharp from "sharp";
 import { describe, expect, it } from "vitest";
 import {
   getCardDesign,
@@ -40,6 +41,22 @@ describe("Merlin Premier League 2026 catalogue", () => {
     expect(new Set(images)).toHaveLength(39);
     for (const image of images) {
       expect(fs.existsSync(path.join(process.cwd(), "public", image))).toBe(true);
+    }
+  });
+
+  it("uses high-resolution, tightly framed catalogue images", async () => {
+    for (const card of merlinPremierLeague2026.cardDesigns) {
+      const imagePath = path.join(process.cwd(), "public", card.image.path);
+      const metadata = await sharp(imagePath).metadata();
+      const width = metadata.width ?? 0;
+      const height = metadata.height ?? 0;
+      const aspectRatio = width / height;
+
+      expect(Math.min(width, height), card.slug).toBeGreaterThanOrEqual(900);
+      expect(
+        aspectRatio <= 0.8 || aspectRatio >= 1.2,
+        `${card.slug} should be cropped to the card rather than a square seller photo`,
+      ).toBe(true);
     }
   });
 });

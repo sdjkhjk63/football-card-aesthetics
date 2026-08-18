@@ -4,7 +4,8 @@ test("user enters Merlin, rates Red Mojo, and keeps the score after reload", asy
   const consoleErrors: string[] = [];
   page.on("console", (message) => { if (message.type() === "error") consoleErrors.push(message.text()); });
   await page.goto("/");
-  await page.getByLabel("语言").selectOption("en");
+  await page.getByRole("button", { name: "语言" }).click();
+  await page.getByRole("menuitemradio", { name: "English" }).click();
   await page.getByRole("link", { name: "Enter series" }).click();
   await expect(page.locator(".card-tile")).toHaveCount(38);
   await page.getByRole("searchbox").fill("Red Mojo");
@@ -16,7 +17,7 @@ test("user enters Merlin, rates Red Mojo, and keeps the score after reload", asy
   await expect(page.getByText("My rating: 8.0")).toBeVisible();
   await page.reload();
   await expect(page.getByText("My rating: 8.0")).toBeVisible();
-  await expect(page.getByLabel("Language")).toHaveValue("en");
+  await expect(page.getByRole("button", { name: "Language" })).toContainText("English");
   expect(consoleErrors).toEqual([]);
 });
 
