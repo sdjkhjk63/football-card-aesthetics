@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Locale } from "@/domain/catalogue";
 import type { RatingRepository } from "@/lib/ratingRepository";
 import { translate } from "@/data/messages";
 
 export function SeriesSelectionRating({ seriesSlug, repository, locale, onSaved }: { seriesSlug: string; repository: RatingRepository; locale: Locale; onSaved?: () => void }) {
-  const existing = repository.getSeriesSelection(seriesSlug);
-  const [score, setScore] = useState(existing?.toString() ?? "");
+  const [score, setScore] = useState("");
+  useEffect(() => {
+    const existing = repository.getSeriesSelection(seriesSlug);
+    if (existing != null) setScore(existing.toString());
+  }, [repository, seriesSlug]);
   const save = () => {
     if (!score) return;
     repository.saveSeriesSelection(seriesSlug, Number(score));

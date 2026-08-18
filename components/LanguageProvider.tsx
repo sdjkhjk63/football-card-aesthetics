@@ -9,6 +9,7 @@ const STORAGE_KEY = "card-aesthetics-locale";
 
 type LanguageContextValue = {
   locale: Locale;
+  ready: boolean;
   setLocale: (locale: Locale) => void;
   t: (key: MessageKey) => string;
 };
@@ -17,6 +18,7 @@ const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [locale, updateLocale] = useState<Locale>("zh-CN");
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     try {
@@ -24,6 +26,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     } catch {
       updateLocale("zh-CN");
     }
+    setReady(true);
   }, []);
 
   const setLocale = (next: Locale) => {
@@ -36,9 +39,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<LanguageContextValue>(() => ({
     locale,
+    ready,
     setLocale,
     t: (key) => translate(key, locale),
-  }), [locale]);
+  }), [locale, ready]);
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 }

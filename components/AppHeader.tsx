@@ -5,7 +5,7 @@ import { useLanguage } from "@/components/LanguageProvider";
 import type { Locale } from "@/domain/catalogue";
 
 export function AppHeader() {
-  const { locale, setLocale, t } = useLanguage();
+  const { locale, ready, setLocale, t } = useLanguage();
   return (
     <header className="app-header">
       <Link className="brand" href="/" aria-label={t("brand")}>
@@ -17,7 +17,7 @@ export function AppHeader() {
       </nav>
       <label className="language-control">
         <span className="sr-only">{t("language")}</span>
-        <select value={locale} onChange={(event) => setLocale(event.target.value as Locale)} aria-label={t("language")}>
+        <select value={locale} disabled={!ready} onChange={(event) => setLocale(event.target.value as Locale)} aria-label={t("language")}>
           <option value="zh-CN">中文</option>
           <option value="en">English</option>
           <option value="es">Español</option>
