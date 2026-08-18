@@ -22,6 +22,21 @@ pnpm lint
 pnpm build
 ```
 
+## Windows desktop app
+
+The desktop edition is an offline Electron wrapper around the same multilingual interface. It keeps ratings on the current computer and opens external source links in the normal web browser.
+
+```bash
+pnpm desktop:dev    # build and launch a local desktop window
+pnpm desktop:build  # export the 43 offline pages to out/
+pnpm desktop:pack   # create release/win-unpacked/Card Aesthetics.exe
+pnpm desktop:dist   # create release/Card Aesthetics Setup 0.1.0.exe
+```
+
+The Windows installer creates `Card Aesthetics` shortcuts on the Desktop and in the Start Menu. Generated `out/` and `release/` files are intentionally ignored by Git.
+
+The current card and packaging photographs are included only for private local research and evaluation. Do not publish the repository, installer, or copied imagery until the relevant image permissions have been confirmed or the images have been replaced with licensed assets. The original desktop cover and icon do not contain third-party card, league, club, or player artwork.
+
 ## Scoring method
 
 Each design is rated from 1 to 10 in four public dimensions:
