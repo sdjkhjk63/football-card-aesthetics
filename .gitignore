@@ -1,6 +1,7 @@
 .worktrees/
 node_modules/
 .next/
+out/
 playwright-report/
 test-results/
 coverage/
