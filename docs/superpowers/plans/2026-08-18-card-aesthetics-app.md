@@ -219,9 +219,6 @@ export type CardSection = "base-unnumbered" | "base-numbered" | "regular-insert"
 
 export interface ImageSource {
   path: string;
-  platform: "Topps" | "CardHobby" | "eBay";
-  sourceUrl: string;
-  authorization: "official" | "research-only" | "licensed";
   alt: LocaleText;
 }
 

@@ -7,6 +7,17 @@ playwright-report/
 test-results/
 coverage/
 research/
+artifacts/
+tmp/
+scripts/import-chrome-arsenal-assets.mjs
+scripts/audit-finest-images.mjs
+scripts/build-finest-candidate-sheets.mjs
+scripts/probe-ebay-images.mjs
+scripts/replace-finest-confirmed-real-images.mjs
+tmp-arsenal-*
+tmp-bing-*
+tmp-google-*
+tmp-super-source.jpg
 *.tsbuildinfo
 .env*
 !.env.example

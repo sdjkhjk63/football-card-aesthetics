@@ -5,12 +5,43 @@ import { generateStaticParams as cardParams } from "@/app/series/[seriesSlug]/ca
 it("enumerates the complete desktop route set", async () => {
   expect(await seriesParams()).toEqual([
     { seriesSlug: "topps-merlin-premier-league-2026" },
+    { seriesSlug: "topps-finest-premier-league-2026" },
+    { seriesSlug: "topps-chrome-arsenal-2025-26" },
+    { seriesSlug: "topps-chrome-sapphire-bundesliga-2025-26" },
   ]);
 
   const cards = await cardParams();
-  expect(cards).toHaveLength(38);
+  expect(cards).toHaveLength(144);
   expect(cards).toContainEqual({
     seriesSlug: "topps-merlin-premier-league-2026",
     cardSlug: "red-mojo",
+  });
+  expect(cards).toContainEqual({
+    seriesSlug: "topps-finest-premier-league-2026",
+    cardSlug: "base-common-blue",
+  });
+  expect(cards).toContainEqual({
+    seriesSlug: "topps-finest-premier-league-2026",
+    cardSlug: "base-rare-pearl",
+  });
+  expect(cards).toContainEqual({
+    seriesSlug: "topps-finest-premier-league-2026",
+    cardSlug: "finest-partnerships",
+  });
+  expect(cards).toContainEqual({
+    seriesSlug: "topps-chrome-arsenal-2025-26",
+    cardSlug: "red-vision",
+  });
+  expect(cards).toContainEqual({
+    seriesSlug: "topps-chrome-arsenal-2025-26",
+    cardSlug: "marble-icons-autographs",
+  });
+  expect(cards).toContainEqual({
+    seriesSlug: "topps-chrome-arsenal-2025-26",
+    cardSlug: "the-arsenal-away-autographs",
+  });
+  expect(cards).toContainEqual({
+    seriesSlug: "topps-chrome-sapphire-bundesliga-2025-26",
+    cardSlug: "infinite-sapphire-padparadscha",
   });
 });

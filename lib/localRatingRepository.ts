@@ -1,8 +1,9 @@
-import { assertScore, calculateWeightedScore, type RatingInput, type RatingRecord } from "@/domain/ratings";
+import { assertScore, type DetailedRating, type RatingInput, type RatingRecord } from "@/domain/ratings";
 import type { RatingRepository } from "@/lib/ratingRepository";
 
 const STORAGE_KEY = "card-aesthetics-ratings-v1";
 type Store = { records: Record<string, RatingRecord>; selections: Record<string, number> };
+type LegacyRatingRecord = RatingRecord & { input?: RatingInput };
 const fallback: Store = { records: {}, selections: {} };
 
 const emptyStore = (): Store => ({ records: {}, selections: {} });
@@ -18,7 +19,20 @@ export function createLocalRatingRepository(providedStorage?: Storage): RatingRe
     if (!storage) return fallback;
     try {
       const raw = storage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) as Store : emptyStore();
+      if (!raw) return emptyStore();
+      const parsed = JSON.parse(raw) as { records?: Record<string, LegacyRatingRecord>; selections?: Record<string, number> };
+      const records = Object.fromEntries(
+        Object.entries(parsed.records ?? {}).map(([slug, record]) => [
+          slug,
+          {
+            cardSlug: record.cardSlug,
+            score: record.score,
+            updatedAt: record.updatedAt,
+            ...(record.details || record.input ? { details: record.details ?? record.input } : {}),
+          } satisfies RatingRecord,
+        ]),
+      );
+      return { records, selections: parsed.selections ?? {} };
     } catch {
       persistence = "session";
       storage = undefined;
@@ -45,9 +59,15 @@ export function createLocalRatingRepository(providedStorage?: Storage): RatingRe
     get persistence() { return persistence; },
     get(cardSlug) { return read().records[cardSlug] ?? null; },
     list() { return Object.values(read().records); },
-    save(cardSlug, input) {
+    save(cardSlug, score, details?: DetailedRating) {
+      assertScore(score);
       const state = read();
-      const record = { cardSlug, input, score: calculateWeightedScore(input), updatedAt: new Date().toISOString() };
+      const record: RatingRecord = {
+        cardSlug,
+        score: Math.round(score * 10) / 10,
+        updatedAt: new Date().toISOString(),
+        ...(details && Object.keys(details).length ? { details } : {}),
+      };
       state.records[cardSlug] = record;
       write(state);
       return record;

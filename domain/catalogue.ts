@@ -11,10 +11,13 @@ export type CardSection =
 
 export interface ImageSource {
   path: string;
-  platform: "Topps" | "CardHobby" | "eBay";
-  sourceUrl: string;
-  authorization: "official" | "research-only" | "licensed";
   alt: LocalizedText;
+  verification?: "exact" | "unverified";
+}
+
+export interface CardParallel {
+  name: string;
+  serial: string | null;
 }
 
 export interface CardDesign {
@@ -24,6 +27,9 @@ export interface CardDesign {
   group: CardGroup;
   section: CardSection;
   serial: string | null;
+  parallels?: CardParallel[];
+  layout?: "portrait" | "landscape";
+  curatorNote?: LocalizedText;
   image: ImageSource;
 }
 
@@ -57,12 +63,15 @@ export function validateSeries(series: CardSeries): string[] {
     }
     imagePaths.add(card.image.path);
 
-    if (!card.image.sourceUrl.startsWith("https://")) {
-      errors.push(`Invalid source URL: ${card.slug}`);
+    for (const parallel of card.parallels ?? []) {
+      if (!parallel.name.trim()) errors.push(`Missing parallel name: ${card.slug}`);
     }
     for (const locale of locales) {
       if (!card.name[locale]?.trim()) errors.push(`Missing ${locale} name: ${card.slug}`);
       if (!card.image.alt[locale]?.trim()) errors.push(`Missing ${locale} alt: ${card.slug}`);
+      if (card.curatorNote && !card.curatorNote[locale]?.trim()) {
+        errors.push(`Missing ${locale} curator note: ${card.slug}`);
+      }
     }
   }
 

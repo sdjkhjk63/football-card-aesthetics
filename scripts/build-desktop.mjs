@@ -7,7 +7,7 @@ const args = pnpmScript
   : ["exec", "next", "build"];
 
 const child = spawn(command, args, {
-  env: { ...process.env, DESKTOP_BUILD: "1" },
+  env: { ...process.env, DESKTOP_BUILD: "1", NEXT_PUBLIC_AUTHOR_MODE: "1" },
   stdio: "inherit",
 });
 

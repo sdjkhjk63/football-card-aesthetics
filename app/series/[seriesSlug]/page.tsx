@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
 import { SeriesCatalogue } from "@/components/SeriesCatalogue";
-import { getSeries } from "@/data/catalogue";
+import { getCatalogue, getSeries } from "@/data/catalogue";
 
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
-  return [{ seriesSlug: "topps-merlin-premier-league-2026" }];
+  return getCatalogue().map((series) => ({ seriesSlug: series.slug }));
 }
 
 export default async function SeriesPage({ params }: { params: Promise<{ seriesSlug: string }> }) {

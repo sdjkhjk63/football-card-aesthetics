@@ -4,7 +4,7 @@ import type { CardSeries, Locale } from "@/domain/catalogue";
 import { localize } from "@/domain/i18n";
 import { translate } from "@/data/messages";
 
-export function ProductHero({ series, locale }: { series: CardSeries; locale: Locale }) {
+export function ProductHero({ series, locale, releaseNumber = 1 }: { series: CardSeries; locale: Locale; releaseNumber?: number }) {
   return (
     <section className="product-hero">
       <div className="product-visual">
@@ -12,7 +12,7 @@ export function ProductHero({ series, locale }: { series: CardSeries; locale: Lo
         <Image src={`/${series.packaging.path}`} alt={localize(series.packaging.alt, locale)} width={1000} height={1000} priority />
       </div>
       <div className="product-copy">
-        <span className="kicker">CURATED RELEASE · 001</span>
+        <span className="kicker">CURATED RELEASE · {String(releaseNumber).padStart(3, "0")}</span>
         <h1>{localize(series.name, locale)}</h1>
         <p>{translate("explore", locale)}</p>
         <div className="product-stats">

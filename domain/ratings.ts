@@ -6,10 +6,11 @@ export const ratingWeights = {
 } as const;
 
 export type RatingInput = Record<keyof typeof ratingWeights, number>;
+export type DetailedRating = Partial<RatingInput>;
 
 export interface RatingRecord {
   cardSlug: string;
-  input: RatingInput;
+  details?: DetailedRating;
   score: number;
   updatedAt: string;
 }

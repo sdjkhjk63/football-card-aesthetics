@@ -34,10 +34,24 @@ describe("ratings", () => {
 
   it("updates one local record instead of duplicating it", () => {
     const repository = createLocalRatingRepository(memoryStorage());
-    repository.save("refractor", perfect);
-    repository.save("refractor", { ...perfect, composition: 8 });
+    repository.save("refractor", 10, perfect);
+    repository.save("refractor", 8.7, { composition: 8 });
     expect(repository.list()).toHaveLength(1);
-    expect(repository.get("refractor")?.input.composition).toBe(8);
+    expect(repository.get("refractor")?.score).toBe(8.7);
+    expect(repository.get("refractor")?.details).toEqual({ composition: 8 });
+  });
+
+  it("migrates a legacy weighted record without losing its score", () => {
+    const storage = memoryStorage();
+    storage.setItem("card-aesthetics-ratings-v1", JSON.stringify({
+      records: {
+        refractor: { cardSlug: "refractor", input: perfect, score: 10, updatedAt: "then" },
+      },
+      selections: {},
+    }));
+    const record = createLocalRatingRepository(storage).get("refractor");
+    expect(record?.score).toBe(10);
+    expect(record?.details).toEqual(perfect);
   });
 
   it("stores one player-photo selection score per series", () => {
@@ -48,7 +62,7 @@ describe("ratings", () => {
   });
 
   it("labels a card-only average differently from a full series score", () => {
-    const records = [{ cardSlug: "base", input: perfect, score: 10, updatedAt: "now" }];
+    const records = [{ cardSlug: "base", details: perfect, score: 10, updatedAt: "now" }];
     expect(calculateSeriesSummary(records)).toEqual({ kind: "card-average", score: 10, ratedCards: 1 });
     expect(calculateSeriesSummary(records, 5)).toEqual({ kind: "full-series", score: 9, ratedCards: 1, selectionScore: 5 });
   });
