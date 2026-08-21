@@ -3,13 +3,14 @@ import Link from "next/link";
 import type { CardSeries, Locale } from "@/domain/catalogue";
 import { localize } from "@/domain/i18n";
 import { translate } from "@/data/messages";
+import { publicAssetPath } from "@/lib/publicAssetPath";
 
 export function ProductHero({ series, locale, releaseNumber = 1 }: { series: CardSeries; locale: Locale; releaseNumber?: number }) {
   return (
     <section className="product-hero">
       <div className="product-visual">
         <span className="eyebrow">{series.manufacturer} · {series.season}</span>
-        <Image src={`/${series.packaging.path}`} alt={localize(series.packaging.alt, locale)} width={1000} height={1000} priority />
+        <Image src={publicAssetPath(series.packaging.path)} alt={localize(series.packaging.alt, locale)} width={1000} height={1000} priority />
       </div>
       <div className="product-copy">
         <span className="kicker">CURATED RELEASE · {String(releaseNumber).padStart(3, "0")}</span>

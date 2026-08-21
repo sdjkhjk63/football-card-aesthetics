@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { publicAssetPath } from "@/lib/publicAssetPath";
 import Link from "next/link";
 import type { CardDesign, Locale } from "@/domain/catalogue";
 import type { RatingRecord } from "@/domain/ratings";
@@ -12,7 +13,7 @@ export function CardDesignTile({ seriesSlug, design, locale, rating }: { seriesS
     <Link className={design.layout === "landscape" ? "card-tile landscape" : "card-tile"} href={`/series/${seriesSlug}/cards/${design.slug}`} aria-label={`${design.officialName} — ${localize(design.name, locale)}`}>
       <div className="card-image-frame">
         {imageIsVerified
-          ? <Image src={`/${design.image.path}`} alt={localize(design.image.alt, locale)} width={520} height={720} />
+          ? <Image src={publicAssetPath(design.image.path)} alt={localize(design.image.alt, locale)} width={520} height={720} />
           : <div className="card-image-unverified" role="status"><span>{unverifiedLabel}</span><small>{design.officialName}</small></div>}
         {design.serial && <span className="serial-badge">{design.serial}</span>}
       </div>

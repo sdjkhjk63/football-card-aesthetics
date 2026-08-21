@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { publicAssetPath } from "@/lib/publicAssetPath";
 import Link from "next/link";
 import { useState } from "react";
 import { ProductHero } from "@/components/ProductHero";
@@ -27,7 +28,7 @@ export default function HomePage() {
             onMouseEnter={() => setActiveSeries(item)}
             onFocus={() => setActiveSeries(item)}
           >
-            <Image src={`/${item.packaging.path}`} alt={localize(item.packaging.alt, locale)} width={220} height={220} />
+            <Image src={publicAssetPath(item.packaging.path)} alt={localize(item.packaging.alt, locale)} width={220} height={220} />
             <span>
               <small>{item.manufacturer} · {item.season}</small>
               <strong>{localize(item.name, locale)}</strong>
