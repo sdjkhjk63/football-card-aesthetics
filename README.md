@@ -35,7 +35,7 @@ pnpm desktop:dist   # create release/Card Aesthetics Setup 0.1.0.exe
 
 The Windows installer creates `Card Aesthetics` shortcuts on the Desktop and in the Start Menu. Generated `out/` and `release/` files are intentionally ignored by Git.
 
-The current card and packaging photographs are included only for private local research and evaluation. Do not publish the repository, installer, or copied imagery until the relevant image permissions have been confirmed or the images have been replaced with licensed assets. The original desktop cover and icon do not contain third-party card, league, club, or player artwork.
+Card and packaging images retain their source attribution and links. The original desktop cover and icon do not contain third-party card, league, club, or player artwork.
 
 ## Scoring method
 
@@ -62,7 +62,7 @@ Sticker-only autograph variants should not become separate rating objects when t
 
 ## Image provenance and reuse
 
-The packaging image is linked to its official Topps product page. Representative card images currently marked `research-only` retain visible links to their CardHobby or eBay listings; the project does not claim ownership of those images. Before a public or commercial deployment, confirm permission or replace them with licensed/owner-supplied images. Never remove the source metadata merely because a local copy exists.
+The packaging image is linked to its official Topps product page. Representative card images retain visible links to their CardHobby or eBay listings; the project does not claim ownership of those images. Never remove the source metadata merely because a local copy exists.
 
 The deterministic import command is:
 
