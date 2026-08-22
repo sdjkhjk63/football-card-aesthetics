@@ -15,13 +15,13 @@ const chromeArsenalSlug = "topps-chrome-arsenal-2025-26";
 const chromeSapphireBundesligaSlug = "topps-chrome-sapphire-bundesliga-2025-26";
 const barcelonaForeverSlug = "topps-forever-fc-barcelona-2025-26";
 const barcelonaForeverDesigns = [
-  "blaugrana-vault-gold",
+  "blaugrana-vault-green",
   "forever-kit",
   "forever-legends-gold-foilfractor",
-  "forever-mens-gold",
+  "forever-mens-purple",
   "forever-womens-orange",
   "identity-respect",
-  "century-club-black",
+  "century-club-gold-foilfractor",
   "home-view",
 ];
 const chromeSapphireBundesligaDesigns = [
@@ -491,10 +491,10 @@ describe("Topps Forever FC Barcelona 2025-26 catalogue", () => {
     const standardParallelSerials = ["/125", "/99", "/75", "/50", "/25", "/10", "/5", "1/1"];
 
     expect(series?.cardDesigns.find((card) => card.slug === "forever-kit")?.parallels?.map((parallel) => parallel.serial)).toEqual(standardParallelSerials);
-    expect(series?.cardDesigns.find((card) => card.slug === "blaugrana-vault-gold")?.parallels?.map((parallel) => parallel.serial)).toEqual(standardParallelSerials);
+    expect(series?.cardDesigns.find((card) => card.slug === "blaugrana-vault-green")?.parallels?.map((parallel) => parallel.serial)).toEqual(standardParallelSerials);
     expect(series?.cardDesigns.find((card) => card.slug === "forever-legends-gold-foilfractor")?.parallels?.map((parallel) => parallel.serial)).toEqual(standardParallelSerials);
     expect(series?.cardDesigns.find((card) => card.slug === "identity-respect")?.parallels?.map((parallel) => parallel.serial)).toEqual(["/50", "/25", "/10", "/5", "1/1"]);
-    expect(series?.cardDesigns.find((card) => card.slug === "century-club-black")?.parallels?.map((parallel) => parallel.serial)).toEqual(["/10", "/5", "1/1"]);
+    expect(series?.cardDesigns.find((card) => card.slug === "century-club-gold-foilfractor")?.parallels?.map((parallel) => parallel.serial)).toEqual(["/10", "/5", "1/1"]);
     expect(series?.cardDesigns.find((card) => card.slug === "home-view")?.parallels?.map((parallel) => parallel.serial)).toEqual(["1/1"]);
   });
 
@@ -502,13 +502,13 @@ describe("Topps Forever FC Barcelona 2025-26 catalogue", () => {
     const series = getSeries(barcelonaForeverSlug);
 
     expect(series?.cardDesigns.map((card) => [card.slug, card.name["zh-CN"], card.officialName])).toEqual([
-      ["blaugrana-vault-gold", "红蓝宝库签名", "Blaugrana Vault Autographs"],
+      ["blaugrana-vault-green", "红蓝宝库签名", "Blaugrana Vault Autographs"],
       ["forever-kit", "永恒球衣签名", "Forever Kit Autographs"],
       ["forever-legends-gold-foilfractor", "永恒传奇签名", "Forever Legend's Autographs"],
-      ["forever-mens-gold", "永恒男足签名", "Forever Men's Autographs"],
+      ["forever-mens-purple", "永恒男足签名", "Forever Men's Autographs"],
       ["forever-womens-orange", "永恒女足签名", "Forever Women's Autographs"],
       ["identity-respect", "巴萨精神签名", "Identity Autographs"],
-      ["century-club-black", "百场纪念：亚马尔签名比赛球网实物", "Century Club: Yamal Edition Autograph Relic"],
+      ["century-club-gold-foilfractor", "百场纪念：亚马尔签名比赛球网实物", "Century Club: Yamal Edition Autograph Relic"],
       ["home-view", "主场视角签名实物", "Home View Autograph Relics"],
     ]);
   });
@@ -516,13 +516,40 @@ describe("Topps Forever FC Barcelona 2025-26 catalogue", () => {
   it("distinguishes the Century Club net relic from the Forever Kit design and marks Home View as one-of-one", () => {
     const series = getSeries(barcelonaForeverSlug);
     const foreverKit = series?.cardDesigns.find((card) => card.slug === "forever-kit");
-    const centuryClub = series?.cardDesigns.find((card) => card.slug === "century-club-black");
+    const centuryClub = series?.cardDesigns.find((card) => card.slug === "century-club-gold-foilfractor");
     const homeView = series?.cardDesigns.find((card) => card.slug === "home-view");
 
     expect(foreverKit?.curatorNote?.["zh-CN"]).toContain("不含实物");
     expect(centuryClub?.curatorNote?.["zh-CN"]).toContain("比赛球网");
     expect(homeView?.curatorNote?.["zh-CN"]).toContain("诺坎普座椅");
     expect(homeView?.serial).toBe("1/1");
+  });
+
+  it("uses the exact numbered versions shown in the four replacement photos", () => {
+    const series = getSeries(barcelonaForeverSlug);
+
+    expect(series?.cardDesigns.find((card) => card.slug === "blaugrana-vault-green")?.serial).toBe("/99");
+    expect(series?.cardDesigns.find((card) => card.slug === "forever-mens-purple")?.serial).toBe("/75");
+    expect(series?.cardDesigns.find((card) => card.slug === "century-club-gold-foilfractor")?.serial).toBe("1/1");
+    expect(series?.cardDesigns.find((card) => card.slug === "home-view")?.serial).toBe("1/1");
+  });
+
+  it("crops the replacement photos to their card frames without phone screenshot padding", async () => {
+    const series = getSeries(barcelonaForeverSlug);
+    const expectedSizes = new Map([
+      ["blaugrana-vault-green", { width: 750, height: 1050 }],
+      ["forever-mens-purple", { width: 750, height: 1050 }],
+      ["century-club-gold-foilfractor", { width: 750, height: 1050 }],
+      ["home-view", { width: 1050, height: 750 }],
+    ]);
+
+    for (const [slug, expected] of expectedSizes) {
+      const card = series?.cardDesigns.find((design) => design.slug === slug);
+      expect(card, slug).toBeDefined();
+      if (!card) continue;
+      const metadata = await sharp(path.join(process.cwd(), "public", card.image.path)).metadata();
+      expect({ width: metadata.width, height: metadata.height }, slug).toEqual(expected);
+    }
   });
 
   it("enlarges the padded women's autograph photo without changing its proportions", () => {
@@ -553,13 +580,13 @@ describe("Topps Forever FC Barcelona 2025-26 catalogue", () => {
       .map((card) => card.slug);
 
     expect(exactSlugs).toEqual([
-      "blaugrana-vault-gold",
+      "blaugrana-vault-green",
       "forever-kit",
       "forever-legends-gold-foilfractor",
-      "forever-mens-gold",
+      "forever-mens-purple",
       "forever-womens-orange",
       "identity-respect",
-      "century-club-black",
+      "century-club-gold-foilfractor",
       "home-view",
     ]);
   });

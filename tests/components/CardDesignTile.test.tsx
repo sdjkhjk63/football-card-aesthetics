@@ -79,7 +79,7 @@ it("names each listed parallel instead of showing only its serial number", () =>
 
 it("shows the generic family title and keeps the representative serial in the parallel labels", () => {
   const series = getSeries("topps-forever-fc-barcelona-2025-26");
-  const design = series?.cardDesigns.find((card) => card.slug === "century-club-black");
+  const design = series?.cardDesigns.find((card) => card.slug === "century-club-gold-foilfractor");
   expect(design).toBeDefined();
   if (!design) return;
 
