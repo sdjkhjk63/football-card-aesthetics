@@ -11,5 +11,5 @@ it("shows displayed faces and the complete variant total separately", () => {
 
   render(<LanguageProvider><SeriesCatalogue series={series} /></LanguageProvider>);
 
-  expect(screen.getByText("15 DISPLAY CARDS / 57 COMPLETE VERSIONS")).toBeVisible();
+  expect(screen.getByText("8 DISPLAY CARDS / 57 COMPLETE VERSIONS")).toBeVisible();
 });

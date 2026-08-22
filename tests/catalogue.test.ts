@@ -15,19 +15,12 @@ const chromeArsenalSlug = "topps-chrome-arsenal-2025-26";
 const chromeSapphireBundesligaSlug = "topps-chrome-sapphire-bundesliga-2025-26";
 const barcelonaForeverSlug = "topps-forever-fc-barcelona-2025-26";
 const barcelonaForeverDesigns = [
-  "blaugrana-vault",
+  "blaugrana-vault-gold",
   "forever-kit",
-  "forever-kit-orange",
-  "forever-kit-red",
-  "forever-legends",
   "forever-legends-gold-foilfractor",
-  "forever-mens",
-  "forever-womens",
+  "forever-mens-gold",
   "forever-womens-orange",
-  "identity",
-  "identity-humility",
   "identity-respect",
-  "century-club",
   "century-club-black",
   "home-view",
 ];
@@ -489,7 +482,7 @@ describe("Topps Forever FC Barcelona 2025-26 catalogue", () => {
     expect(series?.cardDesigns.map((card) => card.slug)).toEqual(
       barcelonaForeverDesigns,
     );
-    expect(series?.cardDesigns).toHaveLength(15);
+    expect(series?.cardDesigns).toHaveLength(8);
     expect(series?.totalVariants).toBe(57);
   });
 
@@ -497,11 +490,11 @@ describe("Topps Forever FC Barcelona 2025-26 catalogue", () => {
     const series = getSeries(barcelonaForeverSlug);
     const standardParallelSerials = ["/125", "/99", "/75", "/50", "/25", "/10", "/5", "1/1"];
 
-    for (const slug of ["blaugrana-vault", "forever-kit", "forever-legends", "forever-mens", "forever-womens"]) {
-      expect(series?.cardDesigns.find((card) => card.slug === slug)?.parallels?.map((parallel) => parallel.serial)).toEqual(standardParallelSerials);
-    }
-    expect(series?.cardDesigns.find((card) => card.slug === "identity")?.parallels?.map((parallel) => parallel.serial)).toEqual(["/50", "/25", "/10", "/5", "1/1"]);
-    expect(series?.cardDesigns.find((card) => card.slug === "century-club")?.parallels?.map((parallel) => parallel.serial)).toEqual(["/10", "/5", "1/1"]);
+    expect(series?.cardDesigns.find((card) => card.slug === "forever-kit")?.parallels?.map((parallel) => parallel.serial)).toEqual(standardParallelSerials);
+    expect(series?.cardDesigns.find((card) => card.slug === "blaugrana-vault-gold")?.parallels?.map((parallel) => parallel.serial)).toEqual(["/125", "/99", "/75", "/25", "/10", "/5", "1/1"]);
+    expect(series?.cardDesigns.find((card) => card.slug === "forever-legends-gold-foilfractor")?.parallels?.map((parallel) => parallel.serial)).toEqual(["/125", "/99", "/75", "/50", "/25", "/10", "/5"]);
+    expect(series?.cardDesigns.find((card) => card.slug === "identity-respect")?.parallels?.map((parallel) => parallel.serial)).toEqual(["/50", "/25", "/10", "/5"]);
+    expect(series?.cardDesigns.find((card) => card.slug === "century-club-black")?.parallels?.map((parallel) => parallel.serial)).toEqual(["/5", "1/1"]);
     expect(series?.cardDesigns.find((card) => card.slug === "home-view")?.parallels?.map((parallel) => parallel.serial)).toEqual(["1/1"]);
   });
 
@@ -513,7 +506,7 @@ describe("Topps Forever FC Barcelona 2025-26 catalogue", () => {
     expect(validateSeries(series)).toEqual([]);
 
     const images = [series.packaging.path, ...series.cardDesigns.map((card) => card.image.path)];
-    expect(new Set(images)).toHaveLength(16);
+    expect(new Set(images)).toHaveLength(9);
     for (const image of images) {
       expect(fs.existsSync(path.join(process.cwd(), "public", image)), image).toBe(true);
     }
@@ -526,17 +519,12 @@ describe("Topps Forever FC Barcelona 2025-26 catalogue", () => {
       .map((card) => card.slug);
 
     expect(exactSlugs).toEqual([
+      "blaugrana-vault-gold",
       "forever-kit",
-      "forever-kit-orange",
-      "forever-kit-red",
       "forever-legends-gold-foilfractor",
-      "forever-mens",
-      "forever-womens",
+      "forever-mens-gold",
       "forever-womens-orange",
-      "identity",
-      "identity-humility",
       "identity-respect",
-      "century-club",
       "century-club-black",
       "home-view",
     ]);

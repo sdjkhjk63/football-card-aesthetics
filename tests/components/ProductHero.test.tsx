@@ -16,6 +16,6 @@ it("distinguishes displayed card faces from the complete variant count", () => {
 
   render(<ProductHero series={series} locale="zh-CN" />);
 
-  expect(screen.getByText("15")).toBeVisible();
+  expect(screen.getByText("8")).toBeVisible();
   expect(screen.getByText("种展示卡面 · 完整收录 57 个版本")).toBeVisible();
 });
