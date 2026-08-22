@@ -12,7 +12,7 @@ it("enumerates the complete desktop route set", async () => {
   ]);
 
   const cards = await cardParams();
-  expect(cards).toHaveLength(201);
+  expect(cards).toHaveLength(159);
   expect(cards).toContainEqual({
     seriesSlug: "topps-merlin-premier-league-2026",
     cardSlug: "red-mojo",
@@ -47,6 +47,6 @@ it("enumerates the complete desktop route set", async () => {
   });
   expect(cards).toContainEqual({
     seriesSlug: "topps-forever-fc-barcelona-2025-26",
-    cardSlug: "home-view-gold-foilfractor",
+    cardSlug: "identity-respect",
   });
 });

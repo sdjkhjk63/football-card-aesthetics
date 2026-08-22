@@ -6,6 +6,13 @@ import { translate } from "@/data/messages";
 import { publicAssetPath } from "@/lib/publicAssetPath";
 
 export function ProductHero({ series, locale, releaseNumber = 1 }: { series: CardSeries; locale: Locale; releaseNumber?: number }) {
+  const designLabel = series.totalVariants
+    ? {
+      "zh-CN": `种展示卡面 · 完整收录 ${series.totalVariants} 个版本`,
+      en: `display cards · ${series.totalVariants} complete variants`,
+      es: `cartas mostradas · ${series.totalVariants} variantes completas`,
+    }[locale]
+    : translate("designs", locale);
   return (
     <section className="product-hero">
       <div className="product-visual">
@@ -18,7 +25,7 @@ export function ProductHero({ series, locale, releaseNumber = 1 }: { series: Car
         <p>{translate("explore", locale)}</p>
         <div className="product-stats">
           <strong>{series.cardDesigns.length}</strong>
-          <span>{translate("designs", locale)}</span>
+          <span>{designLabel}</span>
         </div>
         <Link className="primary-button" aria-label={translate("enterSeries", locale)} href={`/series/${series.slug}`}>{translate("enterSeries", locale)} <span aria-hidden="true">↗</span></Link>
       </div>

@@ -54,3 +54,24 @@ it("does not show an unverified reference photo on the card detail page", () => 
   expect(within(container).queryByRole("img")).not.toBeInTheDocument();
   expect(within(container).getByText("实卡图待核实")).toBeVisible();
 });
+
+it("names each listed parallel instead of showing only its serial number", () => {
+  const design = {
+    slug: "forever-kit",
+    officialName: "Forever Kit Autographs",
+    name: { "zh-CN": "永恒球衣签名", en: "Forever Kit Autographs", es: "Autógrafos Forever Kit" },
+    group: "insert",
+    section: "regular-insert",
+    serial: null,
+    parallels: [{ name: "Orange", serial: "/25" }],
+    image: {
+      path: "images/forever-kit.jpg",
+      alt: { "zh-CN": "永恒球衣签名", en: "Forever Kit", es: "Forever Kit" },
+      verification: "exact",
+    },
+  } as CardDesign;
+
+  render(<CardDesignTile seriesSlug="series" design={design} locale="zh-CN" />);
+
+  expect(screen.getByText("Orange /25")).toBeVisible();
+});

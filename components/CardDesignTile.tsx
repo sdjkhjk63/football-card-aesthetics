@@ -24,7 +24,7 @@ export function CardDesignTile({ seriesSlug, design, locale, rating }: { seriesS
         {design.parallels?.length ? (
           <div className="parallel-strip" aria-label="Parallels">
             {design.parallels.map((parallel) => (
-              <span key={`${parallel.name}-${parallel.serial ?? "base"}`}>{parallel.serial ?? parallel.name}</span>
+              <span key={`${parallel.name}-${parallel.serial ?? "base"}`}>{parallel.name}{parallel.serial ? ` ${parallel.serial}` : ""}</span>
             ))}
           </div>
         ) : null}

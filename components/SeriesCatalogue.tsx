@@ -22,7 +22,7 @@ export function SeriesCatalogue({ series }: { series: CardSeries }) {
   const summary = calculateSeriesSummary(ratings, hydrated ? repository.getSeriesSelection(series.slug) : null);
   return (
     <main>
-      <header className="series-masthead"><div><span className="eyebrow">{series.manufacturer} · {series.season}</span><h1>{localize(series.name, locale)}</h1><p>{series.cardDesigns.length} INDEPENDENT DESIGNS / {baseCount} BASE + {insertCount} INSERTS</p></div><RatingSummary summary={summary} locale={locale} /></header>
+      <header className="series-masthead"><div><span className="eyebrow">{series.manufacturer} · {series.season}</span><h1>{localize(series.name, locale)}</h1><p>{series.totalVariants ? `${series.cardDesigns.length} DISPLAY CARDS / ${series.totalVariants} COMPLETE VERSIONS` : `${series.cardDesigns.length} INDEPENDENT DESIGNS / ${baseCount} BASE + ${insertCount} INSERTS`}</p></div><RatingSummary summary={summary} locale={locale} /></header>
       <SeriesSelectionRating seriesSlug={series.slug} repository={repository} locale={locale} onSaved={() => refresh((value) => value + 1)} />
       <CardDesignGrid seriesSlug={series.slug} designs={series.cardDesigns} locale={locale} ratings={ratings} />
     </main>

@@ -531,6 +531,7 @@ type BarcelonaForeverCardInput = {
   serial?: string;
   layout?: CardDesign["layout"];
   verification?: "exact" | "unverified";
+  parallels?: CardDesign["parallels"];
 };
 
 const barcelonaForeverCard = ({
@@ -540,6 +541,7 @@ const barcelonaForeverCard = ({
   serial,
   layout,
   verification = "unverified",
+  parallels,
 }: BarcelonaForeverCardInput): CardDesign => ({
   slug,
   officialName,
@@ -548,6 +550,7 @@ const barcelonaForeverCard = ({
   section: serial ? rareInsert : regularInsert,
   serial: serial ?? null,
   layout,
+  parallels,
   curatorNote: verification === "unverified"
     ? names(
       "该版本已由公开清单确认；目前展示同卡面家族的官方示意图，确切平行版实卡图仍待核实。",
@@ -584,44 +587,72 @@ type BarcelonaStandardFamily = {
   name: LocalizedText;
 };
 
-const exactBarcelonaStandardSlugs = new Set([
-  "blaugrana-vault-burgundy",
-  "blaugrana-vault-purple",
-  "blaugrana-vault-gold",
+const verifiedBarcelonaDisplaySlugs = new Set([
   "forever-kit",
   "forever-kit-orange",
   "forever-kit-red",
-  "forever-legends-purple",
   "forever-legends-gold-foilfractor",
   "forever-mens",
-  "forever-mens-green",
-  "forever-mens-purple",
-  "forever-mens-gold",
   "forever-womens",
-  "forever-womens-purple",
-  "forever-womens-gold",
   "forever-womens-orange",
+  "identity",
+  "identity-humility",
+  "identity-respect",
+  "century-club",
+  "century-club-black",
+  "home-view",
 ]);
+
+const lowNumberedSerials = new Set(["/25", "/10", "/5", "1/1"]);
+
+const standardBarcelonaParallelNotes = standardBarcelonaParallels.slice(1).map((parallel) => ({
+  name: parallel.en,
+  serial: parallel.serial ?? null,
+}));
 
 const buildBarcelonaStandardFamily = ({
   slug,
   officialName,
   name,
-}: BarcelonaStandardFamily): CardDesign[] => standardBarcelonaParallels.map((parallel) => {
-  const cardSlug = parallel.suffix ? `${slug}-${parallel.suffix}` : slug;
-  const suffix = parallel.en ? ` ${parallel.en}` : "";
-  return barcelonaForeverCard({
-    slug: cardSlug,
-    officialName: `${officialName}${suffix}`,
-    name: names(
-      parallel.zh ? `${name["zh-CN"]} ${parallel.zh}` : name["zh-CN"],
-      `${name.en}${suffix}`,
-      parallel.es ? `${name.es} ${parallel.es}` : name.es,
-    ),
-    serial: parallel.serial,
-    verification: exactBarcelonaStandardSlugs.has(cardSlug) ? "exact" : "unverified",
+}: BarcelonaStandardFamily): CardDesign[] => {
+  const base = barcelonaForeverCard({
+    slug,
+    officialName,
+    name,
+    verification: verifiedBarcelonaDisplaySlugs.has(slug) ? "exact" : "unverified",
+    parallels: standardBarcelonaParallelNotes,
   });
-});
+  const verifiedLowNumbered = standardBarcelonaParallels.slice(1)
+    .filter((parallel) => parallel.serial && lowNumberedSerials.has(parallel.serial))
+    .filter((parallel) => verifiedBarcelonaDisplaySlugs.has(`${slug}-${parallel.suffix}`))
+    .map((parallel) => barcelonaForeverCard({
+      slug: `${slug}-${parallel.suffix}`,
+      officialName: `${officialName} ${parallel.en}`,
+      name: names(
+        `${name["zh-CN"]} ${parallel.zh}`,
+        `${name.en} ${parallel.en}`,
+        `${name.es} ${parallel.es}`,
+      ),
+      serial: parallel.serial,
+      verification: "exact",
+    }));
+
+  return [base, ...verifiedLowNumbered];
+};
+
+const identityParallels = [
+  { name: "Teamwork", serial: "/50" },
+  { name: "Humility", serial: "/25" },
+  { name: "Effort", serial: "/10" },
+  { name: "Ambition", serial: "/5" },
+  { name: "Respect", serial: "1/1" },
+];
+
+const centuryClubParallels = [
+  { name: "Black", serial: "/10" },
+  { name: "Red", serial: "/5" },
+  { name: "Gold FoilFractor", serial: "1/1" },
+];
 
 const barcelonaForeverCardDesigns: CardDesign[] = [
   ...buildBarcelonaStandardFamily({ slug: "blaugrana-vault", officialName: "Blaugrana Vault Autographs", name: names("红蓝宝库签名", "Blaugrana Vault Autographs", "Autógrafos Blaugrana Vault") }),
@@ -629,18 +660,12 @@ const barcelonaForeverCardDesigns: CardDesign[] = [
   ...buildBarcelonaStandardFamily({ slug: "forever-legends", officialName: "Forever Legend's Autographs", name: names("永恒传奇签名", "Forever Legends Autographs", "Autógrafos Forever Legends") }),
   ...buildBarcelonaStandardFamily({ slug: "forever-mens", officialName: "Forever Men's Autographs", name: names("永恒男足签名", "Forever Men's Autographs", "Autógrafos Forever masculinos") }),
   ...buildBarcelonaStandardFamily({ slug: "forever-womens", officialName: "Forever Women's Autographs", name: names("永恒女足签名", "Forever Women's Autographs", "Autógrafos Forever femeninos") }),
-  barcelonaForeverCard({ slug: "identity", officialName: "Identity Autographs", name: names("巴萨精神签名", "Identity Autographs", "Autógrafos Identity"), verification: "exact" }),
-  barcelonaForeverCard({ slug: "identity-teamwork", officialName: "Identity Autographs Teamwork", name: names("巴萨精神签名 团队", "Identity Teamwork", "Identity Trabajo en equipo"), serial: "/50" }),
+  barcelonaForeverCard({ slug: "identity", officialName: "Identity Autographs", name: names("巴萨精神签名", "Identity Autographs", "Autógrafos Identity"), verification: "exact", parallels: identityParallels }),
   barcelonaForeverCard({ slug: "identity-humility", officialName: "Identity Autographs Humility", name: names("巴萨精神签名 谦逊", "Identity Humility", "Identity Humildad"), serial: "/25", verification: "exact" }),
-  barcelonaForeverCard({ slug: "identity-effort", officialName: "Identity Autographs Effort", name: names("巴萨精神签名 努力", "Identity Effort", "Identity Esfuerzo"), serial: "/10" }),
-  barcelonaForeverCard({ slug: "identity-ambition", officialName: "Identity Autographs Ambition", name: names("巴萨精神签名 雄心", "Identity Ambition", "Identity Ambición"), serial: "/5" }),
   barcelonaForeverCard({ slug: "identity-respect", officialName: "Identity Autographs Respect", name: names("巴萨精神签名 尊重", "Identity Respect", "Identity Respeto"), serial: "1/1", verification: "exact" }),
-  barcelonaForeverCard({ slug: "century-club", officialName: "Century Club: Yamal Edition Autograph Relic", name: names("百场俱乐部：亚马尔签名实物", "Century Club: Yamal Edition Autograph Relic", "Century Club: reliquia autografiada de Yamal"), verification: "exact" }),
+  barcelonaForeverCard({ slug: "century-club", officialName: "Century Club: Yamal Edition Autograph Relic", name: names("百场俱乐部：亚马尔签名实物", "Century Club: Yamal Edition Autograph Relic", "Century Club: reliquia autografiada de Yamal"), verification: "exact", parallels: centuryClubParallels }),
   barcelonaForeverCard({ slug: "century-club-black", officialName: "Century Club: Yamal Edition Autograph Relic Black", name: names("百场俱乐部：亚马尔签名实物 黑色", "Century Club Black", "Century Club negro"), serial: "/10", verification: "exact" }),
-  barcelonaForeverCard({ slug: "century-club-red", officialName: "Century Club: Yamal Edition Autograph Relic Red", name: names("百场俱乐部：亚马尔签名实物 红色", "Century Club Red", "Century Club rojo"), serial: "/5" }),
-  barcelonaForeverCard({ slug: "century-club-gold-foilfractor", officialName: "Century Club: Yamal Edition Autograph Relic Gold FoilFractor", name: names("百场俱乐部：亚马尔签名实物 金色 FoilFractor", "Century Club Gold FoilFractor", "Century Club Gold FoilFractor"), serial: "1/1" }),
-  barcelonaForeverCard({ slug: "home-view", officialName: "Home View Autograph Relics", name: names("主场视角签名实物", "Home View Autograph Relics", "Reliquias autografiadas Home View"), layout: "landscape", verification: "exact" }),
-  barcelonaForeverCard({ slug: "home-view-gold-foilfractor", officialName: "Home View Autograph Relics Gold FoilFractor", name: names("主场视角签名实物 金色 FoilFractor", "Home View Gold FoilFractor", "Home View Gold FoilFractor"), serial: "1/1", layout: "landscape" }),
+  barcelonaForeverCard({ slug: "home-view", officialName: "Home View Autograph Relics", name: names("主场视角签名实物", "Home View Autograph Relics", "Reliquias autografiadas Home View"), layout: "landscape", verification: "exact", parallels: [{ name: "Gold FoilFractor", serial: "1/1" }] }),
 ];
 
 export const toppsForeverFcBarcelona202526: CardSeries = {
@@ -661,6 +686,7 @@ export const toppsForeverFcBarcelona202526: CardSeries = {
       "Caja Hobby 2025-26 Topps Forever FC Barcelona",
     ),
   },
+  totalVariants: 57,
   cardDesigns: barcelonaForeverCardDesigns,
 };
 

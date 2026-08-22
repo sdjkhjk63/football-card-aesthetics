@@ -40,6 +40,7 @@ export interface CardSeries {
   name: LocalizedText;
   packaging: ImageSource;
   cardDesigns: CardDesign[];
+  totalVariants?: number;
 }
 
 export function validateSeries(series: CardSeries): string[] {
