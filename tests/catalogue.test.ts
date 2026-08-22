@@ -563,6 +563,38 @@ describe("Topps Forever FC Barcelona 2025-26 catalogue", () => {
       expect(fs.existsSync(path.join(process.cwd(), "public", image)), image).toBe(true);
     }
   });
+
+  it("publishes every marketplace or official image that has been matched to an exact version", () => {
+    const series = getSeries(barcelonaForeverSlug);
+    const exactSlugs = series?.cardDesigns
+      .filter((card) => card.image.verification === "exact")
+      .map((card) => card.slug);
+
+    expect(exactSlugs).toEqual([
+      "blaugrana-vault-burgundy",
+      "blaugrana-vault-purple",
+      "blaugrana-vault-gold",
+      "forever-kit",
+      "forever-kit-orange",
+      "forever-kit-red",
+      "forever-legends-purple",
+      "forever-legends-gold-foilfractor",
+      "forever-mens",
+      "forever-mens-green",
+      "forever-mens-purple",
+      "forever-mens-gold",
+      "forever-womens",
+      "forever-womens-purple",
+      "forever-womens-gold",
+      "forever-womens-orange",
+      "identity",
+      "identity-humility",
+      "identity-respect",
+      "century-club",
+      "century-club-black",
+      "home-view",
+    ]);
+  });
 });
 
 it("does not publish image provenance for any series", () => {

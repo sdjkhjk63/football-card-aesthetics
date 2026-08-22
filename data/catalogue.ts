@@ -582,14 +582,31 @@ type BarcelonaStandardFamily = {
   slug: string;
   officialName: string;
   name: LocalizedText;
-  exactVariant: string;
 };
+
+const exactBarcelonaStandardSlugs = new Set([
+  "blaugrana-vault-burgundy",
+  "blaugrana-vault-purple",
+  "blaugrana-vault-gold",
+  "forever-kit",
+  "forever-kit-orange",
+  "forever-kit-red",
+  "forever-legends-purple",
+  "forever-legends-gold-foilfractor",
+  "forever-mens",
+  "forever-mens-green",
+  "forever-mens-purple",
+  "forever-mens-gold",
+  "forever-womens",
+  "forever-womens-purple",
+  "forever-womens-gold",
+  "forever-womens-orange",
+]);
 
 const buildBarcelonaStandardFamily = ({
   slug,
   officialName,
   name,
-  exactVariant,
 }: BarcelonaStandardFamily): CardDesign[] => standardBarcelonaParallels.map((parallel) => {
   const cardSlug = parallel.suffix ? `${slug}-${parallel.suffix}` : slug;
   const suffix = parallel.en ? ` ${parallel.en}` : "";
@@ -602,24 +619,24 @@ const buildBarcelonaStandardFamily = ({
       parallel.es ? `${name.es} ${parallel.es}` : name.es,
     ),
     serial: parallel.serial,
-    verification: parallel.suffix === exactVariant ? "exact" : "unverified",
+    verification: exactBarcelonaStandardSlugs.has(cardSlug) ? "exact" : "unverified",
   });
 });
 
 const barcelonaForeverCardDesigns: CardDesign[] = [
-  ...buildBarcelonaStandardFamily({ slug: "blaugrana-vault", officialName: "Blaugrana Vault Autographs", name: names("红蓝宝库签名", "Blaugrana Vault Autographs", "Autógrafos Blaugrana Vault"), exactVariant: "burgundy" }),
-  ...buildBarcelonaStandardFamily({ slug: "forever-kit", officialName: "Forever Kit Autographs", name: names("永恒球衣签名", "Forever Kit Autographs", "Autógrafos Forever Kit"), exactVariant: "" }),
-  ...buildBarcelonaStandardFamily({ slug: "forever-legends", officialName: "Forever Legend's Autographs", name: names("永恒传奇签名", "Forever Legends Autographs", "Autógrafos Forever Legends"), exactVariant: "gold-foilfractor" }),
-  ...buildBarcelonaStandardFamily({ slug: "forever-mens", officialName: "Forever Men's Autographs", name: names("永恒男足签名", "Forever Men's Autographs", "Autógrafos Forever masculinos"), exactVariant: "" }),
-  ...buildBarcelonaStandardFamily({ slug: "forever-womens", officialName: "Forever Women's Autographs", name: names("永恒女足签名", "Forever Women's Autographs", "Autógrafos Forever femeninos"), exactVariant: "" }),
+  ...buildBarcelonaStandardFamily({ slug: "blaugrana-vault", officialName: "Blaugrana Vault Autographs", name: names("红蓝宝库签名", "Blaugrana Vault Autographs", "Autógrafos Blaugrana Vault") }),
+  ...buildBarcelonaStandardFamily({ slug: "forever-kit", officialName: "Forever Kit Autographs", name: names("永恒球衣签名", "Forever Kit Autographs", "Autógrafos Forever Kit") }),
+  ...buildBarcelonaStandardFamily({ slug: "forever-legends", officialName: "Forever Legend's Autographs", name: names("永恒传奇签名", "Forever Legends Autographs", "Autógrafos Forever Legends") }),
+  ...buildBarcelonaStandardFamily({ slug: "forever-mens", officialName: "Forever Men's Autographs", name: names("永恒男足签名", "Forever Men's Autographs", "Autógrafos Forever masculinos") }),
+  ...buildBarcelonaStandardFamily({ slug: "forever-womens", officialName: "Forever Women's Autographs", name: names("永恒女足签名", "Forever Women's Autographs", "Autógrafos Forever femeninos") }),
   barcelonaForeverCard({ slug: "identity", officialName: "Identity Autographs", name: names("巴萨精神签名", "Identity Autographs", "Autógrafos Identity"), verification: "exact" }),
   barcelonaForeverCard({ slug: "identity-teamwork", officialName: "Identity Autographs Teamwork", name: names("巴萨精神签名 团队", "Identity Teamwork", "Identity Trabajo en equipo"), serial: "/50" }),
-  barcelonaForeverCard({ slug: "identity-humility", officialName: "Identity Autographs Humility", name: names("巴萨精神签名 谦逊", "Identity Humility", "Identity Humildad"), serial: "/25" }),
+  barcelonaForeverCard({ slug: "identity-humility", officialName: "Identity Autographs Humility", name: names("巴萨精神签名 谦逊", "Identity Humility", "Identity Humildad"), serial: "/25", verification: "exact" }),
   barcelonaForeverCard({ slug: "identity-effort", officialName: "Identity Autographs Effort", name: names("巴萨精神签名 努力", "Identity Effort", "Identity Esfuerzo"), serial: "/10" }),
   barcelonaForeverCard({ slug: "identity-ambition", officialName: "Identity Autographs Ambition", name: names("巴萨精神签名 雄心", "Identity Ambition", "Identity Ambición"), serial: "/5" }),
-  barcelonaForeverCard({ slug: "identity-respect", officialName: "Identity Autographs Respect", name: names("巴萨精神签名 尊重", "Identity Respect", "Identity Respeto"), serial: "1/1" }),
+  barcelonaForeverCard({ slug: "identity-respect", officialName: "Identity Autographs Respect", name: names("巴萨精神签名 尊重", "Identity Respect", "Identity Respeto"), serial: "1/1", verification: "exact" }),
   barcelonaForeverCard({ slug: "century-club", officialName: "Century Club: Yamal Edition Autograph Relic", name: names("百场俱乐部：亚马尔签名实物", "Century Club: Yamal Edition Autograph Relic", "Century Club: reliquia autografiada de Yamal"), verification: "exact" }),
-  barcelonaForeverCard({ slug: "century-club-black", officialName: "Century Club: Yamal Edition Autograph Relic Black", name: names("百场俱乐部：亚马尔签名实物 黑色", "Century Club Black", "Century Club negro"), serial: "/10" }),
+  barcelonaForeverCard({ slug: "century-club-black", officialName: "Century Club: Yamal Edition Autograph Relic Black", name: names("百场俱乐部：亚马尔签名实物 黑色", "Century Club Black", "Century Club negro"), serial: "/10", verification: "exact" }),
   barcelonaForeverCard({ slug: "century-club-red", officialName: "Century Club: Yamal Edition Autograph Relic Red", name: names("百场俱乐部：亚马尔签名实物 红色", "Century Club Red", "Century Club rojo"), serial: "/5" }),
   barcelonaForeverCard({ slug: "century-club-gold-foilfractor", officialName: "Century Club: Yamal Edition Autograph Relic Gold FoilFractor", name: names("百场俱乐部：亚马尔签名实物 金色 FoilFractor", "Century Club Gold FoilFractor", "Century Club Gold FoilFractor"), serial: "1/1" }),
   barcelonaForeverCard({ slug: "home-view", officialName: "Home View Autograph Relics", name: names("主场视角签名实物", "Home View Autograph Relics", "Reliquias autografiadas Home View"), layout: "landscape", verification: "exact" }),
