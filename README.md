@@ -1,6 +1,6 @@
 # Football Card Aesthetics
 
-A multilingual, open-source catalogue for rating the visual design of football trading cards. The first release covers **2026 Topps Merlin Premier League** with 38 independent rating objects: 25 base/parallel designs and 13 inserts. It rates the card design—not the player, rarity, or market price.
+A multilingual, open-source catalogue for rating the visual design of football trading cards. The catalogue currently covers five Topps releases and 201 independent rating objects, including all 57 checklist-confirmed visual versions from **2025-26 Topps Forever FC Barcelona**. It rates the card design—not the player, rarity, or market price.
 
 Interface languages: Simplified Chinese, English, and Spanish. Ratings are private to the current browser; the app does not invent community averages.
 

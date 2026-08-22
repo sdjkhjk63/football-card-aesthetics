@@ -13,6 +13,66 @@ import { validateSeries } from "@/domain/catalogue";
 const finestPremierLeagueSlug = "topps-finest-premier-league-2026";
 const chromeArsenalSlug = "topps-chrome-arsenal-2025-26";
 const chromeSapphireBundesligaSlug = "topps-chrome-sapphire-bundesliga-2025-26";
+const barcelonaForeverSlug = "topps-forever-fc-barcelona-2025-26";
+const barcelonaForeverDesigns = [
+  "blaugrana-vault",
+  "blaugrana-vault-burgundy",
+  "blaugrana-vault-green",
+  "blaugrana-vault-purple",
+  "blaugrana-vault-gold",
+  "blaugrana-vault-orange",
+  "blaugrana-vault-black",
+  "blaugrana-vault-red",
+  "blaugrana-vault-gold-foilfractor",
+  "forever-kit",
+  "forever-kit-burgundy",
+  "forever-kit-green",
+  "forever-kit-purple",
+  "forever-kit-gold",
+  "forever-kit-orange",
+  "forever-kit-black",
+  "forever-kit-red",
+  "forever-kit-gold-foilfractor",
+  "forever-legends",
+  "forever-legends-burgundy",
+  "forever-legends-green",
+  "forever-legends-purple",
+  "forever-legends-gold",
+  "forever-legends-orange",
+  "forever-legends-black",
+  "forever-legends-red",
+  "forever-legends-gold-foilfractor",
+  "forever-mens",
+  "forever-mens-burgundy",
+  "forever-mens-green",
+  "forever-mens-purple",
+  "forever-mens-gold",
+  "forever-mens-orange",
+  "forever-mens-black",
+  "forever-mens-red",
+  "forever-mens-gold-foilfractor",
+  "forever-womens",
+  "forever-womens-burgundy",
+  "forever-womens-green",
+  "forever-womens-purple",
+  "forever-womens-gold",
+  "forever-womens-orange",
+  "forever-womens-black",
+  "forever-womens-red",
+  "forever-womens-gold-foilfractor",
+  "identity",
+  "identity-teamwork",
+  "identity-humility",
+  "identity-effort",
+  "identity-ambition",
+  "identity-respect",
+  "century-club",
+  "century-club-black",
+  "century-club-red",
+  "century-club-gold-foilfractor",
+  "home-view",
+  "home-view-gold-foilfractor",
+];
 const chromeSapphireBundesligaDesigns = [
   "base-sapphire",
   "base-green-sapphire",
@@ -460,6 +520,47 @@ describe("Topps Chrome Sapphire Bundesliga 2025-26 catalogue", () => {
         { width: metadata.width, height: metadata.height },
         `${card.slug} should fill a standard card frame`,
       ).toEqual(expected);
+    }
+  });
+});
+
+describe("Topps Forever FC Barcelona 2025-26 catalogue", () => {
+  it("publishes all 57 visual versions as independent rating cards", () => {
+    const series = getSeries(barcelonaForeverSlug);
+
+    expect(series?.cardDesigns.map((card) => card.slug)).toEqual(
+      barcelonaForeverDesigns,
+    );
+    expect(series?.cardDesigns).toHaveLength(57);
+  });
+
+  it("keeps the official serial-number ladder for every autograph family", () => {
+    const series = getSeries(barcelonaForeverSlug);
+    const standardFamilySerials = [null, "/125", "/99", "/75", "/50", "/25", "/10", "/5", "1/1"];
+
+    expect(series?.cardDesigns.map((card) => card.serial)).toEqual([
+      ...standardFamilySerials,
+      ...standardFamilySerials,
+      ...standardFamilySerials,
+      ...standardFamilySerials,
+      ...standardFamilySerials,
+      null, "/50", "/25", "/10", "/5", "1/1",
+      null, "/10", "/5", "1/1",
+      null, "1/1",
+    ]);
+  });
+
+  it("uses a distinct local image for the box and every published version", () => {
+    const series = getSeries(barcelonaForeverSlug);
+
+    expect(series).toBeDefined();
+    if (!series) return;
+    expect(validateSeries(series)).toEqual([]);
+
+    const images = [series.packaging.path, ...series.cardDesigns.map((card) => card.image.path)];
+    expect(new Set(images)).toHaveLength(58);
+    for (const image of images) {
+      expect(fs.existsSync(path.join(process.cwd(), "public", image)), image).toBe(true);
     }
   });
 });

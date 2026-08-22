@@ -524,11 +524,135 @@ export const toppsChromeSapphireBundesliga202526: CardSeries = {
   cardDesigns: chromeSapphireBundesligaCardDesigns,
 };
 
+type BarcelonaForeverCardInput = {
+  slug: string;
+  officialName: string;
+  name: LocalizedText;
+  serial?: string;
+  layout?: CardDesign["layout"];
+  verification?: "exact" | "unverified";
+};
+
+const barcelonaForeverCard = ({
+  slug,
+  officialName,
+  name,
+  serial,
+  layout,
+  verification = "unverified",
+}: BarcelonaForeverCardInput): CardDesign => ({
+  slug,
+  officialName,
+  name,
+  group: "insert",
+  section: serial ? rareInsert : regularInsert,
+  serial: serial ?? null,
+  layout,
+  curatorNote: verification === "unverified"
+    ? names(
+      "该版本已由公开清单确认；目前展示同卡面家族的官方示意图，确切平行版实卡图仍待核实。",
+      "This version is checklist-confirmed. The official image for its design family is shown while an exact parallel photo is still being verified.",
+      "Esta versión está confirmada por la lista. Se muestra la imagen oficial de su familia de diseño mientras se verifica una foto exacta del paralelo.",
+    )
+    : undefined,
+  image: {
+    path: `images/topps-forever-fc-barcelona-2025-26/cards/${slug}.jpg`,
+    verification,
+    alt: names(
+      `2025-26 Topps Forever 巴塞罗那 ${name["zh-CN"]}卡面示例`,
+      `2025-26 Topps Forever FC Barcelona ${name.en} card example`,
+      `Ejemplo de carta ${name.es} de 2025-26 Topps Forever FC Barcelona`,
+    ),
+  },
+});
+
+const standardBarcelonaParallels = [
+  { suffix: "", zh: "", en: "", es: "", serial: undefined },
+  { suffix: "burgundy", zh: "酒红", en: "Burgundy", es: "burdeos", serial: "/125" },
+  { suffix: "green", zh: "绿色", en: "Green", es: "verde", serial: "/99" },
+  { suffix: "purple", zh: "紫色", en: "Purple", es: "morado", serial: "/75" },
+  { suffix: "gold", zh: "金色", en: "Gold", es: "dorado", serial: "/50" },
+  { suffix: "orange", zh: "橙色", en: "Orange", es: "naranja", serial: "/25" },
+  { suffix: "black", zh: "黑色", en: "Black", es: "negro", serial: "/10" },
+  { suffix: "red", zh: "红色", en: "Red", es: "rojo", serial: "/5" },
+  { suffix: "gold-foilfractor", zh: "金色 FoilFractor", en: "Gold FoilFractor", es: "Gold FoilFractor", serial: "1/1" },
+] as const;
+
+type BarcelonaStandardFamily = {
+  slug: string;
+  officialName: string;
+  name: LocalizedText;
+  exactVariant: string;
+};
+
+const buildBarcelonaStandardFamily = ({
+  slug,
+  officialName,
+  name,
+  exactVariant,
+}: BarcelonaStandardFamily): CardDesign[] => standardBarcelonaParallels.map((parallel) => {
+  const cardSlug = parallel.suffix ? `${slug}-${parallel.suffix}` : slug;
+  const suffix = parallel.en ? ` ${parallel.en}` : "";
+  return barcelonaForeverCard({
+    slug: cardSlug,
+    officialName: `${officialName}${suffix}`,
+    name: names(
+      parallel.zh ? `${name["zh-CN"]} ${parallel.zh}` : name["zh-CN"],
+      `${name.en}${suffix}`,
+      parallel.es ? `${name.es} ${parallel.es}` : name.es,
+    ),
+    serial: parallel.serial,
+    verification: parallel.suffix === exactVariant ? "exact" : "unverified",
+  });
+});
+
+const barcelonaForeverCardDesigns: CardDesign[] = [
+  ...buildBarcelonaStandardFamily({ slug: "blaugrana-vault", officialName: "Blaugrana Vault Autographs", name: names("红蓝宝库签名", "Blaugrana Vault Autographs", "Autógrafos Blaugrana Vault"), exactVariant: "burgundy" }),
+  ...buildBarcelonaStandardFamily({ slug: "forever-kit", officialName: "Forever Kit Autographs", name: names("永恒球衣签名", "Forever Kit Autographs", "Autógrafos Forever Kit"), exactVariant: "" }),
+  ...buildBarcelonaStandardFamily({ slug: "forever-legends", officialName: "Forever Legend's Autographs", name: names("永恒传奇签名", "Forever Legends Autographs", "Autógrafos Forever Legends"), exactVariant: "gold-foilfractor" }),
+  ...buildBarcelonaStandardFamily({ slug: "forever-mens", officialName: "Forever Men's Autographs", name: names("永恒男足签名", "Forever Men's Autographs", "Autógrafos Forever masculinos"), exactVariant: "" }),
+  ...buildBarcelonaStandardFamily({ slug: "forever-womens", officialName: "Forever Women's Autographs", name: names("永恒女足签名", "Forever Women's Autographs", "Autógrafos Forever femeninos"), exactVariant: "" }),
+  barcelonaForeverCard({ slug: "identity", officialName: "Identity Autographs", name: names("巴萨精神签名", "Identity Autographs", "Autógrafos Identity"), verification: "exact" }),
+  barcelonaForeverCard({ slug: "identity-teamwork", officialName: "Identity Autographs Teamwork", name: names("巴萨精神签名 团队", "Identity Teamwork", "Identity Trabajo en equipo"), serial: "/50" }),
+  barcelonaForeverCard({ slug: "identity-humility", officialName: "Identity Autographs Humility", name: names("巴萨精神签名 谦逊", "Identity Humility", "Identity Humildad"), serial: "/25" }),
+  barcelonaForeverCard({ slug: "identity-effort", officialName: "Identity Autographs Effort", name: names("巴萨精神签名 努力", "Identity Effort", "Identity Esfuerzo"), serial: "/10" }),
+  barcelonaForeverCard({ slug: "identity-ambition", officialName: "Identity Autographs Ambition", name: names("巴萨精神签名 雄心", "Identity Ambition", "Identity Ambición"), serial: "/5" }),
+  barcelonaForeverCard({ slug: "identity-respect", officialName: "Identity Autographs Respect", name: names("巴萨精神签名 尊重", "Identity Respect", "Identity Respeto"), serial: "1/1" }),
+  barcelonaForeverCard({ slug: "century-club", officialName: "Century Club: Yamal Edition Autograph Relic", name: names("百场俱乐部：亚马尔签名实物", "Century Club: Yamal Edition Autograph Relic", "Century Club: reliquia autografiada de Yamal"), verification: "exact" }),
+  barcelonaForeverCard({ slug: "century-club-black", officialName: "Century Club: Yamal Edition Autograph Relic Black", name: names("百场俱乐部：亚马尔签名实物 黑色", "Century Club Black", "Century Club negro"), serial: "/10" }),
+  barcelonaForeverCard({ slug: "century-club-red", officialName: "Century Club: Yamal Edition Autograph Relic Red", name: names("百场俱乐部：亚马尔签名实物 红色", "Century Club Red", "Century Club rojo"), serial: "/5" }),
+  barcelonaForeverCard({ slug: "century-club-gold-foilfractor", officialName: "Century Club: Yamal Edition Autograph Relic Gold FoilFractor", name: names("百场俱乐部：亚马尔签名实物 金色 FoilFractor", "Century Club Gold FoilFractor", "Century Club Gold FoilFractor"), serial: "1/1" }),
+  barcelonaForeverCard({ slug: "home-view", officialName: "Home View Autograph Relics", name: names("主场视角签名实物", "Home View Autograph Relics", "Reliquias autografiadas Home View"), layout: "landscape", verification: "exact" }),
+  barcelonaForeverCard({ slug: "home-view-gold-foilfractor", officialName: "Home View Autograph Relics Gold FoilFractor", name: names("主场视角签名实物 金色 FoilFractor", "Home View Gold FoilFractor", "Home View Gold FoilFractor"), serial: "1/1", layout: "landscape" }),
+];
+
+export const toppsForeverFcBarcelona202526: CardSeries = {
+  slug: "topps-forever-fc-barcelona-2025-26",
+  manufacturer: "Topps",
+  season: "2025-26",
+  name: names(
+    "2025-26 Topps Forever 巴塞罗那",
+    "2025-26 Topps Forever FC Barcelona",
+    "2025-26 Topps Forever FC Barcelona",
+  ),
+  packaging: {
+    path: "images/topps-forever-fc-barcelona-2025-26/packaging.jpg",
+    verification: "exact",
+    alt: names(
+      "2025-26 Topps Forever 巴塞罗那 Hobby 盒包装",
+      "2025-26 Topps Forever FC Barcelona Hobby box packaging",
+      "Caja Hobby 2025-26 Topps Forever FC Barcelona",
+    ),
+  },
+  cardDesigns: barcelonaForeverCardDesigns,
+};
+
 const catalogue = [
   merlinPremierLeague2026,
   toppsFinestPremierLeague2026,
   toppsChromeArsenal202526,
   toppsChromeSapphireBundesliga202526,
+  toppsForeverFcBarcelona202526,
 ];
 
 export function getCatalogue() {
