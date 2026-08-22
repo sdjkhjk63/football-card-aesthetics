@@ -608,20 +608,14 @@ const buildBarcelonaStandardFamily = ({
   const representative = standardBarcelonaParallels.find((parallel) => parallel.suffix === representativeSuffix);
   if (!representative) return [];
   const cardSlug = representative.suffix ? `${slug}-${representative.suffix}` : slug;
-  const suffix = representative.en ? ` ${representative.en}` : "";
 
   return [barcelonaForeverCard({
     slug: cardSlug,
-    officialName: `${officialName}${suffix}`,
-    name: names(
-      representative.zh ? `${name["zh-CN"]} ${representative.zh}` : name["zh-CN"],
-      `${name.en}${suffix}`,
-      representative.es ? `${name.es} ${representative.es}` : name.es,
-    ),
+    officialName,
+    name,
     serial: representative.serial,
     verification: verifiedBarcelonaDisplaySlugs.has(cardSlug) ? "exact" : "unverified",
     parallels: standardBarcelonaParallels.slice(1)
-      .filter((parallel) => parallel.suffix !== representativeSuffix)
       .map((parallel) => ({ name: parallel.en, serial: parallel.serial ?? null })),
   })];
 };
@@ -646,8 +640,8 @@ const barcelonaForeverCardDesigns: CardDesign[] = [
   ...buildBarcelonaStandardFamily({ slug: "forever-legends", officialName: "Forever Legend's Autographs", name: names("永恒传奇签名", "Forever Legends Autographs", "Autógrafos Forever Legends"), representativeSuffix: "gold-foilfractor" }),
   ...buildBarcelonaStandardFamily({ slug: "forever-mens", officialName: "Forever Men's Autographs", name: names("永恒男足签名", "Forever Men's Autographs", "Autógrafos Forever masculinos"), representativeSuffix: "gold" }),
   ...buildBarcelonaStandardFamily({ slug: "forever-womens", officialName: "Forever Women's Autographs", name: names("永恒女足签名", "Forever Women's Autographs", "Autógrafos Forever femeninos"), representativeSuffix: "orange" }),
-  barcelonaForeverCard({ slug: "identity-respect", officialName: "Identity Autographs Respect", name: names("巴萨精神签名 尊重", "Identity Respect", "Identity Respeto"), serial: "1/1", verification: "exact", parallels: identityParallels.filter((parallel) => parallel.name !== "Respect") }),
-  barcelonaForeverCard({ slug: "century-club-black", officialName: "Century Club: Yamal Edition Autograph Relic Black", name: names("百场俱乐部：亚马尔签名实物 黑色", "Century Club Black", "Century Club negro"), serial: "/10", verification: "exact", parallels: centuryClubParallels.filter((parallel) => parallel.name !== "Black") }),
+  barcelonaForeverCard({ slug: "identity-respect", officialName: "Identity Autographs", name: names("巴萨精神签名", "Identity Autographs", "Autógrafos Identity"), serial: "1/1", verification: "exact", parallels: identityParallels }),
+  barcelonaForeverCard({ slug: "century-club-black", officialName: "Century Club: Yamal Edition Autograph Relic", name: names("百场俱乐部：亚马尔签名实物", "Century Club: Yamal Edition Autograph Relic", "Century Club: reliquia autografiada de Yamal"), serial: "/10", verification: "exact", parallels: centuryClubParallels }),
   barcelonaForeverCard({ slug: "home-view", officialName: "Home View Autograph Relics", name: names("主场视角签名实物", "Home View Autograph Relics", "Reliquias autografiadas Home View"), layout: "landscape", verification: "exact", parallels: [{ name: "Gold FoilFractor", serial: "1/1" }] }),
 ];
 

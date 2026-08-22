@@ -491,11 +491,26 @@ describe("Topps Forever FC Barcelona 2025-26 catalogue", () => {
     const standardParallelSerials = ["/125", "/99", "/75", "/50", "/25", "/10", "/5", "1/1"];
 
     expect(series?.cardDesigns.find((card) => card.slug === "forever-kit")?.parallels?.map((parallel) => parallel.serial)).toEqual(standardParallelSerials);
-    expect(series?.cardDesigns.find((card) => card.slug === "blaugrana-vault-gold")?.parallels?.map((parallel) => parallel.serial)).toEqual(["/125", "/99", "/75", "/25", "/10", "/5", "1/1"]);
-    expect(series?.cardDesigns.find((card) => card.slug === "forever-legends-gold-foilfractor")?.parallels?.map((parallel) => parallel.serial)).toEqual(["/125", "/99", "/75", "/50", "/25", "/10", "/5"]);
-    expect(series?.cardDesigns.find((card) => card.slug === "identity-respect")?.parallels?.map((parallel) => parallel.serial)).toEqual(["/50", "/25", "/10", "/5"]);
-    expect(series?.cardDesigns.find((card) => card.slug === "century-club-black")?.parallels?.map((parallel) => parallel.serial)).toEqual(["/5", "1/1"]);
+    expect(series?.cardDesigns.find((card) => card.slug === "blaugrana-vault-gold")?.parallels?.map((parallel) => parallel.serial)).toEqual(standardParallelSerials);
+    expect(series?.cardDesigns.find((card) => card.slug === "forever-legends-gold-foilfractor")?.parallels?.map((parallel) => parallel.serial)).toEqual(standardParallelSerials);
+    expect(series?.cardDesigns.find((card) => card.slug === "identity-respect")?.parallels?.map((parallel) => parallel.serial)).toEqual(["/50", "/25", "/10", "/5", "1/1"]);
+    expect(series?.cardDesigns.find((card) => card.slug === "century-club-black")?.parallels?.map((parallel) => parallel.serial)).toEqual(["/10", "/5", "1/1"]);
     expect(series?.cardDesigns.find((card) => card.slug === "home-view")?.parallels?.map((parallel) => parallel.serial)).toEqual(["1/1"]);
+  });
+
+  it("keeps the card-family title generic when a numbered parallel supplies the representative photo", () => {
+    const series = getSeries(barcelonaForeverSlug);
+
+    expect(series?.cardDesigns.map((card) => [card.slug, card.name["zh-CN"], card.officialName])).toEqual([
+      ["blaugrana-vault-gold", "红蓝宝库签名", "Blaugrana Vault Autographs"],
+      ["forever-kit", "永恒球衣签名", "Forever Kit Autographs"],
+      ["forever-legends-gold-foilfractor", "永恒传奇签名", "Forever Legend's Autographs"],
+      ["forever-mens-gold", "永恒男足签名", "Forever Men's Autographs"],
+      ["forever-womens-orange", "永恒女足签名", "Forever Women's Autographs"],
+      ["identity-respect", "巴萨精神签名", "Identity Autographs"],
+      ["century-club-black", "百场俱乐部：亚马尔签名实物", "Century Club: Yamal Edition Autograph Relic"],
+      ["home-view", "主场视角签名实物", "Home View Autograph Relics"],
+    ]);
   });
 
   it("uses a distinct local image for the box and every published version", () => {

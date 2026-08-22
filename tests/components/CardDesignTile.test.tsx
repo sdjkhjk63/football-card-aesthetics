@@ -3,6 +3,7 @@ import { expect, it } from "vitest";
 import { CardDesignTile } from "@/components/CardDesignTile";
 import { CardDetailView } from "@/components/CardDetailView";
 import { LanguageProvider } from "@/components/LanguageProvider";
+import { getSeries } from "@/data/catalogue";
 import type { CardDesign, CardSeries } from "@/domain/catalogue";
 
 it("does not present an unverified reference photo as the exact card version", () => {
@@ -74,4 +75,16 @@ it("names each listed parallel instead of showing only its serial number", () =>
   render(<CardDesignTile seriesSlug="series" design={design} locale="zh-CN" />);
 
   expect(screen.getByText("Orange /25")).toBeVisible();
+});
+
+it("shows the generic family title and keeps the representative serial in the parallel labels", () => {
+  const series = getSeries("topps-forever-fc-barcelona-2025-26");
+  const design = series?.cardDesigns.find((card) => card.slug === "century-club-black");
+  expect(design).toBeDefined();
+  if (!design) return;
+
+  render(<CardDesignTile seriesSlug="topps-forever-fc-barcelona-2025-26" design={design} locale="zh-CN" />);
+
+  expect(screen.getByRole("heading", { name: "百场俱乐部：亚马尔签名实物" })).toBeVisible();
+  expect(screen.getByText("Black /10")).toBeVisible();
 });
