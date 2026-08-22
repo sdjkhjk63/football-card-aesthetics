@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
 import { publicAssetPath } from "@/lib/publicAssetPath";
 import Link from "next/link";
 import type { CardDesign, Locale } from "@/domain/catalogue";
@@ -9,11 +10,14 @@ import { translate } from "@/data/messages";
 export function CardDesignTile({ seriesSlug, design, locale, rating }: { seriesSlug: string; design: CardDesign; locale: Locale; rating?: RatingRecord }) {
   const imageIsVerified = design.image.verification !== "unverified";
   const unverifiedLabel = { "zh-CN": "实卡图待核实", en: "Card image pending verification", es: "Imagen pendiente de verificar" }[locale];
+  const imageStyle = design.image.displayScale
+    ? ({ "--image-display-scale": design.image.displayScale } as CSSProperties)
+    : undefined;
   return (
     <Link className={design.layout === "landscape" ? "card-tile landscape" : "card-tile"} href={`/series/${seriesSlug}/cards/${design.slug}`} aria-label={`${design.officialName} — ${localize(design.name, locale)}`}>
       <div className="card-image-frame">
         {imageIsVerified
-          ? <Image src={publicAssetPath(design.image.path)} alt={localize(design.image.alt, locale)} width={520} height={720} />
+          ? <Image src={publicAssetPath(design.image.path)} alt={localize(design.image.alt, locale)} width={520} height={720} style={imageStyle} />
           : <div className="card-image-unverified" role="status"><span>{unverifiedLabel}</span><small>{design.officialName}</small></div>}
         {design.serial && <span className="serial-badge">{design.serial}</span>}
       </div>

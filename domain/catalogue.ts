@@ -13,6 +13,7 @@ export interface ImageSource {
   path: string;
   alt: LocalizedText;
   verification?: "exact" | "unverified";
+  displayScale?: number;
 }
 
 export interface CardParallel {

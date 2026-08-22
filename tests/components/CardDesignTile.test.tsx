@@ -85,6 +85,19 @@ it("shows the generic family title and keeps the representative serial in the pa
 
   render(<CardDesignTile seriesSlug="topps-forever-fc-barcelona-2025-26" design={design} locale="zh-CN" />);
 
-  expect(screen.getByRole("heading", { name: "百场俱乐部：亚马尔签名实物" })).toBeVisible();
+  expect(screen.getByRole("heading", { name: "百场纪念：亚马尔签名比赛球网实物" })).toBeVisible();
   expect(screen.getByText("Black /10")).toBeVisible();
+});
+
+it("applies the catalogue image scale while preserving object-fit containment", () => {
+  const series = getSeries("topps-forever-fc-barcelona-2025-26");
+  expect(series).toBeDefined();
+  if (!series) return;
+  const design = series?.cardDesigns.find((card) => card.slug === "forever-womens-orange");
+  expect(design).toBeDefined();
+  if (!design) return;
+
+  const { container } = render(<CardDesignTile seriesSlug={series.slug} design={design} locale="zh-CN" />);
+
+  expect(within(container).getByRole("img")).toHaveStyle({ "--image-display-scale": "1.85" });
 });

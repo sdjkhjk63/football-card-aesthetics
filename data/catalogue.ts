@@ -532,6 +532,8 @@ type BarcelonaForeverCardInput = {
   layout?: CardDesign["layout"];
   verification?: "exact" | "unverified";
   parallels?: CardDesign["parallels"];
+  curatorNote?: LocalizedText;
+  displayScale?: number;
 };
 
 const barcelonaForeverCard = ({
@@ -542,6 +544,8 @@ const barcelonaForeverCard = ({
   layout,
   verification = "unverified",
   parallels,
+  curatorNote,
+  displayScale,
 }: BarcelonaForeverCardInput): CardDesign => ({
   slug,
   officialName,
@@ -551,16 +555,17 @@ const barcelonaForeverCard = ({
   serial: serial ?? null,
   layout,
   parallels,
-  curatorNote: verification === "unverified"
+  curatorNote: curatorNote ?? (verification === "unverified"
     ? names(
       "该版本已由公开清单确认；目前展示同卡面家族的官方示意图，确切平行版实卡图仍待核实。",
       "This version is checklist-confirmed. The official image for its design family is shown while an exact parallel photo is still being verified.",
       "Esta versión está confirmada por la lista. Se muestra la imagen oficial de su familia de diseño mientras se verifica una foto exacta del paralelo.",
     )
-    : undefined,
+    : undefined),
   image: {
     path: `images/topps-forever-fc-barcelona-2025-26/cards/${slug}.jpg`,
     verification,
+    displayScale,
     alt: names(
       `2025-26 Topps Forever 巴塞罗那 ${name["zh-CN"]}卡面示例`,
       `2025-26 Topps Forever FC Barcelona ${name.en} card example`,
@@ -586,6 +591,8 @@ type BarcelonaStandardFamily = {
   officialName: string;
   name: LocalizedText;
   representativeSuffix: typeof standardBarcelonaParallels[number]["suffix"];
+  curatorNote?: LocalizedText;
+  displayScale?: number;
 };
 
 const verifiedBarcelonaDisplaySlugs = new Set([
@@ -604,6 +611,8 @@ const buildBarcelonaStandardFamily = ({
   officialName,
   name,
   representativeSuffix,
+  curatorNote,
+  displayScale,
 }: BarcelonaStandardFamily): CardDesign[] => {
   const representative = standardBarcelonaParallels.find((parallel) => parallel.suffix === representativeSuffix);
   if (!representative) return [];
@@ -615,6 +624,8 @@ const buildBarcelonaStandardFamily = ({
     name,
     serial: representative.serial,
     verification: verifiedBarcelonaDisplaySlugs.has(cardSlug) ? "exact" : "unverified",
+    curatorNote,
+    displayScale,
     parallels: standardBarcelonaParallels.slice(1)
       .map((parallel) => ({ name: parallel.en, serial: parallel.serial ?? null })),
   })];
@@ -636,13 +647,13 @@ const centuryClubParallels = [
 
 const barcelonaForeverCardDesigns: CardDesign[] = [
   ...buildBarcelonaStandardFamily({ slug: "blaugrana-vault", officialName: "Blaugrana Vault Autographs", name: names("红蓝宝库签名", "Blaugrana Vault Autographs", "Autógrafos Blaugrana Vault"), representativeSuffix: "gold" }),
-  ...buildBarcelonaStandardFamily({ slug: "forever-kit", officialName: "Forever Kit Autographs", name: names("永恒球衣签名", "Forever Kit Autographs", "Autógrafos Forever Kit"), representativeSuffix: "" }),
+  ...buildBarcelonaStandardFamily({ slug: "forever-kit", officialName: "Forever Kit Autographs", name: names("永恒球衣签名", "Forever Kit Autographs", "Autógrafos Forever Kit"), representativeSuffix: "", curatorNote: names("以巴萨历代球衣元素为视觉主题的签名卡，不含实物。", "An autograph card built around visual elements from historic Barça kits; it does not contain memorabilia.", "Una carta autografiada inspirada en elementos visuales de camisetas históricas del Barça; no contiene reliquias.") }),
   ...buildBarcelonaStandardFamily({ slug: "forever-legends", officialName: "Forever Legend's Autographs", name: names("永恒传奇签名", "Forever Legends Autographs", "Autógrafos Forever Legends"), representativeSuffix: "gold-foilfractor" }),
   ...buildBarcelonaStandardFamily({ slug: "forever-mens", officialName: "Forever Men's Autographs", name: names("永恒男足签名", "Forever Men's Autographs", "Autógrafos Forever masculinos"), representativeSuffix: "gold" }),
-  ...buildBarcelonaStandardFamily({ slug: "forever-womens", officialName: "Forever Women's Autographs", name: names("永恒女足签名", "Forever Women's Autographs", "Autógrafos Forever femeninos"), representativeSuffix: "orange" }),
+  ...buildBarcelonaStandardFamily({ slug: "forever-womens", officialName: "Forever Women's Autographs", name: names("永恒女足签名", "Forever Women's Autographs", "Autógrafos Forever femeninos"), representativeSuffix: "orange", displayScale: 1.85 }),
   barcelonaForeverCard({ slug: "identity-respect", officialName: "Identity Autographs", name: names("巴萨精神签名", "Identity Autographs", "Autógrafos Identity"), serial: "1/1", verification: "exact", parallels: identityParallels }),
-  barcelonaForeverCard({ slug: "century-club-black", officialName: "Century Club: Yamal Edition Autograph Relic", name: names("百场俱乐部：亚马尔签名实物", "Century Club: Yamal Edition Autograph Relic", "Century Club: reliquia autografiada de Yamal"), serial: "/10", verification: "exact", parallels: centuryClubParallels }),
-  barcelonaForeverCard({ slug: "home-view", officialName: "Home View Autograph Relics", name: names("主场视角签名实物", "Home View Autograph Relics", "Reliquias autografiadas Home View"), layout: "landscape", verification: "exact", parallels: [{ name: "Gold FoilFractor", serial: "1/1" }] }),
+  barcelonaForeverCard({ slug: "century-club-black", officialName: "Century Club: Yamal Edition Autograph Relic", name: names("百场纪念：亚马尔签名比赛球网实物", "Century Club: Yamal Edition Autograph Relic", "Century Club: reliquia autografiada de Yamal"), serial: "/10", verification: "exact", parallels: centuryClubParallels, curatorNote: names("纪念亚马尔代表巴萨第 100 次出场，卡内包含该场使用的比赛球网实物，并带有球员签名。", "Celebrating Yamal's 100th FC Barcelona appearance, this signed card contains match-used goal-net material from that game.", "Celebra el partido número 100 de Yamal con el FC Barcelona e incluye material de la red utilizada en ese encuentro, además de su autógrafo.") }),
+  barcelonaForeverCard({ slug: "home-view", officialName: "Home View Autograph Relics", name: names("主场视角签名实物", "Home View Autograph Relics", "Reliquias autografiadas Home View"), serial: "1/1", layout: "landscape", verification: "exact", parallels: [{ name: "Gold FoilFractor", serial: "1/1" }], curatorNote: names("每位球员仅有 Gold FoilFractor 1/1，卡内包含诺坎普座椅实物并带有签名。", "Each player has only a Gold FoilFractor 1/1, combining an autograph with an authentic Camp Nou seat relic.", "Cada jugador aparece únicamente en Gold FoilFractor 1/1, con autógrafo y una reliquia auténtica de un asiento del Camp Nou.") }),
 ];
 
 export const toppsForeverFcBarcelona202526: CardSeries = {

@@ -508,9 +508,28 @@ describe("Topps Forever FC Barcelona 2025-26 catalogue", () => {
       ["forever-mens-gold", "永恒男足签名", "Forever Men's Autographs"],
       ["forever-womens-orange", "永恒女足签名", "Forever Women's Autographs"],
       ["identity-respect", "巴萨精神签名", "Identity Autographs"],
-      ["century-club-black", "百场俱乐部：亚马尔签名实物", "Century Club: Yamal Edition Autograph Relic"],
+      ["century-club-black", "百场纪念：亚马尔签名比赛球网实物", "Century Club: Yamal Edition Autograph Relic"],
       ["home-view", "主场视角签名实物", "Home View Autograph Relics"],
     ]);
+  });
+
+  it("distinguishes the Century Club net relic from the Forever Kit design and marks Home View as one-of-one", () => {
+    const series = getSeries(barcelonaForeverSlug);
+    const foreverKit = series?.cardDesigns.find((card) => card.slug === "forever-kit");
+    const centuryClub = series?.cardDesigns.find((card) => card.slug === "century-club-black");
+    const homeView = series?.cardDesigns.find((card) => card.slug === "home-view");
+
+    expect(foreverKit?.curatorNote?.["zh-CN"]).toContain("不含实物");
+    expect(centuryClub?.curatorNote?.["zh-CN"]).toContain("比赛球网");
+    expect(homeView?.curatorNote?.["zh-CN"]).toContain("诺坎普座椅");
+    expect(homeView?.serial).toBe("1/1");
+  });
+
+  it("enlarges the padded women's autograph photo without changing its proportions", () => {
+    const series = getSeries(barcelonaForeverSlug);
+    const women = series?.cardDesigns.find((card) => card.slug === "forever-womens-orange");
+
+    expect(women?.image.displayScale).toBeGreaterThan(1);
   });
 
   it("uses a distinct local image for the box and every published version", () => {
