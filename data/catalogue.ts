@@ -678,12 +678,159 @@ export const toppsForeverFcBarcelona202526: CardSeries = {
   cardDesigns: barcelonaForeverCardDesigns,
 };
 
+type ArgentinaCardInput = {
+  slug: string;
+  officialName: string;
+  name: LocalizedText;
+  serial?: string;
+  group?: CardGroup;
+  verification?: "exact" | "unverified";
+  curatorNote?: LocalizedText;
+  parallels?: CardDesign["parallels"];
+};
+
+const argentinaCard = ({
+  slug,
+  officialName,
+  name,
+  serial,
+  group = "base",
+  verification = "exact",
+  curatorNote,
+  parallels,
+}: ArgentinaCardInput): CardDesign => ({
+  slug,
+  officialName,
+  name,
+  group,
+  section: group === "base" ? (serial ? numbered : unnumbered) : (serial ? rareInsert : regularInsert),
+  serial: serial ?? null,
+  parallels,
+  curatorNote: curatorNote ?? (verification === "unverified"
+    ? names(
+      "该版本已由官方清单确认，但公开市场暂未出现可核实的对应低编实物；当前展示同卡面家族中最接近的已核实版本。",
+      "This version is confirmed by the official checklist, but no verifiable photo of the exact low-numbered parallel is public yet; the closest verified card from the same design family is shown.",
+      "Esta versión está confirmada por la lista oficial, pero aún no hay una foto pública verificable del paralelo exacto de baja numeración; se muestra la carta verificada más cercana de la misma familia.",
+    )
+    : undefined),
+  image: {
+    path: `images/topps-argentina-team-set-2026/cards/${slug}.jpg`,
+    verification,
+    alt: names(
+      `2026 Topps 阿根廷国家队 ${name["zh-CN"]}卡面示例`,
+      `2026 Topps Argentina Team Set ${name.en} card example`,
+      `Ejemplo de carta ${name.es} de Topps Argentina Team Set 2026`,
+    ),
+  },
+});
+
+const argentinaBaseParallels = [
+  { name: "Halo", serial: null },
+  { name: "Static", serial: null },
+  { name: "Aqua Rainbow", serial: "/199" },
+  { name: "Aqua Icy", serial: "/199" },
+  { name: "Blue Rainbow", serial: "/150" },
+  { name: "Blue Icy", serial: "/150" },
+  { name: "Green Rainbow", serial: "/99" },
+  { name: "Green Icy", serial: "/99" },
+  { name: "Gold Rainbow", serial: "/50" },
+  { name: "Gold Icy", serial: "/50" },
+  { name: "Orange Rainbow", serial: "/25" },
+  { name: "Orange Icy", serial: "/25" },
+  { name: "Black Rainbow", serial: "/10" },
+  { name: "Black Icy", serial: "/10" },
+  { name: "Red Rainbow", serial: "/5" },
+  { name: "Red Icy", serial: "/5" },
+  { name: "Gold FoilFractor", serial: "1/1" },
+];
+
+const argentinaAutoParallels = [
+  { name: "Blue", serial: "/150" },
+  { name: "Green", serial: "/99" },
+  { name: "Gold", serial: "/50" },
+  { name: "Orange", serial: "/25" },
+  { name: "Black", serial: "/10" },
+  { name: "Red", serial: "/5" },
+  { name: "Gold FoilFractor", serial: "1/1" },
+];
+
+const verifiedArgentinaSlugs = new Set([
+  "first-team-base",
+  "first-team-halo",
+  "first-team-static",
+  "bona-fide-baller-base",
+  "bona-fide-baller-halo",
+  "bona-fide-baller-static",
+  "block-base",
+  "toast-the-host-base",
+  "toast-the-host-halo",
+  "toast-the-host-static",
+  "afa-in-the-apple-base",
+  "afa-in-the-apple-halo",
+  "afa-in-the-apple-static",
+  "afa-in-the-apple-gold-foilfractor",
+  "rainbow-flick",
+  "first-team-autograph-red-rainbow",
+  "vis10nary-autograph-gold-foilfractor",
+]);
+
+const argentinaBaseFamilies = [
+  { slug: "first-team", officialName: "First Team", zh: "一线队", es: "Primer equipo" },
+  { slug: "bona-fide-baller", officialName: "Bona Fide Baller", zh: "真格球星", es: "Bona Fide Baller" },
+  { slug: "block", officialName: "Block", zh: "街区", es: "Block" },
+  { slug: "toast-the-host", officialName: "Toast the Host", zh: "致敬东道主", es: "Brindis por el anfitrión" },
+  { slug: "afa-in-the-apple", officialName: "AFA in the Apple", zh: "足协闯入大苹果城", es: "AFA en la Gran Manzana" },
+] as const;
+
+const argentinaVersions = [
+  { suffix: "base", zh: "基础版", en: "Base", es: "Base", serial: undefined },
+  { suffix: "halo", zh: "Halo 光晕", en: "Halo", es: "Halo", serial: undefined },
+  { suffix: "static", zh: "Static 静电", en: "Static", es: "Static", serial: undefined },
+  { suffix: "red-icy", zh: "红色 Icy", en: "Red Icy", es: "Icy rojo", serial: "/5" },
+  { suffix: "red-rainbow", zh: "红色 Rainbow", en: "Red Rainbow", es: "Rainbow rojo", serial: "/5" },
+  { suffix: "gold-foilfractor", zh: "金色 FoilFractor", en: "Gold FoilFractor", es: "Gold FoilFractor", serial: "1/1" },
+] as const;
+
+const argentinaTeamSetCardDesigns: CardDesign[] = [
+  ...argentinaBaseFamilies.flatMap((family) => argentinaVersions.map((version, index) => {
+    const slug = `${family.slug}-${version.suffix}`;
+    return argentinaCard({
+      slug,
+      officialName: `${family.officialName} ${version.en}`,
+      name: names(`${family.zh} · ${version.zh}`, `${family.officialName} · ${version.en}`, `${family.es} · ${version.es}`),
+      serial: version.serial,
+      verification: verifiedArgentinaSlugs.has(slug) ? "exact" : "unverified",
+      parallels: index === 0 ? argentinaBaseParallels : undefined,
+    });
+  })),
+  argentinaCard({ slug: "rainbow-flick", officialName: "Rainbow Flick", name: names("彩虹挑球", "Rainbow Flick", "Regate arcoíris"), group: "insert" }),
+  argentinaCard({ slug: "first-team-autograph-red-rainbow", officialName: "First Team Autograph Red", name: names("一线队签名 · 红色低编", "First Team Autograph · Red", "Autógrafo Primer equipo · Rojo"), serial: "/5", group: "insert", parallels: argentinaAutoParallels }),
+  argentinaCard({ slug: "bona-fide-baller-autograph-red-rainbow", officialName: "Bona Fide Baller Autograph Red", name: names("真格球星签名 · 红色低编", "Bona Fide Baller Autograph · Red", "Autógrafo Bona Fide Baller · Rojo"), serial: "/5", group: "insert", verification: "unverified", parallels: argentinaAutoParallels }),
+  argentinaCard({ slug: "golden-sun-autograph-red-rainbow", officialName: "Golden Sun Autograph Red", name: names("金色太阳签名 · 红色低编", "Golden Sun Autograph · Red", "Autógrafo Golden Sun · Rojo"), serial: "/5", group: "insert", verification: "unverified", parallels: argentinaAutoParallels }),
+  argentinaCard({ slug: "vis10nary-autograph-gold-foilfractor", officialName: "Vis10nary Autograph Gold FoilFractor", name: names("梅西 Vis10nary 签名 · 金色 FoilFractor", "Messi Vis10nary Autograph · Gold FoilFractor", "Autógrafo Vis10nary de Messi · Gold FoilFractor"), serial: "1/1", group: "insert", parallels: [{ name: "Gold FoilFractor", serial: "1/1" }] }),
+];
+
+export const toppsArgentinaTeamSet2026: CardSeries = {
+  slug: "topps-argentina-team-set-2026",
+  manufacturer: "Topps",
+  season: "2026",
+  name: names("2026 Topps 阿根廷国家队套装", "2026 Topps Argentina Team Set", "Topps Argentina Team Set 2026"),
+  packaging: {
+    path: "images/topps-argentina-team-set-2026/packaging.jpg",
+    verification: "exact",
+    alt: names("2026 Topps 阿根廷国家队盒装", "2026 Topps Argentina Team Set box", "Caja Topps Argentina Team Set 2026"),
+  },
+  totalVariants: 116,
+  cardDesigns: argentinaTeamSetCardDesigns,
+};
+
 const catalogue = [
   merlinPremierLeague2026,
   toppsFinestPremierLeague2026,
   toppsChromeArsenal202526,
   toppsChromeSapphireBundesliga202526,
   toppsForeverFcBarcelona202526,
+  toppsArgentinaTeamSet2026,
 ];
 
 export function getCatalogue() {

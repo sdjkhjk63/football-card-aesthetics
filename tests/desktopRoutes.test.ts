@@ -9,10 +9,11 @@ it("enumerates the complete desktop route set", async () => {
     { seriesSlug: "topps-chrome-arsenal-2025-26" },
     { seriesSlug: "topps-chrome-sapphire-bundesliga-2025-26" },
     { seriesSlug: "topps-forever-fc-barcelona-2025-26" },
+    { seriesSlug: "topps-argentina-team-set-2026" },
   ]);
 
   const cards = await cardParams();
-  expect(cards).toHaveLength(152);
+  expect(cards).toHaveLength(187);
   expect(cards).toContainEqual({
     seriesSlug: "topps-merlin-premier-league-2026",
     cardSlug: "red-mojo",
@@ -48,5 +49,9 @@ it("enumerates the complete desktop route set", async () => {
   expect(cards).toContainEqual({
     seriesSlug: "topps-forever-fc-barcelona-2025-26",
     cardSlug: "identity-respect",
+  });
+  expect(cards).toContainEqual({
+    seriesSlug: "topps-argentina-team-set-2026",
+    cardSlug: "vis10nary-autograph-gold-foilfractor",
   });
 });

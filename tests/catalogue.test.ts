@@ -14,6 +14,32 @@ const finestPremierLeagueSlug = "topps-finest-premier-league-2026";
 const chromeArsenalSlug = "topps-chrome-arsenal-2025-26";
 const chromeSapphireBundesligaSlug = "topps-chrome-sapphire-bundesliga-2025-26";
 const barcelonaForeverSlug = "topps-forever-fc-barcelona-2025-26";
+const argentinaTeamSetSlug = "topps-argentina-team-set-2026";
+const argentinaBaseFamilies = [
+  "first-team",
+  "bona-fide-baller",
+  "block",
+  "toast-the-host",
+  "afa-in-the-apple",
+];
+const argentinaBaseVersionSuffixes = [
+  "base",
+  "halo",
+  "static",
+  "red-icy",
+  "red-rainbow",
+  "gold-foilfractor",
+];
+const argentinaTeamSetDesigns = [
+  ...argentinaBaseFamilies.flatMap((family) =>
+    argentinaBaseVersionSuffixes.map((suffix) => `${family}-${suffix}`),
+  ),
+  "rainbow-flick",
+  "first-team-autograph-red-rainbow",
+  "bona-fide-baller-autograph-red-rainbow",
+  "golden-sun-autograph-red-rainbow",
+  "vis10nary-autograph-gold-foilfractor",
+];
 const barcelonaForeverDesigns = [
   "blaugrana-vault-green",
   "forever-kit",
@@ -589,6 +615,69 @@ describe("Topps Forever FC Barcelona 2025-26 catalogue", () => {
       "century-club-gold-foilfractor",
       "home-view",
     ]);
+  });
+});
+
+describe("Topps Argentina Team Set 2026 catalogue", () => {
+  it("publishes the approved 35 independently rateable display cards", () => {
+    const series = getSeries(argentinaTeamSetSlug);
+
+    expect(series?.cardDesigns.map((card) => card.slug)).toEqual(argentinaTeamSetDesigns);
+    expect(series?.cardDesigns).toHaveLength(35);
+    expect(series?.totalVariants).toBe(116);
+  });
+
+  it("shows six representative versions for each of the five base designs", () => {
+    const series = getSeries(argentinaTeamSetSlug);
+
+    for (const family of argentinaBaseFamilies) {
+      const versions = argentinaBaseVersionSuffixes.map((suffix) =>
+        series?.cardDesigns.find((card) => card.slug === `${family}-${suffix}`),
+      );
+      expect(versions.map((card) => card?.serial), family).toEqual([
+        null,
+        null,
+        null,
+        "/5",
+        "/5",
+        "1/1",
+      ]);
+    }
+  });
+
+  it("keeps Rainbow Flick unnumbered and uses low-numbered autograph representatives", () => {
+    const series = getSeries(argentinaTeamSetSlug);
+    const serialBySlug = new Map(series?.cardDesigns.map((card) => [card.slug, card.serial]));
+
+    expect(serialBySlug.get("rainbow-flick")).toBeNull();
+    expect(serialBySlug.get("first-team-autograph-red-rainbow")).toBe("/5");
+    expect(serialBySlug.get("bona-fide-baller-autograph-red-rainbow")).toBe("/5");
+    expect(serialBySlug.get("golden-sun-autograph-red-rainbow")).toBe("/5");
+    expect(serialBySlug.get("vis10nary-autograph-gold-foilfractor")).toBe("1/1");
+  });
+
+  it("uses one tightly cropped local image for every displayed version and labels unmatched photos honestly", async () => {
+    const series = getSeries(argentinaTeamSetSlug);
+
+    expect(series).toBeDefined();
+    if (!series) return;
+    expect(validateSeries(series)).toEqual([]);
+
+    const images = [series.packaging.path, ...series.cardDesigns.map((card) => card.image.path)];
+    expect(new Set(images)).toHaveLength(36);
+    for (const card of series.cardDesigns) {
+      const imagePath = path.join(process.cwd(), "public", card.image.path);
+      expect(fs.existsSync(imagePath), card.slug).toBe(true);
+      const metadata = await sharp(imagePath).metadata();
+      expect({ width: metadata.width, height: metadata.height }, card.slug).toEqual({
+        width: 750,
+        height: 1050,
+      });
+    }
+
+    const unverified = series.cardDesigns.filter((card) => card.image.verification === "unverified");
+    expect(unverified.length).toBeGreaterThan(0);
+    expect(unverified.every((card) => card.curatorNote?.["zh-CN"].includes("暂未出现"))).toBe(true);
   });
 });
 
