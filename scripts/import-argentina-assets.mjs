@@ -20,38 +20,28 @@ const assets = {
   "first-team-base": official.firstTeam,
   "first-team-halo": ebay("Z5UAAeSwYexqYGri"),
   "first-team-static": ebay("OYcAAeSwL8lqeu6o"),
-  "first-team-red-icy": ebay("2aMAAeSwtxVqXZLR"),
-  "first-team-red-rainbow": ebay("1SEAAeSwAUpqRcAZ"),
-  "first-team-gold-foilfractor": official.firstTeam,
   "bona-fide-baller-base": official.bonaFide,
   "bona-fide-baller-halo": ebay("CNEAAeSw4VJqYGrk"),
   "bona-fide-baller-static": ebay("tKwAAeSwJ2dqeu40"),
-  "bona-fide-baller-red-icy": ebay("RWoAAeSwdqlqUxWt"),
-  "bona-fide-baller-red-rainbow": ebay("FVkAAeSw2OhqZ7B4"),
-  "bona-fide-baller-gold-foilfractor": official.bonaFide,
   "block-base": official.block,
-  "block-halo": ebay("kI8AAeSw2OBqZRsh"),
-  "block-static": ebay("PkwAAeSwVnNqeu6o"),
-  "block-red-icy": ebay("T3cAAeSw0DRqPuJV"),
-  "block-red-rainbow": ebay("9SsAAeSwrWpqhwaS"),
-  "block-gold-foilfractor": official.block,
+  "block-halo": ebay("vpAAAeSwK~Zqe-wc"),
+  "block-static": ebay("jNgAAeSw3bRqSH~q"),
   "toast-the-host-base": official.toast,
   "toast-the-host-halo": ebay("1i0AAeSwaYVqR0sT"),
   "toast-the-host-static": ebay("4tMAAeSwjRtqeu51"),
-  "toast-the-host-red-icy": ebay("vFQAAeSwROhqbLKu"),
-  "toast-the-host-red-rainbow": ebay("ZbwAAeSwKTRqdj2Z"),
-  "toast-the-host-gold-foilfractor": official.toast,
   "afa-in-the-apple-base": official.apple,
   "afa-in-the-apple-halo": ebay("s7YAAeSwv-JqeYKe"),
   "afa-in-the-apple-static": ebay("7e0AAeSw9jhqeu24"),
-  "afa-in-the-apple-red-icy": ebay("Af0AAeSwAfJqgkqh"),
-  "afa-in-the-apple-red-rainbow": ebay("Rd4AAeSw7~BqNmbK"),
-  "afa-in-the-apple-gold-foilfractor": ebay("FMkAAeSw3XhqOrtX"),
   "rainbow-flick": "https://cdn.shopify.com/s/files/1/0739/2015/1805/files/3fd646302374730ba94c5c6eb6d136215b923de6_ARG3_TS50_Rainbow_Flick_FR_PAZ.jpg?v=1781208651",
-  "first-team-autograph-red-rainbow": ebay("gosAAeSwkAlqicWc"),
-  "bona-fide-baller-autograph-red-rainbow": "https://cdn.shopify.com/s/files/1/0739/2015/1805/files/0402a075dd9b6c12b7d87ca453011da97f79afd5_Bona_Fide_Baller_Autograph_FR_TEVEZ.jpg?v=1781254289",
-  "golden-sun-autograph-red-rainbow": "https://cdn.shopify.com/s/files/1/0739/2015/1805/files/639ef8fb7a6f6765d70ab532b5ec3e4e5c7d4839_Golden_Sun_Autograph_FR_MARTINEZ.jpg?v=1781208651",
+  "first-team-autograph-red": ebay("gosAAeSwkAlqicWc"),
+  "bona-fide-baller-autograph-red": ebay("qn0AAeSwVopqdzAg"),
+  "golden-sun-autograph-black": ebay("YXkAAeSwR-FqgjlC"),
   "vis10nary-autograph-gold-foilfractor": "https://cdn.shopify.com/s/files/1/0739/2015/1805/files/a6ba73d64425f9cb1b67fcad73af1b580b24b049_Vis10nary_Autograph_FR_MESSI.jpg?v=1781208651",
+};
+
+const crops = {
+  "block-static": { left: 130, top: 70, width: 900, height: 1260 },
+  "bona-fide-baller-autograph-red": { left: 260, top: 30, width: 1080, height: 1512 },
 };
 
 async function download(url) {
@@ -62,7 +52,9 @@ async function download(url) {
 
 async function renderCard(slug, url) {
   const input = await download(url);
+  const crop = crops[slug];
   const image = sharp(input, { failOn: "none" }).rotate();
+  if (crop) image.extract(crop);
   const metadata = await image.metadata();
   const ratio = (metadata.width ?? 1) / (metadata.height ?? 1);
   const fit = ratio > 0.9 ? "contain" : "cover";

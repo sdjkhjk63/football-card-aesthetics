@@ -762,6 +762,8 @@ const verifiedArgentinaSlugs = new Set([
   "bona-fide-baller-halo",
   "bona-fide-baller-static",
   "block-base",
+  "block-halo",
+  "block-static",
   "toast-the-host-base",
   "toast-the-host-halo",
   "toast-the-host-static",
@@ -770,7 +772,9 @@ const verifiedArgentinaSlugs = new Set([
   "afa-in-the-apple-static",
   "afa-in-the-apple-gold-foilfractor",
   "rainbow-flick",
-  "first-team-autograph-red-rainbow",
+  "first-team-autograph-red",
+  "bona-fide-baller-autograph-red",
+  "golden-sun-autograph-black",
   "vis10nary-autograph-gold-foilfractor",
 ]);
 
@@ -786,9 +790,6 @@ const argentinaVersions = [
   { suffix: "base", zh: "基础版", en: "Base", es: "Base", serial: undefined },
   { suffix: "halo", zh: "Halo 光晕", en: "Halo", es: "Halo", serial: undefined },
   { suffix: "static", zh: "Static 静电", en: "Static", es: "Static", serial: undefined },
-  { suffix: "red-icy", zh: "红色 Icy", en: "Red Icy", es: "Icy rojo", serial: "/5" },
-  { suffix: "red-rainbow", zh: "红色 Rainbow", en: "Red Rainbow", es: "Rainbow rojo", serial: "/5" },
-  { suffix: "gold-foilfractor", zh: "金色 FoilFractor", en: "Gold FoilFractor", es: "Gold FoilFractor", serial: "1/1" },
 ] as const;
 
 const argentinaTeamSetCardDesigns: CardDesign[] = [
@@ -804,9 +805,9 @@ const argentinaTeamSetCardDesigns: CardDesign[] = [
     });
   })),
   argentinaCard({ slug: "rainbow-flick", officialName: "Rainbow Flick", name: names("彩虹挑球", "Rainbow Flick", "Regate arcoíris"), group: "insert" }),
-  argentinaCard({ slug: "first-team-autograph-red-rainbow", officialName: "First Team Autograph Red", name: names("一线队签名 · 红色低编", "First Team Autograph · Red", "Autógrafo Primer equipo · Rojo"), serial: "/5", group: "insert", parallels: argentinaAutoParallels }),
-  argentinaCard({ slug: "bona-fide-baller-autograph-red-rainbow", officialName: "Bona Fide Baller Autograph Red", name: names("真格球星签名 · 红色低编", "Bona Fide Baller Autograph · Red", "Autógrafo Bona Fide Baller · Rojo"), serial: "/5", group: "insert", verification: "unverified", parallels: argentinaAutoParallels }),
-  argentinaCard({ slug: "golden-sun-autograph-red-rainbow", officialName: "Golden Sun Autograph Red", name: names("金色太阳签名 · 红色低编", "Golden Sun Autograph · Red", "Autógrafo Golden Sun · Rojo"), serial: "/5", group: "insert", verification: "unverified", parallels: argentinaAutoParallels }),
+  argentinaCard({ slug: "first-team-autograph-red", officialName: "First Team Autograph Red", name: names("一线队签名 · 红色", "First Team Autograph · Red", "Autógrafo Primer equipo · Rojo"), serial: "/5", group: "insert", parallels: argentinaAutoParallels }),
+  argentinaCard({ slug: "bona-fide-baller-autograph-red", officialName: "Bona Fide Baller Autograph Red", name: names("真格球星签名 · 红色", "Bona Fide Baller Autograph · Red", "Autógrafo Bona Fide Baller · Rojo"), serial: "/5", group: "insert", parallels: argentinaAutoParallels }),
+  argentinaCard({ slug: "golden-sun-autograph-black", officialName: "Golden Sun Autograph Black", name: names("金色太阳签名 · 黑色", "Golden Sun Autograph · Black", "Autógrafo Golden Sun · Negro"), serial: "/10", group: "insert", parallels: argentinaAutoParallels }),
   argentinaCard({ slug: "vis10nary-autograph-gold-foilfractor", officialName: "Vis10nary Autograph Gold FoilFractor", name: names("梅西 Vis10nary 签名 · 金色 FoilFractor", "Messi Vis10nary Autograph · Gold FoilFractor", "Autógrafo Vis10nary de Messi · Gold FoilFractor"), serial: "1/1", group: "insert", parallels: [{ name: "Gold FoilFractor", serial: "1/1" }] }),
 ];
 

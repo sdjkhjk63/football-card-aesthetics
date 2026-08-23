@@ -26,18 +26,15 @@ const argentinaBaseVersionSuffixes = [
   "base",
   "halo",
   "static",
-  "red-icy",
-  "red-rainbow",
-  "gold-foilfractor",
 ];
 const argentinaTeamSetDesigns = [
   ...argentinaBaseFamilies.flatMap((family) =>
     argentinaBaseVersionSuffixes.map((suffix) => `${family}-${suffix}`),
   ),
   "rainbow-flick",
-  "first-team-autograph-red-rainbow",
-  "bona-fide-baller-autograph-red-rainbow",
-  "golden-sun-autograph-red-rainbow",
+  "first-team-autograph-red",
+  "bona-fide-baller-autograph-red",
+  "golden-sun-autograph-black",
   "vis10nary-autograph-gold-foilfractor",
 ];
 const barcelonaForeverDesigns = [
@@ -619,15 +616,15 @@ describe("Topps Forever FC Barcelona 2025-26 catalogue", () => {
 });
 
 describe("Topps Argentina Team Set 2026 catalogue", () => {
-  it("publishes the approved 35 independently rateable display cards", () => {
+  it("publishes the approved 20 independently rateable display cards", () => {
     const series = getSeries(argentinaTeamSetSlug);
 
     expect(series?.cardDesigns.map((card) => card.slug)).toEqual(argentinaTeamSetDesigns);
-    expect(series?.cardDesigns).toHaveLength(35);
+    expect(series?.cardDesigns).toHaveLength(20);
     expect(series?.totalVariants).toBe(116);
   });
 
-  it("shows six representative versions for each of the five base designs", () => {
+  it("shows only Base, Halo, and Static for each of the five base designs", () => {
     const series = getSeries(argentinaTeamSetSlug);
 
     for (const family of argentinaBaseFamilies) {
@@ -638,25 +635,22 @@ describe("Topps Argentina Team Set 2026 catalogue", () => {
         null,
         null,
         null,
-        "/5",
-        "/5",
-        "1/1",
       ]);
     }
   });
 
-  it("keeps Rainbow Flick unnumbered and uses low-numbered autograph representatives", () => {
+  it("keeps Rainbow Flick unnumbered and uses the matched autograph representatives", () => {
     const series = getSeries(argentinaTeamSetSlug);
     const serialBySlug = new Map(series?.cardDesigns.map((card) => [card.slug, card.serial]));
 
     expect(serialBySlug.get("rainbow-flick")).toBeNull();
-    expect(serialBySlug.get("first-team-autograph-red-rainbow")).toBe("/5");
-    expect(serialBySlug.get("bona-fide-baller-autograph-red-rainbow")).toBe("/5");
-    expect(serialBySlug.get("golden-sun-autograph-red-rainbow")).toBe("/5");
+    expect(serialBySlug.get("first-team-autograph-red")).toBe("/5");
+    expect(serialBySlug.get("bona-fide-baller-autograph-red")).toBe("/5");
+    expect(serialBySlug.get("golden-sun-autograph-black")).toBe("/10");
     expect(serialBySlug.get("vis10nary-autograph-gold-foilfractor")).toBe("1/1");
   });
 
-  it("uses one tightly cropped local image for every displayed version and labels unmatched photos honestly", async () => {
+  it("uses one exact, tightly cropped local image for every displayed version", async () => {
     const series = getSeries(argentinaTeamSetSlug);
 
     expect(series).toBeDefined();
@@ -664,8 +658,9 @@ describe("Topps Argentina Team Set 2026 catalogue", () => {
     expect(validateSeries(series)).toEqual([]);
 
     const images = [series.packaging.path, ...series.cardDesigns.map((card) => card.image.path)];
-    expect(new Set(images)).toHaveLength(36);
+    expect(new Set(images)).toHaveLength(21);
     for (const card of series.cardDesigns) {
+      expect(card.image.verification, card.slug).toBe("exact");
       const imagePath = path.join(process.cwd(), "public", card.image.path);
       expect(fs.existsSync(imagePath), card.slug).toBe(true);
       const metadata = await sharp(imagePath).metadata();
@@ -675,9 +670,6 @@ describe("Topps Argentina Team Set 2026 catalogue", () => {
       });
     }
 
-    const unverified = series.cardDesigns.filter((card) => card.image.verification === "unverified");
-    expect(unverified.length).toBeGreaterThan(0);
-    expect(unverified.every((card) => card.curatorNote?.["zh-CN"].includes("暂未出现"))).toBe(true);
   });
 });
 
