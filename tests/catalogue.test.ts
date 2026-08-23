@@ -686,6 +686,39 @@ describe("Topps Argentina Team Set 2026 catalogue", () => {
 
     expect(landscapeSlugs).toEqual(argentinaLandscapeDesigns);
   });
+
+  it("presents the two featured autograph cards edge-to-edge without the photo background", async () => {
+    const featuredAutographs = [
+      "bona-fide-baller-autograph-red",
+      "golden-sun-autograph-black",
+    ];
+
+    for (const slug of featuredAutographs) {
+      const imagePath = path.join(
+        process.cwd(),
+        "public/images/topps-argentina-team-set-2026/cards",
+        `${slug}.jpg`,
+      );
+      const { data, info } = await sharp(imagePath)
+        .extract({ left: 0, top: 0, width: 750, height: 40 })
+        .raw()
+        .toBuffer({ resolveWithObject: true });
+      let saturatedPixels = 0;
+
+      for (let index = 0; index < data.length; index += info.channels) {
+        const red = data[index] / 255;
+        const green = data[index + 1] / 255;
+        const blue = data[index + 2] / 255;
+        const maximum = Math.max(red, green, blue);
+        const minimum = Math.min(red, green, blue);
+        const saturation = maximum === 0 ? 0 : (maximum - minimum) / maximum;
+        if (saturation > 0.18 && maximum > 0.08) saturatedPixels += 1;
+      }
+
+      const saturatedRatio = saturatedPixels / (info.width * info.height);
+      expect(saturatedRatio, slug).toBeGreaterThan(0.6);
+    }
+  });
 });
 
 it("does not publish image provenance for any series", () => {

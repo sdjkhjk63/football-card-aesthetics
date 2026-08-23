@@ -41,10 +41,19 @@ const assets = {
 
 const crops = {
   "block-static": { left: 130, top: 70, width: 900, height: 1260 },
-  "bona-fide-baller-autograph-red": { left: 260, top: 30, width: 1080, height: 1512 },
-  "golden-sun-autograph-black": { left: 155, top: 220, width: 870, height: 1218 },
   "toast-the-host-halo": { left: 90, top: 50, width: 1360, height: 971 },
   "toast-the-host-static": { left: 65, top: 355, width: 840, height: 600 },
+};
+
+const curatedSources = {
+  "bona-fide-baller-autograph-red": path.join(
+    root,
+    "scripts/curated-assets/argentina-team-set-2026/bona-fide-baller-autograph-red.jpg",
+  ),
+  "golden-sun-autograph-black": path.join(
+    root,
+    "scripts/curated-assets/argentina-team-set-2026/golden-sun-autograph-black.jpg",
+  ),
 };
 
 const landscapeSlugs = new Set([
@@ -61,7 +70,9 @@ async function download(url) {
 }
 
 async function renderCard(slug, url) {
-  const input = await download(url);
+  const input = curatedSources[slug]
+    ? await fs.readFile(curatedSources[slug])
+    : await download(url);
   const crop = crops[slug];
   const image = sharp(input, { failOn: "none" }).rotate();
   if (crop) image.extract(crop);
