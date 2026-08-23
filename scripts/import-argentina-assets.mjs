@@ -42,7 +42,17 @@ const assets = {
 const crops = {
   "block-static": { left: 130, top: 70, width: 900, height: 1260 },
   "bona-fide-baller-autograph-red": { left: 260, top: 30, width: 1080, height: 1512 },
+  "golden-sun-autograph-black": { left: 155, top: 220, width: 870, height: 1218 },
+  "toast-the-host-halo": { left: 90, top: 50, width: 1360, height: 971 },
+  "toast-the-host-static": { left: 65, top: 355, width: 840, height: 600 },
 };
+
+const landscapeSlugs = new Set([
+  "toast-the-host-base",
+  "toast-the-host-halo",
+  "toast-the-host-static",
+  "rainbow-flick",
+]);
 
 async function download(url) {
   const response = await fetch(url, { headers: { "user-agent": "Mozilla/5.0" } });
@@ -57,9 +67,13 @@ async function renderCard(slug, url) {
   if (crop) image.extract(crop);
   const metadata = await image.metadata();
   const ratio = (metadata.width ?? 1) / (metadata.height ?? 1);
-  const fit = ratio > 0.9 ? "contain" : "cover";
+  const landscape = landscapeSlugs.has(slug);
+  const width = landscape ? 1050 : 750;
+  const height = landscape ? 750 : 1050;
+  const fit = landscape || ratio < 0.9 ? "cover" : "contain";
   const buffer = await image
-    .resize(750, 1050, { fit, position: "centre", background: "#eef5fb" })
+    .resize(width, height, { fit, position: "centre", background: "#eef5fb" })
+    .sharpen({ sigma: 0.55 })
     .jpeg({ quality: 92, chromaSubsampling: "4:4:4" })
     .toBuffer();
   await fs.writeFile(path.join(outputRoot, "cards", `${slug}.jpg`), buffer);

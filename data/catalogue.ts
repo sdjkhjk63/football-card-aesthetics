@@ -687,6 +687,7 @@ type ArgentinaCardInput = {
   verification?: "exact" | "unverified";
   curatorNote?: LocalizedText;
   parallels?: CardDesign["parallels"];
+  layout?: CardDesign["layout"];
 };
 
 const argentinaCard = ({
@@ -698,6 +699,7 @@ const argentinaCard = ({
   verification = "exact",
   curatorNote,
   parallels,
+  layout,
 }: ArgentinaCardInput): CardDesign => ({
   slug,
   officialName,
@@ -706,6 +708,7 @@ const argentinaCard = ({
   section: group === "base" ? (serial ? numbered : unnumbered) : (serial ? rareInsert : regularInsert),
   serial: serial ?? null,
   parallels,
+  layout,
   curatorNote: curatorNote ?? (verification === "unverified"
     ? names(
       "该版本已由官方清单确认，但公开市场暂未出现可核实的对应低编实物；当前展示同卡面家族中最接近的已核实版本。",
@@ -802,9 +805,10 @@ const argentinaTeamSetCardDesigns: CardDesign[] = [
       serial: version.serial,
       verification: verifiedArgentinaSlugs.has(slug) ? "exact" : "unverified",
       parallels: index === 0 ? argentinaBaseParallels : undefined,
+      layout: family.slug === "toast-the-host" ? "landscape" : undefined,
     });
   })),
-  argentinaCard({ slug: "rainbow-flick", officialName: "Rainbow Flick", name: names("彩虹挑球", "Rainbow Flick", "Regate arcoíris"), group: "insert" }),
+  argentinaCard({ slug: "rainbow-flick", officialName: "Rainbow Flick", name: names("彩虹挑球", "Rainbow Flick", "Regate arcoíris"), group: "insert", layout: "landscape" }),
   argentinaCard({ slug: "first-team-autograph-red", officialName: "First Team Autograph Red", name: names("一线队签名 · 红色", "First Team Autograph · Red", "Autógrafo Primer equipo · Rojo"), serial: "/5", group: "insert", parallels: argentinaAutoParallels }),
   argentinaCard({ slug: "bona-fide-baller-autograph-red", officialName: "Bona Fide Baller Autograph Red", name: names("真格球星签名 · 红色", "Bona Fide Baller Autograph · Red", "Autógrafo Bona Fide Baller · Rojo"), serial: "/5", group: "insert", parallels: argentinaAutoParallels }),
   argentinaCard({ slug: "golden-sun-autograph-black", officialName: "Golden Sun Autograph Black", name: names("金色太阳签名 · 黑色", "Golden Sun Autograph · Black", "Autógrafo Golden Sun · Negro"), serial: "/10", group: "insert", parallels: argentinaAutoParallels }),

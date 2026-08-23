@@ -37,6 +37,12 @@ const argentinaTeamSetDesigns = [
   "golden-sun-autograph-black",
   "vis10nary-autograph-gold-foilfractor",
 ];
+const argentinaLandscapeDesigns = [
+  "toast-the-host-base",
+  "toast-the-host-halo",
+  "toast-the-host-static",
+  "rainbow-flick",
+];
 const barcelonaForeverDesigns = [
   "blaugrana-vault-green",
   "forever-kit",
@@ -664,12 +670,21 @@ describe("Topps Argentina Team Set 2026 catalogue", () => {
       const imagePath = path.join(process.cwd(), "public", card.image.path);
       expect(fs.existsSync(imagePath), card.slug).toBe(true);
       const metadata = await sharp(imagePath).metadata();
-      expect({ width: metadata.width, height: metadata.height }, card.slug).toEqual({
-        width: 750,
-        height: 1050,
-      });
+      const expectedSize = argentinaLandscapeDesigns.includes(card.slug)
+        ? { width: 1050, height: 750 }
+        : { width: 750, height: 1050 };
+      expect({ width: metadata.width, height: metadata.height }, card.slug).toEqual(expectedSize);
     }
 
+  });
+
+  it("marks Toast the Host and Rainbow Flick for landscape presentation", () => {
+    const series = getSeries(argentinaTeamSetSlug);
+    const landscapeSlugs = series?.cardDesigns
+      .filter((card) => card.layout === "landscape")
+      .map((card) => card.slug);
+
+    expect(landscapeSlugs).toEqual(argentinaLandscapeDesigns);
   });
 });
 
