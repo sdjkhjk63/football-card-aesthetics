@@ -1,6 +1,6 @@
 # Football Card Aesthetics
 
-A multilingual, open-source catalogue for rating the visual design of football trading cards. The catalogue currently covers five Topps releases and 201 independent rating objects, including all 57 checklist-confirmed visual versions from **2025-26 Topps Forever FC Barcelona**. It rates the card design—not the player, rarity, or market price.
+A multilingual, open-source catalogue for rating the visual design of football trading cards. The catalogue currently covers seven Topps releases and 205 independent rating objects. The newest addition is **2025/26 Topps Inception UEFA Club Competitions**, with one representative for every main card type and separate displays for both Club Crest Autograph Patch versions. It rates the card design—not the player, rarity, or market price.
 
 Interface languages: Simplified Chinese, English, and Spanish. Ratings are private to the current browser; the app does not invent community averages.
 
@@ -69,6 +69,14 @@ The deterministic import command is:
 ```bash
 node scripts/copy-merlin-assets.mjs
 ```
+
+The Inception UCC assets can be regenerated from the adjacent research folder with:
+
+```bash
+node scripts/import-inception-ucc-assets.mjs
+```
+
+That importer uses fixed pixel crops and consistent portrait/landscape canvases; it does not use generative reconstruction. Twenty-five Inception card images are verified real-card examples. Eight checklist-confirmed types without a trustworthy public image are intentionally shown as “pending verification” placeholders rather than being filled with a similar card.
 
 Its source research folder is intentionally not committed.
 

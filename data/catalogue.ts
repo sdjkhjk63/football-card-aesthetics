@@ -829,6 +829,106 @@ export const toppsArgentinaTeamSet2026: CardSeries = {
   cardDesigns: argentinaTeamSetCardDesigns,
 };
 
+type InceptionCardInput = {
+  slug: string;
+  officialName: string;
+  zh: string;
+  es: string;
+  serial?: string;
+  group?: CardGroup;
+  verification?: "exact" | "unverified";
+  layout?: CardDesign["layout"];
+  parallels?: CardDesign["parallels"];
+};
+
+const inceptionCard = ({
+  slug,
+  officialName,
+  zh,
+  es,
+  serial,
+  group = "insert",
+  verification = "exact",
+  layout,
+  parallels,
+}: InceptionCardInput): CardDesign => ({
+  slug,
+  officialName,
+  name: names(zh, officialName, es),
+  group,
+  section: group === "base" ? "base-numbered" : "rare-insert",
+  serial: serial ?? null,
+  layout,
+  parallels,
+  image: {
+    path: `images/topps-inception-ucc-2025-26/cards/${slug}.webp`,
+    verification,
+    alt: names(
+      `2025/26 Topps Inception 欧足联俱乐部赛事 ${zh}代表卡`,
+      `2025/26 Topps Inception UEFA Club Competitions ${officialName} representative card`,
+      `Carta representativa ${es} de 2025/26 Topps Inception UEFA Club Competitions`,
+    ),
+  },
+});
+
+const inceptionUccCardDesigns: CardDesign[] = [
+  inceptionCard({ slug: "first-xi", officialName: "First XI", zh: "首发十一人", es: "Once inicial", serial: "/25", group: "base" }),
+  inceptionCard({ slug: "emerging-stars", officialName: "Emerging Stars", zh: "新星崛起", es: "Estrellas emergentes", serial: "/150", group: "base" }),
+  inceptionCard({ slug: "succession", officialName: "Succession", zh: "传承接班", es: "Sucesión", serial: "/25", group: "base" }),
+  inceptionCard({ slug: "showman", officialName: "Showman", zh: "球场巨星", es: "Showman", serial: "/25", group: "base" }),
+  inceptionCard({ slug: "star-quality", officialName: "Star Quality", zh: "巨星品质", es: "Calidad de estrella", serial: "/10", group: "base" }),
+  inceptionCard({ slug: "superior-legends", officialName: "Superior Legends", zh: "至尊传奇", es: "Leyendas superiores", serial: "/25", group: "base" }),
+  inceptionCard({ slug: "worldwide", officialName: "Worldwide", zh: "世界足坛", es: "Mundial", serial: "/99", group: "base" }),
+  inceptionCard({ slug: "dark-flow", officialName: "Dark Flow", zh: "暗流", es: "Flujo oscuro", serial: "1/1", parallels: [{ name: "Gold Foil", serial: "1/1" }] }),
+  inceptionCard({ slug: "first-xi-autographs", officialName: "First XI Autographs", zh: "首发十一人签字", es: "Autógrafos Once inicial", serial: "/25" }),
+  inceptionCard({ slug: "emerging-stars-autographs", officialName: "Emerging Stars Autographs", zh: "新星崛起签字", es: "Autógrafos Estrellas emergentes", serial: "/10" }),
+  inceptionCard({ slug: "succession-autographs", officialName: "Succession Autographs", zh: "传承接班签字", es: "Autógrafos Sucesión", serial: "/5" }),
+  inceptionCard({ slug: "showman-autographs", officialName: "Showman Autographs", zh: "球场巨星签字", es: "Autógrafos Showman", serial: "/25" }),
+  inceptionCard({ slug: "star-quality-autographs", officialName: "Star Quality Autographs", zh: "巨星品质签字", es: "Autógrafos Calidad de estrella", serial: "/10" }),
+  inceptionCard({ slug: "superior-legends-autographs", officialName: "Superior Legends Autographs", zh: "至尊传奇签字", es: "Autógrafos Leyendas superiores" }),
+  inceptionCard({ slug: "worldwide-autographs", officialName: "Worldwide Autographs", zh: "世界足坛签字", es: "Autógrafos Mundial", serial: "/25" }),
+  inceptionCard({ slug: "dawn-of-greatness-autographs", officialName: "Dawn of Greatness Autographs", zh: "伟大黎明签字", es: "Autógrafos Amanecer de la grandeza", serial: "/10" }),
+  inceptionCard({ slug: "silver-signings-autographs", officialName: "Silver Signings Autographs", zh: "银墨签字", es: "Autógrafos Firmas plateadas", serial: "1/1", layout: "landscape" }),
+  inceptionCard({ slug: "marks-of-excellence", officialName: "Marks of Excellence", zh: "卓越印记签字", es: "Marcas de excelencia", serial: "/5" }),
+  inceptionCard({ slug: "inception-dual-autographs", officialName: "Inception Dual Autographs", zh: "Inception 双人签字", es: "Autógrafos dobles Inception", serial: "/5", layout: "landscape" }),
+  inceptionCard({ slug: "role-models-quad-autograph-book", officialName: "Role Models Quad Autograph Book", zh: "楷模四人签字书卡", es: "Libro de cuatro autógrafos Modelos a seguir", verification: "unverified", layout: "landscape" }),
+  inceptionCard({ slug: "ucl-winners-quad-autograph-book", officialName: "UCL Winners Quad Autograph Book", zh: "欧冠冠军四人签字书卡", es: "Libro de cuatro autógrafos Campeones UCL", verification: "unverified", layout: "landscape" }),
+  inceptionCard({ slug: "uwcl-winners-quad-autograph-book", officialName: "UWCL Winners Quad Autograph Book", zh: "女足欧冠冠军四人签字书卡", es: "Libro de cuatro autógrafos Campeonas UWCL", verification: "unverified", layout: "landscape" }),
+  inceptionCard({ slug: "inception-patch", officialName: "Inception Patch", zh: "Inception 实物切片", es: "Parche Inception", serial: "/10" }),
+  inceptionCard({ slug: "match-day-memories-relic", officialName: "Match Day Memories Relic", zh: "比赛日记忆实物", es: "Reliquia Recuerdos del partido", serial: "/10" }),
+  inceptionCard({ slug: "uwcl-final-goal-net-relic", officialName: "UWCL Final Goal Net Relic", zh: "女足欧冠决赛球网实物", es: "Reliquia de red de la final UWCL", serial: "1/1" }),
+  inceptionCard({ slug: "uwcl-final-corner-flag-relic", officialName: "UWCL Final Corner Flag Relic", zh: "女足欧冠决赛角旗实物", es: "Reliquia de banderín de la final UWCL", serial: "1/1", verification: "unverified" }),
+  inceptionCard({ slug: "inception-autograph-patch", officialName: "Inception Autograph Patch", zh: "Inception 签字切片", es: "Parche autografiado Inception", serial: "/25", layout: "landscape" }),
+  inceptionCard({ slug: "number-1-patch-autographs", officialName: "Number 1 Patch Autographs", zh: "一号门将签字切片", es: "Autógrafos con parche Número 1", verification: "unverified" }),
+  inceptionCard({ slug: "match-day-memories-autograph-relic", officialName: "Match Day Memories Autograph Relic", zh: "比赛日记忆签字实物", es: "Reliquia autografiada Recuerdos del partido", serial: "/10", layout: "landscape" }),
+  inceptionCard({ slug: "club-crest-autograph-patch-v1", officialName: "Club Crest Autograph Patch Version 1", zh: "俱乐部徽章签字切片·版本 1", es: "Parche autografiado de escudo · Versión 1", serial: "1/1", verification: "unverified" }),
+  inceptionCard({ slug: "club-crest-autograph-patch-v2", officialName: "Club Crest Autograph Patch Version 2", zh: "俱乐部徽章签字切片·版本 2", es: "Parche autografiado de escudo · Versión 2", serial: "1/1", verification: "unverified" }),
+  inceptionCard({ slug: "autograph-branded-patch-book", officialName: "Autograph Branded Patch Book", zh: "品牌切片签字书卡", es: "Libro de parche de marca autografiado", serial: "1/1", verification: "unverified", layout: "landscape" }),
+  inceptionCard({ slug: "dual-autograph-patch-book", officialName: "Dual Autograph Patch Book", zh: "双人签字切片书卡", es: "Libro de doble parche autografiado", serial: "/5", layout: "landscape" }),
+];
+
+export const toppsInceptionUcc202526: CardSeries = {
+  slug: "topps-inception-ucc-2025-26",
+  manufacturer: "Topps",
+  season: "2025/26",
+  name: names(
+    "2025/26 Topps Inception 欧足联俱乐部赛事",
+    "2025/26 Topps Inception UEFA Club Competitions",
+    "2025/26 Topps Inception UEFA Club Competitions",
+  ),
+  packaging: {
+    path: "images/topps-inception-ucc-2025-26/packaging.webp",
+    verification: "exact",
+    alt: names(
+      "2025/26 Topps Inception 欧足联俱乐部赛事 Hobby 盒包装",
+      "2025/26 Topps Inception UEFA Club Competitions Hobby box",
+      "Caja Hobby 2025/26 Topps Inception UEFA Club Competitions",
+    ),
+  },
+  totalVariants: 33,
+  cardDesigns: inceptionUccCardDesigns,
+};
+
 const catalogue = [
   merlinPremierLeague2026,
   toppsFinestPremierLeague2026,
@@ -836,6 +936,7 @@ const catalogue = [
   toppsChromeSapphireBundesliga202526,
   toppsForeverFcBarcelona202526,
   toppsArgentinaTeamSet2026,
+  toppsInceptionUcc202526,
 ];
 
 export function getCatalogue() {

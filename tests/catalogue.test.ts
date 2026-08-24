@@ -15,6 +15,63 @@ const chromeArsenalSlug = "topps-chrome-arsenal-2025-26";
 const chromeSapphireBundesligaSlug = "topps-chrome-sapphire-bundesliga-2025-26";
 const barcelonaForeverSlug = "topps-forever-fc-barcelona-2025-26";
 const argentinaTeamSetSlug = "topps-argentina-team-set-2026";
+const inceptionUccSlug = "topps-inception-ucc-2025-26";
+const inceptionUccDesigns = [
+  "first-xi",
+  "emerging-stars",
+  "succession",
+  "showman",
+  "star-quality",
+  "superior-legends",
+  "worldwide",
+  "dark-flow",
+  "first-xi-autographs",
+  "emerging-stars-autographs",
+  "succession-autographs",
+  "showman-autographs",
+  "star-quality-autographs",
+  "superior-legends-autographs",
+  "worldwide-autographs",
+  "dawn-of-greatness-autographs",
+  "silver-signings-autographs",
+  "marks-of-excellence",
+  "inception-dual-autographs",
+  "role-models-quad-autograph-book",
+  "ucl-winners-quad-autograph-book",
+  "uwcl-winners-quad-autograph-book",
+  "inception-patch",
+  "match-day-memories-relic",
+  "uwcl-final-goal-net-relic",
+  "uwcl-final-corner-flag-relic",
+  "inception-autograph-patch",
+  "number-1-patch-autographs",
+  "match-day-memories-autograph-relic",
+  "club-crest-autograph-patch-v1",
+  "club-crest-autograph-patch-v2",
+  "autograph-branded-patch-book",
+  "dual-autograph-patch-book",
+];
+const inceptionUnverifiedDesigns = [
+  "role-models-quad-autograph-book",
+  "ucl-winners-quad-autograph-book",
+  "uwcl-winners-quad-autograph-book",
+  "uwcl-final-corner-flag-relic",
+  "number-1-patch-autographs",
+  "club-crest-autograph-patch-v1",
+  "club-crest-autograph-patch-v2",
+  "autograph-branded-patch-book",
+];
+const inceptionLandscapeDesigns = [
+  "silver-signings-autographs",
+  "inception-dual-autographs",
+  "role-models-quad-autograph-book",
+  "ucl-winners-quad-autograph-book",
+  "uwcl-winners-quad-autograph-book",
+  "inception-autograph-patch",
+  "match-day-memories-autograph-relic",
+  "autograph-branded-patch-book",
+  "dual-autograph-patch-book",
+];
 const argentinaBaseFamilies = [
   "first-team",
   "bona-fide-baller",
@@ -717,6 +774,72 @@ describe("Topps Argentina Team Set 2026 catalogue", () => {
 
       const saturatedRatio = saturatedPixels / (info.width * info.height);
       expect(saturatedRatio, slug).toBeGreaterThan(0.6);
+    }
+  });
+});
+
+describe("Topps Inception UEFA Club Competitions 2025-26 catalogue", () => {
+  it("publishes one representative for all 32 main card types and both Club Crest versions", () => {
+    const series = getSeries(inceptionUccSlug);
+
+    expect(series?.cardDesigns.map((card) => card.slug)).toEqual(inceptionUccDesigns);
+    expect(series?.cardDesigns).toHaveLength(33);
+    expect(series?.totalVariants).toBe(33);
+    expect(validateSeries(series!)).toEqual([]);
+  });
+
+  it("keeps Dark Flow at Gold Foil 1/1 and separates both Club Crest versions", () => {
+    const series = getSeries(inceptionUccSlug);
+    const cards = new Map(series?.cardDesigns.map((card) => [card.slug, card]));
+
+    expect(cards.get("dark-flow")?.serial).toBe("1/1");
+    expect(cards.get("dark-flow")?.parallels).toEqual([
+      { name: "Gold Foil", serial: "1/1" },
+    ]);
+    expect(cards.get("marks-of-excellence")?.serial).toBe("/5");
+    expect(cards.get("inception-dual-autographs")?.serial).toBe("/5");
+    expect(cards.get("club-crest-autograph-patch-v1")?.officialName).toContain("Version 1");
+    expect(cards.get("club-crest-autograph-patch-v2")?.officialName).toContain("Version 2");
+  });
+
+  it("shows placeholders only for the eight types without trustworthy public images", () => {
+    const series = getSeries(inceptionUccSlug);
+    const unverified = series?.cardDesigns
+      .filter((card) => card.image.verification === "unverified")
+      .map((card) => card.slug);
+
+    expect(unverified).toEqual(inceptionUnverifiedDesigns);
+    expect(series?.cardDesigns.filter((card) => card.image.verification === "exact")).toHaveLength(25);
+  });
+
+  it("marks every horizontal card design for landscape presentation", () => {
+    const series = getSeries(inceptionUccSlug);
+    const landscape = series?.cardDesigns
+      .filter((card) => card.layout === "landscape")
+      .map((card) => card.slug);
+
+    expect(landscape).toEqual(inceptionLandscapeDesigns);
+  });
+
+  it("uses normalized local assets for the packaging and all 25 verified cards", async () => {
+    const series = getSeries(inceptionUccSlug);
+
+    expect(series).toBeDefined();
+    if (!series) return;
+
+    const packagingPath = path.join(process.cwd(), "public", series.packaging.path);
+    expect(fs.existsSync(packagingPath)).toBe(true);
+
+    const verified = series.cardDesigns.filter((card) => card.image.verification === "exact");
+    expect(verified).toHaveLength(25);
+    for (const card of verified) {
+      const imagePath = path.join(process.cwd(), "public", card.image.path);
+      expect(fs.existsSync(imagePath), card.slug).toBe(true);
+      const metadata = await sharp(imagePath).metadata();
+      const expectedSize = card.layout === "landscape"
+        ? { width: 1050, height: 750 }
+        : { width: 750, height: 1050 };
+      expect({ width: metadata.width, height: metadata.height }, card.slug).toEqual(expectedSize);
     }
   });
 });
