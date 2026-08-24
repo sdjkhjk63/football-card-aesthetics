@@ -41,8 +41,9 @@ export function resolveStaticFile(root, requestPath) {
 
 async function sendFile(filePath, response, method) {
   const metadata = await stat(filePath);
+  const isHashedNextAsset = filePath.includes(`${path.sep}_next${path.sep}static${path.sep}`);
   response.writeHead(200, {
-    "Cache-Control": filePath.endsWith(".html") ? "no-cache" : "public, max-age=31536000, immutable",
+    "Cache-Control": isHashedNextAsset ? "public, max-age=31536000, immutable" : "no-cache",
     "Content-Length": metadata.size,
     "Content-Type": MIME_TYPES.get(path.extname(filePath).toLowerCase()) ?? "application/octet-stream",
     "X-Content-Type-Options": "nosniff",

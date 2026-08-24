@@ -73,6 +73,7 @@ async function createMainWindow() {
       mainWindow?.show();
     }, remaining);
   });
+  await mainWindow.webContents.session.clearCache();
   await mainWindow.loadURL(localServer.origin);
 }
 
