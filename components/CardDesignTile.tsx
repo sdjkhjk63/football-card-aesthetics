@@ -13,6 +13,9 @@ export function CardDesignTile({ seriesSlug, design, locale, rating }: { seriesS
   const imageStyle = design.image.displayScale
     ? ({ "--image-display-scale": design.image.displayScale } as CSSProperties)
     : undefined;
+  const displayedLabel = { "zh-CN": "当前展示", en: "Shown", es: "Mostrada" }[locale];
+  const allParallelsLabel = { "zh-CN": "全部限编", en: "Numbered versions", es: "Versiones numeradas" }[locale];
+  const countSuffix = { "zh-CN": "种", en: "", es: "" }[locale];
   return (
     <Link className={design.layout === "landscape" ? "card-tile landscape" : "card-tile"} href={`/series/${seriesSlug}/cards/${design.slug}`} aria-label={`${design.officialName} — ${localize(design.name, locale)}`}>
       <div className="card-image-frame">
@@ -26,10 +29,15 @@ export function CardDesignTile({ seriesSlug, design, locale, rating }: { seriesS
         <h3>{localize(design.name, locale)}</h3>
         <p>{design.officialName}</p>
         {design.parallels?.length ? (
-          <div className="parallel-strip" aria-label="Parallels">
-            {design.parallels.map((parallel) => (
-              <span key={`${parallel.name}-${parallel.serial ?? "base"}`}>{parallel.name}{parallel.serial ? ` ${parallel.serial}` : ""}</span>
-            ))}
+          <div className="parallel-block">
+            {design.displayParallelName && design.serial ? <strong className="displayed-parallel">{displayedLabel}：{design.displayParallelName} {design.serial}</strong> : null}
+            <div className="parallel-summary">{allParallelsLabel} {design.parallels.length} {countSuffix}</div>
+            <div className="parallel-strip" aria-label="Parallels">
+              {design.parallels.map((parallel) => {
+                const isCurrent = parallel.name === design.displayParallelName && parallel.serial === design.serial;
+                return <span data-current={isCurrent ? "true" : undefined} key={`${parallel.name}-${parallel.serial ?? "base"}`}>{parallel.name}{parallel.serial ? ` ${parallel.serial}` : ""}</span>;
+              })}
+            </div>
           </div>
         ) : null}
         <span className={rating ? "rating-chip rated" : "rating-chip"}>{rating ? `${translate("myRating", locale)} ${rating.score.toFixed(1)}` : translate("notRated", locale)}</span>

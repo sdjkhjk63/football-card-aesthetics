@@ -77,6 +77,34 @@ it("names each listed parallel instead of showing only its serial number", () =>
   expect(screen.getByText("Orange /25")).toBeVisible();
 });
 
+it("distinguishes the displayed parallel from the complete numbered ladder", () => {
+  const design = {
+    slug: "first-xi",
+    officialName: "First XI",
+    name: { "zh-CN": "首发十一人", en: "First XI", es: "Once inicial" },
+    group: "base",
+    section: "base-numbered",
+    serial: "/25",
+    displayParallelName: "Purple Foil",
+    parallels: [
+      { name: "Foil", serial: "/199" },
+      { name: "Purple Foil", serial: "/25" },
+      { name: "Gold Foil", serial: "1/1" },
+    ],
+    image: {
+      path: "images/first-xi.jpg",
+      alt: { "zh-CN": "首发十一人", en: "First XI", es: "Once inicial" },
+      verification: "exact",
+    },
+  } as CardDesign;
+
+  const { container } = render(<CardDesignTile seriesSlug="series" design={design} locale="zh-CN" />);
+
+  expect(screen.getByText("当前展示：Purple Foil /25")).toBeVisible();
+  expect(screen.getByText("全部限编 3 种")).toBeVisible();
+  expect(container.querySelector('[data-current="true"]')).toHaveTextContent("Purple Foil /25");
+});
+
 it("shows the generic family title and keeps the representative serial in the parallel labels", () => {
   const series = getSeries("topps-forever-fc-barcelona-2025-26");
   const design = series?.cardDesigns.find((card) => card.slug === "century-club-gold-foilfractor");

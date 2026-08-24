@@ -802,6 +802,34 @@ describe("Topps Inception UEFA Club Competitions 2025-26 catalogue", () => {
     expect(cards.get("club-crest-autograph-patch-v2")?.officialName).toContain("Version 2");
   });
 
+  it("publishes the complete numbered parallel ladder for every displayed card type", () => {
+    const series = getSeries(inceptionUccSlug);
+    const cards = new Map(series?.cardDesigns.map((card) => [card.slug, card]));
+
+    expect(cards.get("first-xi")?.parallels).toEqual([
+      { name: "Foil", serial: "/199" },
+      { name: "Yellow Foil", serial: "/150" },
+      { name: "Magenta Foil", serial: "/125" },
+      { name: "Green Foil", serial: "/99" },
+      { name: "Pink Foil", serial: "/75" },
+      { name: "Blue Foil", serial: "/49" },
+      { name: "Purple Foil", serial: "/25" },
+      { name: "Red Foil", serial: "/10" },
+      { name: "Orange Foil", serial: "/5" },
+      { name: "Gold Foil", serial: "1/1" },
+      { name: "Printing Plates", serial: "1/1" },
+    ]);
+    expect(cards.get("first-xi-autographs")?.parallels).toHaveLength(7);
+    expect(cards.get("dawn-of-greatness-autographs")?.parallels).toHaveLength(4);
+    expect(cards.get("marks-of-excellence")?.parallels).toHaveLength(5);
+    expect(cards.get("inception-dual-autographs")?.parallels).toHaveLength(3);
+    expect(cards.get("inception-patch")?.parallels).toHaveLength(4);
+    expect(cards.get("inception-autograph-patch")?.parallels).toHaveLength(7);
+    expect(cards.get("number-1-patch-autographs")?.parallels).toHaveLength(4);
+    expect(cards.get("dual-autograph-patch-book")?.parallels).toHaveLength(2);
+    expect(series?.cardDesigns.every((card) => (card.parallels?.length ?? 0) > 0)).toBe(true);
+  });
+
   it("shows placeholders only for the eight types without trustworthy public images", () => {
     const series = getSeries(inceptionUccSlug);
     const unverified = series?.cardDesigns

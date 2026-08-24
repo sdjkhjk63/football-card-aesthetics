@@ -28,6 +28,7 @@ export interface CardDesign {
   group: CardGroup;
   section: CardSection;
   serial: string | null;
+  displayParallelName?: string;
   parallels?: CardParallel[];
   layout?: "portrait" | "landscape";
   curatorNote?: LocalizedText;
