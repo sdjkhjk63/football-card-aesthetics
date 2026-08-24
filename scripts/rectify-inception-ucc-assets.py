@@ -21,7 +21,7 @@ ASSETS = [
     ("09-auto-first-xi-vitinha-purple-25.webp", "first-xi-autographs", [(98, 112), (1068, 114), (1068, 1490), (97, 1490)], (750, 1050)),
     ("10-auto-emerging-stars-max-dowman-red-10.webp", "emerging-stars-autographs", [(211, 245), (971, 244), (971, 1327), (211, 1329)], (750, 1050)),
     ("11-auto-succession-ibrahim-mbaye-orange-5.webp", "succession-autographs", [(176, 185), (1040, 184), (1008, 1318), (218, 1318)], (750, 1050)),
-    ("12-auto-showman-eberechi-eze-purple-25.webp", "showman-autographs", [(120, 126), (840, 139), (840, 1017), (121, 1014)], (750, 1050)),
+    ("12-auto-showman-eberechi-eze-purple-25.webp", "showman-autographs", [(139, 137), (810, 146), (803, 992), (154, 991)], (750, 1050)),
     ("13-auto-star-quality-zubimendi-red-10.webp", "star-quality-autographs", [(84, 67), (1123, 67), (1122, 1513), (80, 1510)], (750, 1050)),
     ("14-auto-superior-legends-caroline-graham-hansen.webp", "superior-legends-autographs", [(172, 175), (990, 175), (990, 1319), (172, 1319)], (750, 1050)),
     ("15-auto-worldwide-rafael-marquez-purple-25.webp", "worldwide-autographs", [(243, 280), (846, 302), (846, 1182), (191, 1182)], (750, 1050)),
