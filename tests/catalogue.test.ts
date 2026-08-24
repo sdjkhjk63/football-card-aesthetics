@@ -56,9 +56,6 @@ const inceptionUnverifiedDesigns = [
   "ucl-winners-quad-autograph-book",
   "uwcl-winners-quad-autograph-book",
   "uwcl-final-corner-flag-relic",
-  "number-1-patch-autographs",
-  "club-crest-autograph-patch-v1",
-  "club-crest-autograph-patch-v2",
   "autograph-branded-patch-book",
 ];
 const inceptionLandscapeDesigns = [
@@ -830,14 +827,14 @@ describe("Topps Inception UEFA Club Competitions 2025-26 catalogue", () => {
     expect(series?.cardDesigns.every((card) => (card.parallels?.length ?? 0) > 0)).toBe(true);
   });
 
-  it("shows placeholders only for the eight types without trustworthy public images", () => {
+  it("shows placeholders only for the five types without trustworthy public images", () => {
     const series = getSeries(inceptionUccSlug);
     const unverified = series?.cardDesigns
       .filter((card) => card.image.verification === "unverified")
       .map((card) => card.slug);
 
     expect(unverified).toEqual(inceptionUnverifiedDesigns);
-    expect(series?.cardDesigns.filter((card) => card.image.verification === "exact")).toHaveLength(25);
+    expect(series?.cardDesigns.filter((card) => card.image.verification === "exact")).toHaveLength(28);
   });
 
   it("marks every horizontal card design for landscape presentation", () => {
@@ -849,7 +846,7 @@ describe("Topps Inception UEFA Club Competitions 2025-26 catalogue", () => {
     expect(landscape).toEqual(inceptionLandscapeDesigns);
   });
 
-  it("uses normalized local assets for the packaging and all 25 verified cards", async () => {
+  it("uses normalized local assets for the packaging and all 28 displayed cards", async () => {
     const series = getSeries(inceptionUccSlug);
 
     expect(series).toBeDefined();
@@ -859,7 +856,7 @@ describe("Topps Inception UEFA Club Competitions 2025-26 catalogue", () => {
     expect(fs.existsSync(packagingPath)).toBe(true);
 
     const verified = series.cardDesigns.filter((card) => card.image.verification === "exact");
-    expect(verified).toHaveLength(25);
+    expect(verified).toHaveLength(28);
     for (const card of verified) {
       const imagePath = path.join(process.cwd(), "public", card.image.path);
       expect(fs.existsSync(imagePath), card.slug).toBe(true);
