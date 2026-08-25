@@ -728,8 +728,6 @@ const argentinaCard = ({
 });
 
 const argentinaBaseParallels = [
-  { name: "Halo", serial: null },
-  { name: "Static", serial: null },
   { name: "Aqua Rainbow", serial: "/199" },
   { name: "Aqua Icy", serial: "/199" },
   { name: "Blue Rainbow", serial: "/150" },
@@ -827,6 +825,133 @@ export const toppsArgentinaTeamSet2026: CardSeries = {
   },
   totalVariants: 116,
   cardDesigns: argentinaTeamSetCardDesigns,
+};
+
+type RealMadridCardInput = {
+  slug: string;
+  officialName: string;
+  name: LocalizedText;
+  serial?: string;
+  displayParallelName?: string;
+  group?: CardGroup;
+  parallels?: CardDesign["parallels"];
+  layout?: CardDesign["layout"];
+};
+
+const realMadridCard = ({
+  slug,
+  officialName,
+  name,
+  serial,
+  displayParallelName,
+  group = "base",
+  parallels,
+  layout,
+}: RealMadridCardInput): CardDesign => ({
+  slug,
+  officialName,
+  name,
+  group,
+  section: group === "base" ? (serial ? numbered : unnumbered) : (serial ? rareInsert : regularInsert),
+  serial: serial ?? null,
+  displayParallelName,
+  parallels,
+  layout,
+  image: {
+    path: `images/topps-real-madrid-team-set-2025-26/cards/${slug}.jpg`,
+    verification: "exact",
+    alt: names(
+      `2025-26 Topps 皇家马德里球队套装 ${name["zh-CN"]}卡面示例`,
+      `2025-26 Topps Real Madrid Team Set ${name.en} card example`,
+      `Ejemplo de carta ${name.es} de Topps Real Madrid Team Set 2025-26`,
+    ),
+  },
+});
+
+const realMadridBaseParallels: CardDesign["parallels"] = [
+  { name: "Purple Rainbow Foil", serial: "/250" },
+  { name: "Purple Icy Foil", serial: "/250" },
+  { name: "Aqua Rainbow Foil", serial: "/199" },
+  { name: "Aqua Icy Foil", serial: "/199" },
+  { name: "Blue Rainbow Foil", serial: "/150" },
+  { name: "Blue Icy Foil", serial: "/150" },
+  { name: "Green Rainbow Foil", serial: "/99" },
+  { name: "Green Icy Foil", serial: "/99" },
+  { name: "Gold Rainbow Foil", serial: "/50" },
+  { name: "Gold Icy Foil", serial: "/50" },
+  { name: "Orange Rainbow Foil", serial: "/25" },
+  { name: "Orange Icy Foil", serial: "/25" },
+  { name: "Black Rainbow Foil", serial: "/10" },
+  { name: "Black Icy Foil", serial: "/10" },
+  { name: "Red Rainbow Foil", serial: "/5" },
+  { name: "Red Icy Foil", serial: "/5" },
+  { name: "Gold FoilFractor", serial: "1/1" },
+];
+
+const realMadridAutographParallels: CardDesign["parallels"] = [
+  { name: "Aqua Rainbow Foil", serial: "/199" },
+  { name: "Blue Rainbow Foil", serial: "/150" },
+  { name: "Green Rainbow Foil", serial: "/99" },
+  { name: "Gold Rainbow Foil", serial: "/50" },
+  { name: "Orange Rainbow Foil", serial: "/25" },
+  { name: "Black Rainbow Foil", serial: "/10" },
+  { name: "Red Rainbow Foil", serial: "/5" },
+  { name: "Gold FoilFractor", serial: "1/1" },
+];
+
+const realMadridBaseFamilies = [
+  { slug: "first-team", officialName: "First Team", zh: "一线队", es: "Primer equipo" },
+  { slug: "bona-fide-baller", officialName: "Bona Fide Baller", zh: "真格球星", es: "Bona Fide Baller" },
+  { slug: "pitch-pursuits", officialName: "Pitch Pursuits", zh: "球场追击", es: "Pitch Pursuits" },
+  { slug: "collectors-corner", officialName: "Collector's Corner", zh: "收藏家角旗区", es: "Rincón del coleccionista" },
+  { slug: "king-real", officialName: "King Real", zh: "皇马之王", es: "Rey Real" },
+] as const;
+
+const realMadridVersions = [
+  { suffix: "base", zh: "基础版", en: "Base", es: "Base" },
+  { suffix: "halo", zh: "Halo 光晕", en: "Halo", es: "Halo" },
+  { suffix: "static", zh: "Static 静电", en: "Static Foil", es: "Static Foil" },
+] as const;
+
+const realMadridTeamSetCardDesigns: CardDesign[] = [
+  ...realMadridBaseFamilies.flatMap((family) => realMadridVersions.map((version, index) =>
+    realMadridCard({
+      slug: `${family.slug}-${version.suffix}`,
+      officialName: `${family.officialName} ${version.en}`,
+      name: names(
+        `${family.zh} · ${version.zh}`,
+        `${family.officialName} · ${version.en}`,
+        `${family.es} · ${version.es}`,
+      ),
+      parallels: index === 0 ? realMadridBaseParallels : undefined,
+      layout: family.slug === "collectors-corner" ? "landscape" : undefined,
+    }),
+  )),
+  realMadridCard({ slug: "rainbow-flick", officialName: "Rainbow Flick", name: names("彩虹挑球", "Rainbow Flick", "Regate arcoíris"), group: "insert", layout: "landscape" }),
+  realMadridCard({ slug: "base-autograph", officialName: "Base Autograph Orange Rainbow Foil", name: names("基础签名 · 橙色彩虹", "Base Autograph · Orange Rainbow Foil", "Autógrafo base · Naranja arcoíris"), serial: "/25", displayParallelName: "Orange Rainbow Foil", group: "insert", parallels: realMadridAutographParallels }),
+  realMadridCard({ slug: "bona-fide-baller-autograph", officialName: "Bona Fide Baller Autograph Red Rainbow Foil", name: names("真格球星签名 · 红色彩虹", "Bona Fide Baller Autograph · Red Rainbow Foil", "Autógrafo Bona Fide Baller · Rojo arcoíris"), serial: "/5", displayParallelName: "Red Rainbow Foil", group: "insert", parallels: realMadridAutographParallels }),
+];
+
+export const toppsRealMadridTeamSet202526: CardSeries = {
+  slug: "topps-real-madrid-team-set-2025-26",
+  manufacturer: "Topps",
+  season: "2025/26",
+  name: names(
+    "2025-26 Topps 皇家马德里球队套装",
+    "2025-26 Topps Real Madrid Team Set",
+    "Topps Real Madrid Team Set 2025-26",
+  ),
+  packaging: {
+    path: "images/topps-real-madrid-team-set-2025-26/packaging.jpg",
+    verification: "exact",
+    alt: names(
+      "2025-26 Topps 皇家马德里球队套装盒装",
+      "2025-26 Topps Real Madrid Team Set box",
+      "Caja Topps Real Madrid Team Set 2025-26",
+    ),
+  },
+  totalVariants: 1448,
+  cardDesigns: realMadridTeamSetCardDesigns,
 };
 
 type InceptionCardInput = {
@@ -985,6 +1110,7 @@ const catalogue = [
   toppsForeverFcBarcelona202526,
   toppsArgentinaTeamSet2026,
   toppsInceptionUcc202526,
+  toppsRealMadridTeamSet202526,
 ];
 
 export function getCatalogue() {

@@ -16,6 +16,29 @@ const chromeSapphireBundesligaSlug = "topps-chrome-sapphire-bundesliga-2025-26";
 const barcelonaForeverSlug = "topps-forever-fc-barcelona-2025-26";
 const argentinaTeamSetSlug = "topps-argentina-team-set-2026";
 const inceptionUccSlug = "topps-inception-ucc-2025-26";
+const realMadridTeamSetSlug = "topps-real-madrid-team-set-2025-26";
+const realMadridBaseFamilies = [
+  "first-team",
+  "bona-fide-baller",
+  "pitch-pursuits",
+  "collectors-corner",
+  "king-real",
+];
+const realMadridVersionSuffixes = ["base", "halo", "static"];
+const realMadridTeamSetDesigns = [
+  ...realMadridBaseFamilies.flatMap((family) =>
+    realMadridVersionSuffixes.map((suffix) => `${family}-${suffix}`),
+  ),
+  "rainbow-flick",
+  "base-autograph",
+  "bona-fide-baller-autograph",
+];
+const realMadridLandscapeDesigns = [
+  "collectors-corner-base",
+  "collectors-corner-halo",
+  "collectors-corner-static",
+  "rainbow-flick",
+];
 const inceptionUccDesigns = [
   "first-xi",
   "emerging-stars",
@@ -698,6 +721,7 @@ describe("Topps Argentina Team Set 2026 catalogue", () => {
         null,
         null,
       ]);
+      expect(versions[0]?.parallels).toHaveLength(15);
     }
   });
 
@@ -775,6 +799,107 @@ describe("Topps Argentina Team Set 2026 catalogue", () => {
       expect(saturatedRatio, slug).toBeGreaterThan(0.6);
     }
   });
+});
+
+describe("Topps Real Madrid Team Set 2025-26 catalogue", () => {
+  it("publishes the 18 independently rateable display cards and the full 1,448-card master set", () => {
+    const series = getSeries(realMadridTeamSetSlug);
+
+    expect(series?.cardDesigns.map((card) => card.slug)).toEqual(realMadridTeamSetDesigns);
+    expect(series?.cardDesigns).toHaveLength(18);
+    expect(series?.totalVariants).toBe(1448);
+  });
+
+  it("shows Base, Halo, and Static for each of the five base designs", () => {
+    const series = getSeries(realMadridTeamSetSlug);
+
+    for (const family of realMadridBaseFamilies) {
+      const versions = realMadridVersionSuffixes.map((suffix) =>
+        series?.cardDesigns.find((card) => card.slug === `${family}-${suffix}`),
+      );
+      expect(versions.map((card) => card?.serial), family).toEqual([null, null, null]);
+      expect(versions[0]?.parallels).toHaveLength(17);
+    }
+  });
+
+  it("keeps the official base and autograph parallel ladders", () => {
+    const series = getSeries(realMadridTeamSetSlug);
+    const cards = new Map(series?.cardDesigns.map((card) => [card.slug, card]));
+
+    expect(cards.get("first-team-base")?.parallels?.map((parallel) => parallel.serial)).toEqual([
+      "/250", "/250", "/199", "/199", "/150", "/150", "/99", "/99",
+      "/50", "/50", "/25", "/25", "/10", "/10", "/5", "/5", "1/1",
+    ]);
+    expect(cards.get("base-autograph")?.parallels?.map((parallel) => parallel.serial)).toEqual([
+      "/199", "/150", "/99", "/50", "/25", "/10", "/5", "1/1",
+    ]);
+    expect(cards.get("bona-fide-baller-autograph")?.parallels).toHaveLength(8);
+  });
+
+  it("uses exact, normalized local assets and marks every horizontal design", async () => {
+    const series = getSeries(realMadridTeamSetSlug);
+
+    expect(series).toBeDefined();
+    if (!series) return;
+    expect(validateSeries(series)).toEqual([]);
+    expect(series.cardDesigns.filter((card) => card.layout === "landscape").map((card) => card.slug))
+      .toEqual(realMadridLandscapeDesigns);
+
+    const images = [series.packaging.path, ...series.cardDesigns.map((card) => card.image.path)];
+    expect(new Set(images)).toHaveLength(19);
+    for (const card of series.cardDesigns) {
+      expect(card.image.verification, card.slug).toBe("exact");
+      const imagePath = path.join(process.cwd(), "public", card.image.path);
+      expect(fs.existsSync(imagePath), card.slug).toBe(true);
+      const metadata = await sharp(imagePath).metadata();
+      const expected = card.layout === "landscape"
+        ? { width: 1050, height: 750 }
+        : { width: 750, height: 1050 };
+      expect({ width: metadata.width, height: metadata.height }, card.slug).toEqual(expected);
+    }
+  });
+
+  it("uses tightly framed artwork for the King Real Base and Static cards", async () => {
+    for (const slug of ["king-real-base", "king-real-static"]) {
+      const imagePath = path.join(
+        process.cwd(),
+        "public",
+        "images",
+        realMadridTeamSetSlug,
+        "cards",
+        `${slug}.jpg`,
+      );
+      const corner = await sharp(imagePath)
+        .extract({ left: 0, top: 0, width: 50, height: 50 })
+        .stats();
+      const meanLuminance = corner.channels
+        .slice(0, 3)
+        .reduce((sum, channel) => sum + channel.mean, 0) / 3;
+
+      expect(meanLuminance, `${slug} still includes the dark seller backdrop`).toBeGreaterThan(160);
+    }
+  });
+});
+
+it("does not repeat independently rated Halo or Static cards under their Base card", () => {
+  const independentlyRatedFamilies = [
+    { seriesSlug: argentinaTeamSetSlug, families: argentinaBaseFamilies },
+    { seriesSlug: realMadridTeamSetSlug, families: realMadridBaseFamilies },
+  ];
+
+  for (const { seriesSlug, families } of independentlyRatedFamilies) {
+    const series = getSeries(seriesSlug);
+    for (const family of families) {
+      const labels = series?.cardDesigns
+        .find((card) => card.slug === `${family}-base`)
+        ?.parallels?.map((parallel) => parallel.name) ?? [];
+
+      expect(labels, `${seriesSlug}/${family}`).not.toContain("Halo");
+      expect(labels, `${seriesSlug}/${family}`).not.toContain("Static");
+      expect(labels, `${seriesSlug}/${family}`).not.toContain("Static Foil");
+      expect(labels.every((label) => !/^(Halo|Static(?: Foil)?)$/.test(label))).toBe(true);
+    }
+  }
 });
 
 describe("Topps Inception UEFA Club Competitions 2025-26 catalogue", () => {

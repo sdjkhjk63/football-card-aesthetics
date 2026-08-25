@@ -1,6 +1,6 @@
 # Football Card Aesthetics
 
-A multilingual, open-source catalogue for rating the visual design of football trading cards. The catalogue currently covers seven Topps releases and 205 independent rating objects. The newest addition is **2025/26 Topps Inception UEFA Club Competitions**, with one representative for every main card type and separate displays for both Club Crest Autograph Patch versions. It rates the card design—not the player, rarity, or market price.
+A multilingual, open-source catalogue for rating the visual design of football trading cards. The catalogue currently covers eight Topps releases and 223 independent rating objects. The newest addition is **2025/26 Topps Real Madrid Team Set**, with Base, Halo, and Static displays for all five base designs plus Rainbow Flick and both autograph families. It rates the card design—not the player, rarity, or market price.
 
 Interface languages: Simplified Chinese, English, and Spanish. Ratings are private to the current browser; the app does not invent community averages.
 
@@ -28,7 +28,7 @@ The desktop edition is an offline Electron wrapper around the same multilingual 
 
 ```bash
 pnpm desktop:dev    # build and launch a local desktop window
-pnpm desktop:build  # export the 43 offline pages to out/
+pnpm desktop:build  # export the complete offline catalogue to out/
 pnpm desktop:pack   # create release/win-unpacked/Card Aesthetics.exe
 pnpm desktop:dist   # create release/Card Aesthetics Setup 0.1.0.exe
 ```
@@ -74,6 +74,12 @@ The Inception UCC assets can be regenerated from the adjacent research folder wi
 
 ```bash
 node scripts/import-inception-ucc-assets.mjs
+```
+
+The Real Madrid Team Set assets can be regenerated with:
+
+```bash
+node scripts/import-real-madrid-team-set-assets.mjs
 ```
 
 That importer uses fixed pixel crops and consistent portrait/landscape canvases; it does not use generative reconstruction. Twenty-five Inception card images are verified real-card examples. Eight checklist-confirmed types without a trustworthy public image are intentionally shown as “pending verification” placeholders rather than being filled with a similar card.
