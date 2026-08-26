@@ -23,13 +23,26 @@ async function studioPackagingStats(imagePath: string) {
   const { data, info } = await sharp(imagePath).raw().toBuffer({ resolveWithObject: true });
   let blackPixels = 0;
   let brightPixels = 0;
+  let visibleMaxY = 0;
+  let lowerContactMinX = Number.POSITIVE_INFINITY;
+  let lowerContactPixels = 0;
 
   for (let index = 0; index < data.length; index += info.channels) {
+    const pixelIndex = index / info.channels;
+    const y = Math.floor(pixelIndex / info.width);
     const red = data[index];
     const green = data[index + 1];
     const blue = data[index + 2];
+    const visibleObjectPixel = red > 70 || green > 70 || blue > 70;
     if (red < 12 && green < 12 && blue < 12) blackPixels += 1;
     if (red > 190 && green > 190 && blue > 190) brightPixels += 1;
+    if (visibleObjectPixel) {
+      visibleMaxY = Math.max(visibleMaxY, y);
+      if (y === 910) {
+        lowerContactMinX = Math.min(lowerContactMinX, pixelIndex % info.width);
+        lowerContactPixels += 1;
+      }
+    }
   }
 
   const pixelCount = info.width * info.height;
@@ -38,6 +51,9 @@ async function studioPackagingStats(imagePath: string) {
     height: info.height,
     blackRatio: blackPixels / pixelCount,
     brightRatio: brightPixels / pixelCount,
+    visibleMaxY,
+    lowerContactMinX,
+    lowerContactPixels,
   };
 }
 const manchesterUnitedBaseFamilies = [
@@ -729,6 +745,9 @@ describe("Topps Forever FC Barcelona 2025-26 catalogue", () => {
     expect({ width: stats.width, height: stats.height }).toEqual({ width: 1200, height: 1200 });
     expect(stats.blackRatio).toBeGreaterThan(0.25);
     expect(stats.brightRatio).toBeGreaterThan(0.1);
+    expect(stats.visibleMaxY).toBeGreaterThan(900);
+    expect(stats.lowerContactMinX).toBeLessThan(400);
+    expect(stats.lowerContactPixels).toBeGreaterThan(180);
   });
 
   it("publishes every marketplace or official image that has been matched to an exact version", () => {

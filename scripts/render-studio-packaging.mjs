@@ -13,7 +13,7 @@ const barcelonaSource = path.join(
   "packaging-source.jpg",
 );
 
-const studioBackdrop = (haloMarkup) => Buffer.from(`
+const studioBackdrop = (haloMarkup, { floor = true } = {}) => Buffer.from(`
   <svg width="1200" height="1200" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <filter id="blur"><feGaussianBlur stdDeviation="24" /></filter>
@@ -29,7 +29,7 @@ const studioBackdrop = (haloMarkup) => Buffer.from(`
     </defs>
     <rect width="1200" height="1200" fill="#000000" />
     ${haloMarkup}
-    <ellipse cx="600" cy="1080" rx="300" ry="38" fill="url(#floor)" filter="url(#blur)" />
+    ${floor ? '<ellipse cx="600" cy="1080" rx="300" ry="38" fill="url(#floor)" filter="url(#blur)" />' : ''}
   </svg>
 `);
 
@@ -66,12 +66,12 @@ export async function renderBarcelonaForeverPackaging(inputPath, outputPath) {
     .composite([{
       input: Buffer.from(`
         <svg width="550" height="733" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="160,2 541,64 549,674 455,732 6,679 5,59" fill="#ffffff" />
+          <polygon points="160,2 541,64 548,650 160,682 8,679 5,59" fill="#ffffff" />
         </svg>
       `),
       blend: "dest-in",
     }])
-    .resize({ height: 1020 })
+    .resize({ height: 980 })
     .png()
     .toBuffer();
 
@@ -79,10 +79,11 @@ export async function renderBarcelonaForeverPackaging(inputPath, outputPath) {
   const left = Math.round((1200 - metadata.width) / 2);
   const backdrop = studioBackdrop(`
     <ellipse cx="600" cy="585" rx="455" ry="555" fill="url(#halo)" />
-  `);
+    <ellipse cx="585" cy="1018" rx="255" ry="34" fill="#242424" opacity="0.42" filter="url(#blur)" />
+  `, { floor: false });
 
   await sharp(backdrop)
-    .composite([{ input: cutout, left, top: 60 }])
+    .composite([{ input: cutout, left, top: 110 }])
     .jpeg({ quality: 94, chromaSubsampling: "4:4:4" })
     .toFile(outputPath);
 }
