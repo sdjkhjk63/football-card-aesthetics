@@ -1054,8 +1054,8 @@ const manchesterUnitedTeamSetCardDesigns: CardDesign[] = [
     }),
   )),
   manchesterUnitedCard({ slug: "rainbow-flick", officialName: "Rainbow Flick", name: names("彩虹挑球", "Rainbow Flick", "Regate arcoíris"), group: "insert", layout: "landscape" }),
-  manchesterUnitedCard({ slug: "base-autograph", officialName: "Base Cards Autograph Variation", name: names("基础卡签名", "Base Cards Autograph Variation", "Variación de autógrafo base"), group: "insert", parallels: manchesterUnitedAutographParallels }),
-  manchesterUnitedCard({ slug: "bona-fide-baller-autograph", officialName: "Bona Fide Baller Autograph Variation", name: names("真格球星签名", "Bona Fide Baller Autograph Variation", "Autógrafo Bona Fide Baller"), group: "insert", parallels: manchesterUnitedAutographParallels }),
+  manchesterUnitedCard({ slug: "base-autograph", officialName: "Base Cards Autograph Variation", name: names("基础卡签名", "Base Cards Autograph Variation", "Variación de autógrafo base"), serial: "1/1", displayParallelName: "Gold FoilFractor", group: "insert", parallels: manchesterUnitedAutographParallels }),
+  manchesterUnitedCard({ slug: "bona-fide-baller-autograph", officialName: "Bona Fide Baller Autograph Variation", name: names("真格球星签名", "Bona Fide Baller Autograph Variation", "Autógrafo Bona Fide Baller"), serial: "/10", displayParallelName: "Black", group: "insert", parallels: manchesterUnitedAutographParallels }),
 ];
 
 export const toppsManchesterUnitedTeamSet202526: CardSeries = {

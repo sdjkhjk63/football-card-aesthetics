@@ -73,7 +73,7 @@ async function renderCard(slug, url) {
 }
 
 await fs.mkdir(path.join(outputRoot, "cards"), { recursive: true });
-const packaging = await download("https://buysoccercardsonline.com/cdn/shop/files/MANU-TEAM-SET-2_2048x.jpg?v=1771357933");
+const packaging = await download("https://buysoccercardsonline.com/cdn/shop/files/MANU-TEAM-SET-1.jpg?v=1771357932");
 await sharp(packaging, { failOn: "none" })
   .rotate()
   .resize(1200, 1200, { fit: "contain", background: "#eef5fb" })

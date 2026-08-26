@@ -921,6 +921,43 @@ describe("Topps Manchester United Team Set 2025-26 catalogue", () => {
     expect(cards.get("bona-fide-baller-autograph")?.parallels).toHaveLength(7);
   });
 
+  it("marks the exact autograph parallels shown by the representative photos", () => {
+    const series = getSeries(manchesterUnitedTeamSetSlug);
+    const cards = new Map(series?.cardDesigns.map((card) => [card.slug, card]));
+
+    expect({
+      serial: cards.get("base-autograph")?.serial,
+      displayParallelName: cards.get("base-autograph")?.displayParallelName,
+    }).toEqual({ serial: "1/1", displayParallelName: "Gold FoilFractor" });
+    expect({
+      serial: cards.get("bona-fide-baller-autograph")?.serial,
+      displayParallelName: cards.get("bona-fide-baller-autograph")?.displayParallelName,
+    }).toEqual({ serial: "/10", displayParallelName: "Black" });
+  });
+
+  it("uses isolated retail box art instead of the multi-card sell-sheet", async () => {
+    const series = getSeries(manchesterUnitedTeamSetSlug);
+    expect(series).toBeDefined();
+    if (!series) return;
+
+    const imagePath = path.join(process.cwd(), "public", series.packaging.path);
+    const { data, info } = await sharp(imagePath).raw().toBuffer({ resolveWithObject: true });
+    let whitePixels = 0;
+    let redPixels = 0;
+
+    for (let index = 0; index < data.length; index += info.channels) {
+      const red = data[index];
+      const green = data[index + 1];
+      const blue = data[index + 2];
+      if (red > 242 && green > 242 && blue > 242) whitePixels += 1;
+      if (red > 150 && red > green * 1.35 && red > blue * 1.35) redPixels += 1;
+    }
+
+    const pixelCount = info.width * info.height;
+    expect(whitePixels / pixelCount).toBeGreaterThan(0.7);
+    expect(redPixels / pixelCount).toBeGreaterThan(0.1);
+  });
+
   it("uses exact normalized local assets and marks every horizontal design", async () => {
     const series = getSeries(manchesterUnitedTeamSetSlug);
 
