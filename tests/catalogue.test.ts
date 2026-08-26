@@ -18,6 +18,28 @@ const argentinaTeamSetSlug = "topps-argentina-team-set-2026";
 const inceptionUccSlug = "topps-inception-ucc-2025-26";
 const realMadridTeamSetSlug = "topps-real-madrid-team-set-2025-26";
 const manchesterUnitedTeamSetSlug = "topps-manchester-united-team-set-2025-26";
+
+async function studioPackagingStats(imagePath: string) {
+  const { data, info } = await sharp(imagePath).raw().toBuffer({ resolveWithObject: true });
+  let blackPixels = 0;
+  let brightPixels = 0;
+
+  for (let index = 0; index < data.length; index += info.channels) {
+    const red = data[index];
+    const green = data[index + 1];
+    const blue = data[index + 2];
+    if (red < 12 && green < 12 && blue < 12) blackPixels += 1;
+    if (red > 190 && green > 190 && blue > 190) brightPixels += 1;
+  }
+
+  const pixelCount = info.width * info.height;
+  return {
+    width: info.width,
+    height: info.height,
+    blackRatio: blackPixels / pixelCount,
+    brightRatio: brightPixels / pixelCount,
+  };
+}
 const manchesterUnitedBaseFamilies = [
   "first-team",
   "bona-fide-baller",
@@ -698,6 +720,17 @@ describe("Topps Forever FC Barcelona 2025-26 catalogue", () => {
     }
   });
 
+  it("presents the three-dimensional box on a black studio background", async () => {
+    const series = getSeries(barcelonaForeverSlug);
+    expect(series).toBeDefined();
+    if (!series) return;
+
+    const stats = await studioPackagingStats(path.join(process.cwd(), "public", series.packaging.path));
+    expect({ width: stats.width, height: stats.height }).toEqual({ width: 1200, height: 1200 });
+    expect(stats.blackRatio).toBeGreaterThan(0.25);
+    expect(stats.brightRatio).toBeGreaterThan(0.1);
+  });
+
   it("publishes every marketplace or official image that has been matched to an exact version", () => {
     const series = getSeries(barcelonaForeverSlug);
     const exactSlugs = series?.cardDesigns
@@ -939,27 +972,15 @@ describe("Topps Manchester United Team Set 2025-26 catalogue", () => {
     }).toEqual({ serial: "/10", displayParallelName: "Black" });
   });
 
-  it("uses isolated retail box art instead of the multi-card sell-sheet", async () => {
+  it("presents the isolated retail box on a black studio background", async () => {
     const series = getSeries(manchesterUnitedTeamSetSlug);
     expect(series).toBeDefined();
     if (!series) return;
 
-    const imagePath = path.join(process.cwd(), "public", series.packaging.path);
-    const { data, info } = await sharp(imagePath).raw().toBuffer({ resolveWithObject: true });
-    let whitePixels = 0;
-    let redPixels = 0;
-
-    for (let index = 0; index < data.length; index += info.channels) {
-      const red = data[index];
-      const green = data[index + 1];
-      const blue = data[index + 2];
-      if (red > 242 && green > 242 && blue > 242) whitePixels += 1;
-      if (red > 150 && red > green * 1.35 && red > blue * 1.35) redPixels += 1;
-    }
-
-    const pixelCount = info.width * info.height;
-    expect(whitePixels / pixelCount).toBeGreaterThan(0.7);
-    expect(redPixels / pixelCount).toBeGreaterThan(0.1);
+    const stats = await studioPackagingStats(path.join(process.cwd(), "public", series.packaging.path));
+    expect({ width: stats.width, height: stats.height }).toEqual({ width: 1200, height: 1200 });
+    expect(stats.blackRatio).toBeGreaterThan(0.25);
+    expect(stats.brightRatio).toBeGreaterThan(0.1);
   });
 
   it("uses exact normalized local assets and marks every horizontal design", async () => {

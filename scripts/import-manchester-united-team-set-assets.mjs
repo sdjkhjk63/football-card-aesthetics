@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
+import { renderManchesterUnitedPackaging } from "./render-studio-packaging.mjs";
 
 const root = process.cwd();
 const outputRoot = path.join(root, "public/images/topps-manchester-united-team-set-2025-26");
@@ -74,11 +75,7 @@ async function renderCard(slug, url) {
 
 await fs.mkdir(path.join(outputRoot, "cards"), { recursive: true });
 const packaging = await download("https://buysoccercardsonline.com/cdn/shop/files/MANU-TEAM-SET-1.jpg?v=1771357932");
-await sharp(packaging, { failOn: "none" })
-  .rotate()
-  .resize(1200, 1200, { fit: "contain", background: "#eef5fb" })
-  .jpeg({ quality: 92 })
-  .toFile(path.join(outputRoot, "packaging.jpg"));
+await renderManchesterUnitedPackaging(packaging, path.join(outputRoot, "packaging.jpg"));
 
 for (const [slug, url] of Object.entries(assets)) {
   await renderCard(slug, url);
