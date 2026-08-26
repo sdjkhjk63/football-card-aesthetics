@@ -17,6 +17,23 @@ const barcelonaForeverSlug = "topps-forever-fc-barcelona-2025-26";
 const argentinaTeamSetSlug = "topps-argentina-team-set-2026";
 const inceptionUccSlug = "topps-inception-ucc-2025-26";
 const realMadridTeamSetSlug = "topps-real-madrid-team-set-2025-26";
+const manchesterUnitedTeamSetSlug = "topps-manchester-united-team-set-2025-26";
+const manchesterUnitedBaseFamilies = [
+  "first-team",
+  "bona-fide-baller",
+  "pitch-pursuits",
+  "collectors-corner",
+  "united-road",
+];
+const manchesterUnitedVersionSuffixes = ["base", "halo", "static"];
+const manchesterUnitedTeamSetDesigns = [
+  ...manchesterUnitedBaseFamilies.flatMap((family) =>
+    manchesterUnitedVersionSuffixes.map((suffix) => `${family}-${suffix}`),
+  ),
+  "rainbow-flick",
+  "base-autograph",
+  "bona-fide-baller-autograph",
+];
 const realMadridBaseFamilies = [
   "first-team",
   "bona-fide-baller",
@@ -881,10 +898,65 @@ describe("Topps Real Madrid Team Set 2025-26 catalogue", () => {
   });
 });
 
+describe("Topps Manchester United Team Set 2025-26 catalogue", () => {
+  it("publishes the 18 independently rateable displays and all 1,377 physical variants", () => {
+    const series = getSeries(manchesterUnitedTeamSetSlug);
+
+    expect(series?.cardDesigns.map((card) => card.slug)).toEqual(manchesterUnitedTeamSetDesigns);
+    expect(series?.cardDesigns).toHaveLength(18);
+    expect(series?.totalVariants).toBe(1377);
+  });
+
+  it("uses Manchester United's 19-set base ladder and seven numbered autograph parallels", () => {
+    const series = getSeries(manchesterUnitedTeamSetSlug);
+    const cards = new Map(series?.cardDesigns.map((card) => [card.slug, card]));
+
+    expect(cards.get("first-team-base")?.parallels?.map((parallel) => parallel.serial)).toEqual([
+      "/199", "/199", "/150", "/150", "/99", "/99", "/75", "/75",
+      "/50", "/50", "/25", "/25", "/10", "/10", "/5", "/5", "1/1",
+    ]);
+    expect(cards.get("base-autograph")?.parallels?.map((parallel) => parallel.serial)).toEqual([
+      "/150", "/99", "/50", "/25", "/10", "/5", "1/1",
+    ]);
+    expect(cards.get("bona-fide-baller-autograph")?.parallels).toHaveLength(7);
+  });
+
+  it("uses exact normalized local assets and marks every horizontal design", async () => {
+    const series = getSeries(manchesterUnitedTeamSetSlug);
+
+    expect(series).toBeDefined();
+    if (!series) return;
+    expect(validateSeries(series)).toEqual([]);
+    expect(series.cardDesigns.filter((card) => card.layout === "landscape").map((card) => card.slug))
+      .toEqual([
+        "collectors-corner-base",
+        "collectors-corner-halo",
+        "collectors-corner-static",
+        "rainbow-flick",
+      ]);
+
+    const images = [series.packaging.path, ...series.cardDesigns.map((card) => card.image.path)];
+    expect(new Set(images)).toHaveLength(19);
+    for (const image of images) {
+      const imagePath = path.join(process.cwd(), "public", image);
+      expect(fs.existsSync(imagePath), image).toBe(true);
+    }
+    for (const card of series.cardDesigns) {
+      expect(card.image.verification, card.slug).toBe("exact");
+      const metadata = await sharp(path.join(process.cwd(), "public", card.image.path)).metadata();
+      const expected = card.layout === "landscape"
+        ? { width: 1050, height: 750 }
+        : { width: 750, height: 1050 };
+      expect({ width: metadata.width, height: metadata.height }, card.slug).toEqual(expected);
+    }
+  });
+});
+
 it("does not repeat independently rated Halo or Static cards under their Base card", () => {
   const independentlyRatedFamilies = [
     { seriesSlug: argentinaTeamSetSlug, families: argentinaBaseFamilies },
     { seriesSlug: realMadridTeamSetSlug, families: realMadridBaseFamilies },
+    { seriesSlug: manchesterUnitedTeamSetSlug, families: manchesterUnitedBaseFamilies },
   ];
 
   for (const { seriesSlug, families } of independentlyRatedFamilies) {

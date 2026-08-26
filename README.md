@@ -1,6 +1,6 @@
 # Football Card Aesthetics
 
-A multilingual, open-source catalogue for rating the visual design of football trading cards. The catalogue currently covers eight Topps releases and 223 independent rating objects. The newest addition is **2025/26 Topps Real Madrid Team Set**, with Base, Halo, and Static displays for all five base designs plus Rainbow Flick and both autograph families. It rates the card design—not the player, rarity, or market price.
+A multilingual, open-source catalogue for rating the visual design of football trading cards. The catalogue currently covers nine Topps releases and 241 independent rating objects. The newest addition is **2025/26 Topps Manchester United Team Set**, with Base, Halo, and Static displays for all five base designs plus Rainbow Flick and both autograph families. It rates the card design—not the player, rarity, or market price.
 
 Interface languages: Simplified Chinese, English, and Spanish. Ratings are private to the current browser; the app does not invent community averages.
 
