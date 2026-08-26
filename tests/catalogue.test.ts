@@ -921,10 +921,14 @@ describe("Topps Manchester United Team Set 2025-26 catalogue", () => {
     expect(cards.get("bona-fide-baller-autograph")?.parallels).toHaveLength(7);
   });
 
-  it("marks the exact autograph parallels shown by the representative photos", () => {
+  it("marks every numbered parallel shown by the representative photos", () => {
     const series = getSeries(manchesterUnitedTeamSetSlug);
     const cards = new Map(series?.cardDesigns.map((card) => [card.slug, card]));
 
+    expect({
+      serial: cards.get("bona-fide-baller-base")?.serial,
+      displayParallelName: cards.get("bona-fide-baller-base")?.displayParallelName,
+    }).toEqual({ serial: "1/1", displayParallelName: "Gold FoilFractor" });
     expect({
       serial: cards.get("base-autograph")?.serial,
       displayParallelName: cards.get("base-autograph")?.displayParallelName,

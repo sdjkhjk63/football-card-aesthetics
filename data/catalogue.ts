@@ -1049,6 +1049,8 @@ const manchesterUnitedTeamSetCardDesigns: CardDesign[] = [
         `${family.officialName} · ${version.en}`,
         `${family.es} · ${version.es}`,
       ),
+      serial: family.slug === "bona-fide-baller" && version.suffix === "base" ? "1/1" : undefined,
+      displayParallelName: family.slug === "bona-fide-baller" && version.suffix === "base" ? "Gold FoilFractor" : undefined,
       parallels: index === 0 ? manchesterUnitedBaseParallels : undefined,
       layout: family.slug === "collectors-corner" ? "landscape" : undefined,
     }),
