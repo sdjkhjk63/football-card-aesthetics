@@ -40,7 +40,6 @@ async function recropOneClubAutographs() {
 
 await Promise.all([
   refineExisting("cubist", "portrait"),
-  refineExisting("prodigy-autographs", "portrait"),
   refineExisting("dual-autographs", "landscape"),
   recropOneClubAutographs(),
 ]);
