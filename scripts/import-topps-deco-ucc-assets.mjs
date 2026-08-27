@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { spawnSync } from "node:child_process";
 import sharp from "sharp";
 
 const projectRoot = process.cwd();
@@ -18,25 +19,19 @@ const assets = [
   ["01-current-stars-purple-bellingham.jpg", "current-stars"],
   ["02-artistry-baggio-red.avif", "artistry"],
   ["03-moderne-marvels-doue.jpg", "moderne-marvels"],
-  ["04-then-now-yamal-ronaldinho.jpg", "then-and-now", [135, 80, 750, 920]],
   ["05-one-club-gavi-putellas-red.jpg", "one-club"],
   ["06-legends-george-weah.jpg", "legends", [36, 42, 735, 1015]],
   ["07-prodigy-ruben-van-bommel.jpg", "prodigy", [145, 190, 760, 1010]],
-  ["08-lnouvel-esprit-rio-ngumoha.jpg", "l-nouvel-esprit", [300, 356, 800, 1080]],
-  ["09-joueur-emblematique-baggio.webp", "joueur-emblematique"],
   ["10-razzmatazz-messi-purple.jpg", "razzmatazz"],
-  ["11-cubist-messi.jpg", "cubist", [202, 350, 610, 820]],
   ["12-current-stars-auto-marmoush-gold.jpg", "current-stars-autographs"],
   ["13-legends-auto-koeman-orange.jpg", "legends-autographs"],
   ["14-joueur-emblematique-auto-baggio.webp", "joueur-emblematique-autographs", [194, 90, 660, 930]],
   ["15-lnouvel-esprit-auto-lennart-karl.jpg", "l-nouvel-esprit-autographs", [100, 100, 375, 520]],
   ["16-one-club-auto-joao-pedro-lauren-james.webp", "one-club-autographs", [235, 52, 745, 1060]],
   ["17-nouveau-auto-nedved-black.jpg", "nouveau-short-print-autographs"],
-  ["18-dual-auto-musiala-luis-diaz.webp", "dual-autographs", [72, 470, 740, 540], "landscape"],
   ["19-then-now-auto-neymar-dembele-red.jpg", "then-and-now-autographs"],
   ["20-triple-auto-isak-haaland-pedro-gold.jpg", "triple-autographs"],
   ["21-antiquity-auto-relic-ronaldinho-orange.jpg", "antiquity-autograph-relics", null, "landscape"],
-  ["22-prodigy-auto-reigan-heskey.png", "prodigy-autographs", [215, 45, 590, 850]],
 ];
 
 const canvas = {
@@ -79,4 +74,12 @@ async function normalizePackaging() {
 await fs.access(sourceRoot);
 await fs.mkdir(cardOutputRoot, { recursive: true });
 await Promise.all(assets.map(normalizeCard));
+const python = process.env.DECO_PYTHON ?? (process.platform === "win32" ? "python" : "python3");
+const rectifier = spawnSync(
+  python,
+  [path.join(projectRoot, "scripts", "rectify-topps-deco-ucc-assets.py")],
+  { stdio: "inherit" },
+);
+if (rectifier.error) throw rectifier.error;
+if (rectifier.status !== 0) throw new Error(`Deco perspective correction failed (${rectifier.status})`);
 await normalizePackaging();

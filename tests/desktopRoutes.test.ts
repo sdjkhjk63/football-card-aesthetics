@@ -17,7 +17,7 @@ it("enumerates the complete desktop route set", async () => {
   ]);
 
   const cards = await cardParams();
-  expect(cards).toHaveLength(263);
+  expect(cards).toHaveLength(264);
   expect(cards).toContainEqual({
     seriesSlug: "topps-merlin-premier-league-2026",
     cardSlug: "red-mojo",
@@ -65,6 +65,10 @@ it("enumerates the complete desktop route set", async () => {
   expect(cards).toContainEqual({
     seriesSlug: "topps-deco-ucc-2025-26",
     cardSlug: "antiquity-autograph-relics",
+  });
+  expect(cards).toContainEqual({
+    seriesSlug: "topps-deco-ucc-2025-26",
+    cardSlug: "only1-autographs",
   });
   expect(cards).toContainEqual({
     seriesSlug: "topps-real-madrid-team-set-2025-26",

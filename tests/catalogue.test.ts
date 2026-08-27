@@ -173,6 +173,7 @@ const decoUccDesigns = [
   "triple-autographs",
   "antiquity-autograph-relics",
   "prodigy-autographs",
+  "only1-autographs",
 ];
 const decoLandscapeDesigns = [
   "dual-autographs",
@@ -1179,13 +1180,22 @@ describe("Topps Inception UEFA Club Competitions 2025-26 catalogue", () => {
 });
 
 describe("Topps Deco UEFA Club Competitions 2025-26 catalogue", () => {
-  it("publishes the 22 reviewed visual families and omits the unpictured Only1 chase", () => {
+  it("publishes all 23 known visual families and keeps Only1 as an unverified placeholder", () => {
     const series = getSeries(decoUccSlug);
 
     expect(series?.cardDesigns.map((card) => card.slug)).toEqual(decoUccDesigns);
-    expect(series?.cardDesigns).toHaveLength(22);
-    expect(series?.totalVariants).toBe(22);
-    expect(series?.cardDesigns.some((card) => card.slug.includes("only1"))).toBe(false);
+    expect(series?.cardDesigns).toHaveLength(23);
+    expect(series?.totalVariants).toBe(23);
+    expect(series?.cardDesigns.find((card) => card.slug === "only1-autographs")).toMatchObject({
+      officialName: "Only1 Autographs",
+      serial: "1/1",
+      image: { verification: "unverified" },
+      curatorNote: {
+        "zh-CN": "官方已确认该神秘 1/1 卡种，但人物与实卡图尚未公开。",
+        en: "Topps has confirmed this mystery 1/1 card type, but its subject and physical card image have not been revealed.",
+        es: "Topps ha confirmado este misterioso tipo de carta 1/1, pero aún no se han revelado su protagonista ni una imagen de la carta física.",
+      },
+    });
     expect(validateSeries(series!)).toEqual([]);
   });
 
@@ -1217,7 +1227,7 @@ describe("Topps Deco UEFA Club Competitions 2025-26 catalogue", () => {
       .map((card) => card.slug)).toEqual(decoLandscapeDesigns);
   });
 
-  it("uses normalized exact local images for the packaging and all displayed cards", async () => {
+  it("uses normalized exact local images for every photographed card and no fake image for Only1", async () => {
     const series = getSeries(decoUccSlug);
 
     expect(series).toBeDefined();
@@ -1229,7 +1239,12 @@ describe("Topps Deco UEFA Club Competitions 2025-26 catalogue", () => {
     const packaging = await sharp(packagingPath).metadata();
     expect({ width: packaging.width, height: packaging.height }).toEqual({ width: 1050, height: 750 });
 
-    for (const card of series.cardDesigns) {
+    const only1 = series.cardDesigns.find((card) => card.slug === "only1-autographs");
+    expect(only1?.image.verification).toBe("unverified");
+
+    const photographed = series.cardDesigns.filter((card) => card.image.verification === "exact");
+    expect(photographed).toHaveLength(22);
+    for (const card of photographed) {
       expect(card.image.verification, card.slug).toBe("exact");
       const imagePath = path.join(process.cwd(), "public", card.image.path);
       expect(fs.existsSync(imagePath), card.slug).toBe(true);

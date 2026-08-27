@@ -1241,6 +1241,8 @@ type DecoCardInput = {
   displayParallelName?: string;
   parallels?: CardDesign["parallels"];
   layout?: CardDesign["layout"];
+  verification?: "exact" | "unverified";
+  curatorNote?: LocalizedText;
 };
 
 const decoCard = ({
@@ -1254,6 +1256,8 @@ const decoCard = ({
   displayParallelName,
   parallels,
   layout,
+  verification = "exact",
+  curatorNote,
 }: DecoCardInput): CardDesign => ({
   slug,
   officialName,
@@ -1264,9 +1268,10 @@ const decoCard = ({
   displayParallelName,
   parallels,
   layout,
+  curatorNote,
   image: {
     path: `images/topps-deco-ucc-2025-26/cards/${slug}.webp`,
-    verification: "exact",
+    verification,
     alt: names(
       `2025/26 Topps Deco 欧足联俱乐部赛事 ${zh}代表卡`,
       `2025/26 Topps Deco UEFA Club Competitions ${officialName} representative card`,
@@ -1315,6 +1320,21 @@ const decoUccCardDesigns: CardDesign[] = [
   decoCard({ slug: "triple-autographs", officialName: "Triple Autographs", zh: "三人签字", es: "Autógrafos triples", serial: "1/1", displayParallelName: "Gold" }),
   decoCard({ slug: "antiquity-autograph-relics", officialName: "Antiquity Autograph Relics", zh: "古典签字实物", es: "Reliquias autografiadas Antiquity", serial: "/25", displayParallelName: "Orange", layout: "landscape" }),
   decoCard({ slug: "prodigy-autographs", officialName: "Prodigy Autographs", zh: "天才新星签字", es: "Autógrafos Prodigy", serial: "/99", displayParallelName: "Blue" }),
+  decoCard({
+    slug: "only1-autographs",
+    officialName: "Only1 Autographs",
+    zh: "唯一签字",
+    es: "Autógrafos Only1",
+    serial: "1/1",
+    displayParallelName: "Only1",
+    parallels: [{ name: "Only1", serial: "1/1" }],
+    verification: "unverified",
+    curatorNote: names(
+      "官方已确认该神秘 1/1 卡种，但人物与实卡图尚未公开。",
+      "Topps has confirmed this mystery 1/1 card type, but its subject and physical card image have not been revealed.",
+      "Topps ha confirmado este misterioso tipo de carta 1/1, pero aún no se han revelado su protagonista ni una imagen de la carta física.",
+    ),
+  }),
 ];
 
 export const toppsDecoUcc202526: CardSeries = {
@@ -1335,7 +1355,7 @@ export const toppsDecoUcc202526: CardSeries = {
       "Caja Hobby 2025/26 Topps Deco UEFA Club Competitions",
     ),
   },
-  totalVariants: 22,
+  totalVariants: 23,
   cardDesigns: decoUccCardDesigns,
 };
 
