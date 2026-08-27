@@ -30,6 +30,7 @@ export interface CardDesign {
   serial: string | null;
   displayParallelName?: string;
   parallels?: CardParallel[];
+  parallelCoverage?: "complete" | "confirmed";
   layout?: "portrait" | "landscape";
   curatorNote?: LocalizedText;
   image: ImageSource;

@@ -15,6 +15,8 @@ export function CardDesignTile({ seriesSlug, design, locale, rating }: { seriesS
     : undefined;
   const displayedLabel = { "zh-CN": "当前展示", en: "Shown", es: "Mostrada" }[locale];
   const allParallelsLabel = { "zh-CN": "全部限编", en: "Numbered versions", es: "Versiones numeradas" }[locale];
+  const confirmedParallelsLabel = { "zh-CN": "已确认限编", en: "Confirmed numbered versions", es: "Versiones numeradas confirmadas" }[locale];
+  const parallelsLabel = design.parallelCoverage === "confirmed" ? confirmedParallelsLabel : allParallelsLabel;
   const countSuffix = { "zh-CN": "种", en: "", es: "" }[locale];
   return (
     <Link className={design.layout === "landscape" ? "card-tile landscape" : "card-tile"} href={`/series/${seriesSlug}/cards/${design.slug}`} aria-label={`${design.officialName} — ${localize(design.name, locale)}`}>
@@ -31,7 +33,7 @@ export function CardDesignTile({ seriesSlug, design, locale, rating }: { seriesS
         {design.parallels?.length ? (
           <div className="parallel-block">
             {design.displayParallelName && design.serial ? <strong className="displayed-parallel">{displayedLabel}：{design.displayParallelName} {design.serial}</strong> : null}
-            <div className="parallel-summary">{allParallelsLabel} {design.parallels.length} {countSuffix}</div>
+            <div className="parallel-summary">{parallelsLabel} {design.parallels.length} {countSuffix}</div>
             <div className="parallel-strip" aria-label="Parallels">
               {design.parallels.map((parallel) => {
                 const isCurrent = parallel.name === design.displayParallelName && parallel.serial === design.serial;

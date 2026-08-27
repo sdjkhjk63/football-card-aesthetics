@@ -1240,6 +1240,7 @@ type DecoCardInput = {
   serial?: string;
   displayParallelName?: string;
   parallels?: CardDesign["parallels"];
+  parallelCoverage?: CardDesign["parallelCoverage"];
   layout?: CardDesign["layout"];
   verification?: "exact" | "unverified";
   curatorNote?: LocalizedText;
@@ -1255,6 +1256,7 @@ const decoCard = ({
   serial,
   displayParallelName,
   parallels,
+  parallelCoverage,
   layout,
   verification = "exact",
   curatorNote,
@@ -1267,6 +1269,7 @@ const decoCard = ({
   serial: serial ?? null,
   displayParallelName,
   parallels,
+  parallelCoverage,
   layout,
   curatorNote,
   image: {
@@ -1307,19 +1310,19 @@ const decoUccCardDesigns: CardDesign[] = [
   decoBaseCard({ slug: "prodigy", officialName: "Prodigy", zh: "天才新星", es: "Prodigio" }),
   decoBaseCard({ slug: "l-nouvel-esprit", officialName: "L’Nouvel Esprit", zh: "新生代精神", es: "El nuevo espíritu" }),
   decoBaseCard({ slug: "joueur-emblematique", officialName: "Joueur Emblématique", zh: "标志性球员", es: "Jugador emblemático" }),
-  decoCard({ slug: "razzmatazz", officialName: "Razzmatazz", zh: "炫目华彩", es: "Deslumbrante", section: "regular-insert", serial: "/50", displayParallelName: "Purple" }),
-  decoCard({ slug: "cubist", officialName: "Cubist", zh: "立体主义", es: "Cubista" }),
-  decoCard({ slug: "current-stars-autographs", officialName: "Current Stars Autographs", zh: "当季球星签字", es: "Autógrafos de estrellas actuales", serial: "1/1", displayParallelName: "Gold" }),
-  decoCard({ slug: "legends-autographs", officialName: "Legends Autographs", zh: "传奇签字", es: "Autógrafos de leyendas", serial: "/25", displayParallelName: "Orange" }),
-  decoCard({ slug: "joueur-emblematique-autographs", officialName: "Joueur Emblématique Autographs", zh: "标志性球员签字", es: "Autógrafos de jugador emblemático", serial: "/5", displayParallelName: "Red" }),
-  decoCard({ slug: "l-nouvel-esprit-autographs", officialName: "L’Nouvel Esprit Autographs", zh: "新生代精神签字", es: "Autógrafos El nuevo espíritu", serial: "/50", displayParallelName: "Purple" }),
-  decoCard({ slug: "one-club-autographs", officialName: "One Club Autographs", zh: "同一俱乐部双签", es: "Autógrafos dobles Un solo club", serial: "/5", displayParallelName: "Red" }),
-  decoCard({ slug: "nouveau-short-print-autographs", officialName: "Nouveau Short Print Autographs", zh: "新艺术短印签字", es: "Autógrafos Nouveau de tirada corta", serial: "/10", displayParallelName: "Black" }),
-  decoCard({ slug: "dual-autographs", officialName: "Dual Autographs", zh: "双人签字", es: "Autógrafos dobles", serial: "/10", displayParallelName: "Black", layout: "landscape" }),
-  decoCard({ slug: "then-and-now-autographs", officialName: "Then & Now Autographs", zh: "今昔双星双签", es: "Autógrafos dobles Antes y ahora", serial: "/5", displayParallelName: "Red" }),
-  decoCard({ slug: "triple-autographs", officialName: "Triple Autographs", zh: "三人签字", es: "Autógrafos triples", serial: "1/1", displayParallelName: "Gold" }),
-  decoCard({ slug: "antiquity-autograph-relics", officialName: "Antiquity Autograph Relics", zh: "古典签字实物", es: "Reliquias autografiadas Antiquity", serial: "/25", displayParallelName: "Orange", layout: "landscape" }),
-  decoCard({ slug: "prodigy-autographs", officialName: "Prodigy Autographs", zh: "天才新星签字", es: "Autógrafos Prodigy", serial: "/99", displayParallelName: "Blue" }),
+  decoCard({ slug: "razzmatazz", officialName: "Razzmatazz", zh: "炫目华彩", es: "Deslumbrante", section: "regular-insert", serial: "/50", displayParallelName: "Purple", parallels: [{ name: "Purple", serial: "/50" }], parallelCoverage: "confirmed" }),
+  decoCard({ slug: "cubist", officialName: "Cubist", zh: "立体主义", es: "Cubista", serial: "/50", displayParallelName: "Purple", parallels: [{ name: "Purple", serial: "/50" }], parallelCoverage: "confirmed" }),
+  decoCard({ slug: "current-stars-autographs", officialName: "Current Stars Autographs", zh: "当季球星签字", es: "Autógrafos de estrellas actuales", serial: "1/1", displayParallelName: "Gold", parallels: decoMainParallels }),
+  decoCard({ slug: "legends-autographs", officialName: "Legends Autographs", zh: "传奇签字", es: "Autógrafos de leyendas", serial: "/25", displayParallelName: "Orange", parallels: decoMainParallels }),
+  decoCard({ slug: "joueur-emblematique-autographs", officialName: "Joueur Emblématique Autographs", zh: "标志性球员签字", es: "Autógrafos de jugador emblemático", serial: "/5", displayParallelName: "Red", parallels: decoMainParallels }),
+  decoCard({ slug: "l-nouvel-esprit-autographs", officialName: "L’Nouvel Esprit Autographs", zh: "新生代精神签字", es: "Autógrafos El nuevo espíritu", serial: "/50", displayParallelName: "Purple", parallels: decoMainParallels }),
+  decoCard({ slug: "one-club-autographs", officialName: "One Club Autographs", zh: "同一俱乐部双签", es: "Autógrafos dobles Un solo club", serial: "/5", displayParallelName: "Red", parallels: decoMainParallels }),
+  decoCard({ slug: "nouveau-short-print-autographs", officialName: "Nouveau Short Print Autographs", zh: "新艺术短印签字", es: "Autógrafos Nouveau de tirada corta", serial: "/10", displayParallelName: "Black", parallels: decoMainParallels }),
+  decoCard({ slug: "dual-autographs", officialName: "Dual Autographs", zh: "双人签字", es: "Autógrafos dobles", serial: "/10", displayParallelName: "Black", parallels: [{ name: "Black", serial: "/10" }], parallelCoverage: "confirmed", layout: "landscape" }),
+  decoCard({ slug: "then-and-now-autographs", officialName: "Then & Now Autographs", zh: "今昔双星双签", es: "Autógrafos dobles Antes y ahora", serial: "/5", displayParallelName: "Red", parallels: decoMainParallels }),
+  decoCard({ slug: "triple-autographs", officialName: "Triple Autographs", zh: "三人签字", es: "Autógrafos triples", serial: "1/1", displayParallelName: "Gold", parallels: [{ name: "Gold", serial: "1/1" }], parallelCoverage: "confirmed" }),
+  decoCard({ slug: "antiquity-autograph-relics", officialName: "Antiquity Autograph Relics", zh: "古典签字实物", es: "Reliquias autografiadas Antiquity", serial: "/25", displayParallelName: "Orange", parallels: decoMainParallels, layout: "landscape" }),
+  decoCard({ slug: "prodigy-autographs", officialName: "Prodigy Autographs", zh: "天才新星签字", es: "Autógrafos Prodigy", serial: "/99", displayParallelName: "Blue", parallels: decoMainParallels }),
   decoCard({
     slug: "only1-autographs",
     officialName: "Only1 Autographs",

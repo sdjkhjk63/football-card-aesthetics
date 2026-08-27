@@ -105,6 +105,42 @@ it("distinguishes the displayed parallel from the complete numbered ladder", () 
   expect(container.querySelector('[data-current="true"]')).toHaveTextContent("Purple Foil /25");
 });
 
+it("labels an incomplete parallel list as confirmed-only on tiles and details", () => {
+  const design = {
+    slug: "cubist",
+    officialName: "Cubist",
+    name: { "zh-CN": "立体主义", en: "Cubist", es: "Cubista" },
+    group: "insert",
+    section: "regular-insert",
+    serial: "/50",
+    displayParallelName: "Purple",
+    parallelCoverage: "confirmed",
+    parallels: [{ name: "Purple", serial: "/50" }],
+    image: {
+      path: "images/cubist.webp",
+      alt: { "zh-CN": "立体主义", en: "Cubist", es: "Cubista" },
+      verification: "exact",
+    },
+  } as CardDesign;
+  const series = {
+    slug: "series",
+    manufacturer: "Topps",
+    season: "2025-26",
+    name: { "zh-CN": "系列", en: "Series", es: "Serie" },
+    packaging: design.image,
+    cardDesigns: [design],
+  } as CardSeries;
+
+  const tile = render(<CardDesignTile seriesSlug="series" design={design} locale="zh-CN" />);
+  expect(within(tile.container).getByText("已确认限编 1 种")).toBeVisible();
+  expect(within(tile.container).queryByText("全部限编 1 种")).not.toBeInTheDocument();
+  tile.unmount();
+
+  const detail = render(<LanguageProvider><CardDetailView series={series} design={design} /></LanguageProvider>);
+  expect(within(detail.container).getByText("已确认限编 · 1")).toBeVisible();
+  expect(within(detail.container).queryByText("全部限编 · 1")).not.toBeInTheDocument();
+});
+
 it("shows the generic family title and keeps the representative serial in the parallel labels", () => {
   const series = getSeries("topps-forever-fc-barcelona-2025-26");
   const design = series?.cardDesigns.find((card) => card.slug === "century-club-gold-foilfractor");

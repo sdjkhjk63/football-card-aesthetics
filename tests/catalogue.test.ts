@@ -1199,7 +1199,7 @@ describe("Topps Deco UEFA Club Competitions 2025-26 catalogue", () => {
     expect(validateSeries(series!)).toEqual([]);
   });
 
-  it("records the verified seven-level main-set parallel ladder", () => {
+  it("records complete ladders where verified and confirmed-only limits for unresolved Deco families", () => {
     const series = getSeries(decoUccSlug);
     const cards = new Map(series?.cardDesigns.map((card) => [card.slug, card]));
     const expected = [
@@ -1212,11 +1212,42 @@ describe("Topps Deco UEFA Club Competitions 2025-26 catalogue", () => {
       { name: "Gold", serial: "1/1" },
     ];
 
-    for (const slug of decoUccDesigns.slice(0, 9)) {
+    const completeLadderSlugs = [
+      ...decoUccDesigns.slice(0, 9),
+      "current-stars-autographs",
+      "legends-autographs",
+      "joueur-emblematique-autographs",
+      "l-nouvel-esprit-autographs",
+      "one-club-autographs",
+      "nouveau-short-print-autographs",
+      "then-and-now-autographs",
+      "antiquity-autograph-relics",
+      "prodigy-autographs",
+    ];
+    for (const slug of completeLadderSlugs) {
       expect(cards.get(slug)?.parallels, slug).toEqual(expected);
+      expect(cards.get(slug)?.parallelCoverage, slug).not.toBe("confirmed");
     }
-    expect(cards.get("razzmatazz")?.parallels).toBeUndefined();
-    expect(cards.get("cubist")?.parallels).toBeUndefined();
+
+    expect(cards.get("razzmatazz")).toMatchObject({
+      parallelCoverage: "confirmed",
+      parallels: [{ name: "Purple", serial: "/50" }],
+    });
+    expect(cards.get("cubist")).toMatchObject({
+      parallelCoverage: "confirmed",
+      parallels: [{ name: "Purple", serial: "/50" }],
+    });
+    expect(cards.get("dual-autographs")).toMatchObject({
+      parallelCoverage: "confirmed",
+      parallels: [{ name: "Black", serial: "/10" }],
+    });
+    expect(cards.get("triple-autographs")).toMatchObject({
+      parallelCoverage: "confirmed",
+      parallels: [{ name: "Gold", serial: "1/1" }],
+    });
+    expect(cards.get("only1-autographs")?.parallels).toEqual([
+      { name: "Only1", serial: "1/1" },
+    ]);
   });
 
   it("marks only the two genuinely horizontal card designs as landscape", () => {
