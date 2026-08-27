@@ -16,6 +16,7 @@ const chromeSapphireBundesligaSlug = "topps-chrome-sapphire-bundesliga-2025-26";
 const barcelonaForeverSlug = "topps-forever-fc-barcelona-2025-26";
 const argentinaTeamSetSlug = "topps-argentina-team-set-2026";
 const inceptionUccSlug = "topps-inception-ucc-2025-26";
+const decoUccSlug = "topps-deco-ucc-2025-26";
 const realMadridTeamSetSlug = "topps-real-madrid-team-set-2025-26";
 const manchesterUnitedTeamSetSlug = "topps-manchester-united-team-set-2025-26";
 
@@ -148,6 +149,34 @@ const inceptionLandscapeDesigns = [
   "match-day-memories-autograph-relic",
   "autograph-branded-patch-book",
   "dual-autograph-patch-book",
+];
+const decoUccDesigns = [
+  "current-stars",
+  "artistry",
+  "moderne-marvels",
+  "then-and-now",
+  "one-club",
+  "legends",
+  "prodigy",
+  "l-nouvel-esprit",
+  "joueur-emblematique",
+  "razzmatazz",
+  "cubist",
+  "current-stars-autographs",
+  "legends-autographs",
+  "joueur-emblematique-autographs",
+  "l-nouvel-esprit-autographs",
+  "one-club-autographs",
+  "nouveau-short-print-autographs",
+  "dual-autographs",
+  "then-and-now-autographs",
+  "triple-autographs",
+  "antiquity-autograph-relics",
+  "prodigy-autographs",
+];
+const decoLandscapeDesigns = [
+  "dual-autographs",
+  "antiquity-autograph-relics",
 ];
 const argentinaBaseFamilies = [
   "first-team",
@@ -1138,6 +1167,70 @@ describe("Topps Inception UEFA Club Competitions 2025-26 catalogue", () => {
     const verified = series.cardDesigns.filter((card) => card.image.verification === "exact");
     expect(verified).toHaveLength(26);
     for (const card of verified) {
+      const imagePath = path.join(process.cwd(), "public", card.image.path);
+      expect(fs.existsSync(imagePath), card.slug).toBe(true);
+      const metadata = await sharp(imagePath).metadata();
+      const expectedSize = card.layout === "landscape"
+        ? { width: 1050, height: 750 }
+        : { width: 750, height: 1050 };
+      expect({ width: metadata.width, height: metadata.height }, card.slug).toEqual(expectedSize);
+    }
+  });
+});
+
+describe("Topps Deco UEFA Club Competitions 2025-26 catalogue", () => {
+  it("publishes the 22 reviewed visual families and omits the unpictured Only1 chase", () => {
+    const series = getSeries(decoUccSlug);
+
+    expect(series?.cardDesigns.map((card) => card.slug)).toEqual(decoUccDesigns);
+    expect(series?.cardDesigns).toHaveLength(22);
+    expect(series?.totalVariants).toBe(22);
+    expect(series?.cardDesigns.some((card) => card.slug.includes("only1"))).toBe(false);
+    expect(validateSeries(series!)).toEqual([]);
+  });
+
+  it("records the verified seven-level main-set parallel ladder", () => {
+    const series = getSeries(decoUccSlug);
+    const cards = new Map(series?.cardDesigns.map((card) => [card.slug, card]));
+    const expected = [
+      { name: "Blue", serial: "/99" },
+      { name: "Green", serial: "/75" },
+      { name: "Purple", serial: "/50" },
+      { name: "Orange", serial: "/25" },
+      { name: "Black", serial: "/10" },
+      { name: "Red", serial: "/5" },
+      { name: "Gold", serial: "1/1" },
+    ];
+
+    for (const slug of decoUccDesigns.slice(0, 9)) {
+      expect(cards.get(slug)?.parallels, slug).toEqual(expected);
+    }
+    expect(cards.get("razzmatazz")?.parallels).toBeUndefined();
+    expect(cards.get("cubist")?.parallels).toBeUndefined();
+  });
+
+  it("marks only the two genuinely horizontal card designs as landscape", () => {
+    const series = getSeries(decoUccSlug);
+
+    expect(series?.cardDesigns
+      .filter((card) => card.layout === "landscape")
+      .map((card) => card.slug)).toEqual(decoLandscapeDesigns);
+  });
+
+  it("uses normalized exact local images for the packaging and all displayed cards", async () => {
+    const series = getSeries(decoUccSlug);
+
+    expect(series).toBeDefined();
+    if (!series) return;
+
+    expect(series.packaging.verification).toBe("exact");
+    const packagingPath = path.join(process.cwd(), "public", series.packaging.path);
+    expect(fs.existsSync(packagingPath)).toBe(true);
+    const packaging = await sharp(packagingPath).metadata();
+    expect({ width: packaging.width, height: packaging.height }).toEqual({ width: 1050, height: 750 });
+
+    for (const card of series.cardDesigns) {
+      expect(card.image.verification, card.slug).toBe("exact");
       const imagePath = path.join(process.cwd(), "public", card.image.path);
       expect(fs.existsSync(imagePath), card.slug).toBe(true);
       const metadata = await sharp(imagePath).metadata();

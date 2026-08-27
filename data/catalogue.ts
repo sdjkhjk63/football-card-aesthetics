@@ -1230,6 +1230,115 @@ export const toppsInceptionUcc202526: CardSeries = {
   cardDesigns: inceptionUccCardDesigns,
 };
 
+type DecoCardInput = {
+  slug: string;
+  officialName: string;
+  zh: string;
+  es: string;
+  group?: CardGroup;
+  section?: CardSection;
+  serial?: string;
+  displayParallelName?: string;
+  parallels?: CardDesign["parallels"];
+  layout?: CardDesign["layout"];
+};
+
+const decoCard = ({
+  slug,
+  officialName,
+  zh,
+  es,
+  group = "insert",
+  section = "rare-insert",
+  serial,
+  displayParallelName,
+  parallels,
+  layout,
+}: DecoCardInput): CardDesign => ({
+  slug,
+  officialName,
+  name: names(zh, officialName, es),
+  group,
+  section,
+  serial: serial ?? null,
+  displayParallelName,
+  parallels,
+  layout,
+  image: {
+    path: `images/topps-deco-ucc-2025-26/cards/${slug}.webp`,
+    verification: "exact",
+    alt: names(
+      `2025/26 Topps Deco 欧足联俱乐部赛事 ${zh}代表卡`,
+      `2025/26 Topps Deco UEFA Club Competitions ${officialName} representative card`,
+      `Carta representativa ${es} de 2025/26 Topps Deco UEFA Club Competitions`,
+    ),
+  },
+});
+
+const decoMainParallels: CardDesign["parallels"] = [
+  { name: "Blue", serial: "/99" },
+  { name: "Green", serial: "/75" },
+  { name: "Purple", serial: "/50" },
+  { name: "Orange", serial: "/25" },
+  { name: "Black", serial: "/10" },
+  { name: "Red", serial: "/5" },
+  { name: "Gold", serial: "1/1" },
+];
+
+const decoBaseCard = (input: DecoCardInput): CardDesign => decoCard({
+  ...input,
+  group: "base",
+  section: "base-unnumbered",
+  parallels: decoMainParallels,
+});
+
+const decoUccCardDesigns: CardDesign[] = [
+  decoBaseCard({ slug: "current-stars", officialName: "Current Stars", zh: "当季球星", es: "Estrellas actuales", serial: "/50", displayParallelName: "Purple" }),
+  decoBaseCard({ slug: "artistry", officialName: "Artistry", zh: "艺术肖像", es: "Arte", serial: "/5", displayParallelName: "Red" }),
+  decoBaseCard({ slug: "moderne-marvels", officialName: "Moderne Marvels", zh: "现代巨星", es: "Maravillas modernas" }),
+  decoBaseCard({ slug: "then-and-now", officialName: "Then & Now", zh: "今昔双星", es: "Antes y ahora" }),
+  decoBaseCard({ slug: "one-club", officialName: "One Club", zh: "同一俱乐部", es: "Un solo club", serial: "/5", displayParallelName: "Red" }),
+  decoBaseCard({ slug: "legends", officialName: "Legends", zh: "传奇", es: "Leyendas" }),
+  decoBaseCard({ slug: "prodigy", officialName: "Prodigy", zh: "天才新星", es: "Prodigio" }),
+  decoBaseCard({ slug: "l-nouvel-esprit", officialName: "L’Nouvel Esprit", zh: "新生代精神", es: "El nuevo espíritu" }),
+  decoBaseCard({ slug: "joueur-emblematique", officialName: "Joueur Emblématique", zh: "标志性球员", es: "Jugador emblemático" }),
+  decoCard({ slug: "razzmatazz", officialName: "Razzmatazz", zh: "炫目华彩", es: "Deslumbrante", section: "regular-insert", serial: "/50", displayParallelName: "Purple" }),
+  decoCard({ slug: "cubist", officialName: "Cubist", zh: "立体主义", es: "Cubista" }),
+  decoCard({ slug: "current-stars-autographs", officialName: "Current Stars Autographs", zh: "当季球星签字", es: "Autógrafos de estrellas actuales", serial: "1/1", displayParallelName: "Gold" }),
+  decoCard({ slug: "legends-autographs", officialName: "Legends Autographs", zh: "传奇签字", es: "Autógrafos de leyendas", serial: "/25", displayParallelName: "Orange" }),
+  decoCard({ slug: "joueur-emblematique-autographs", officialName: "Joueur Emblématique Autographs", zh: "标志性球员签字", es: "Autógrafos de jugador emblemático", serial: "/5", displayParallelName: "Red" }),
+  decoCard({ slug: "l-nouvel-esprit-autographs", officialName: "L’Nouvel Esprit Autographs", zh: "新生代精神签字", es: "Autógrafos El nuevo espíritu", serial: "/50", displayParallelName: "Purple" }),
+  decoCard({ slug: "one-club-autographs", officialName: "One Club Autographs", zh: "同一俱乐部双签", es: "Autógrafos dobles Un solo club", serial: "/5", displayParallelName: "Red" }),
+  decoCard({ slug: "nouveau-short-print-autographs", officialName: "Nouveau Short Print Autographs", zh: "新艺术短印签字", es: "Autógrafos Nouveau de tirada corta", serial: "/10", displayParallelName: "Black" }),
+  decoCard({ slug: "dual-autographs", officialName: "Dual Autographs", zh: "双人签字", es: "Autógrafos dobles", serial: "/10", displayParallelName: "Black", layout: "landscape" }),
+  decoCard({ slug: "then-and-now-autographs", officialName: "Then & Now Autographs", zh: "今昔双星双签", es: "Autógrafos dobles Antes y ahora", serial: "/5", displayParallelName: "Red" }),
+  decoCard({ slug: "triple-autographs", officialName: "Triple Autographs", zh: "三人签字", es: "Autógrafos triples", serial: "1/1", displayParallelName: "Gold" }),
+  decoCard({ slug: "antiquity-autograph-relics", officialName: "Antiquity Autograph Relics", zh: "古典签字实物", es: "Reliquias autografiadas Antiquity", serial: "/25", displayParallelName: "Orange", layout: "landscape" }),
+  decoCard({ slug: "prodigy-autographs", officialName: "Prodigy Autographs", zh: "天才新星签字", es: "Autógrafos Prodigy", serial: "/99", displayParallelName: "Blue" }),
+];
+
+export const toppsDecoUcc202526: CardSeries = {
+  slug: "topps-deco-ucc-2025-26",
+  manufacturer: "Topps",
+  season: "2025/26",
+  name: names(
+    "2025/26 Topps Deco 欧足联俱乐部赛事",
+    "2025/26 Topps Deco UEFA Club Competitions",
+    "2025/26 Topps Deco UEFA Club Competitions",
+  ),
+  packaging: {
+    path: "images/topps-deco-ucc-2025-26/packaging.png",
+    verification: "exact",
+    alt: names(
+      "2025/26 Topps Deco 欧足联俱乐部赛事 Hobby 盒包装",
+      "2025/26 Topps Deco UEFA Club Competitions Hobby box",
+      "Caja Hobby 2025/26 Topps Deco UEFA Club Competitions",
+    ),
+  },
+  totalVariants: 22,
+  cardDesigns: decoUccCardDesigns,
+};
+
 const catalogue = [
   merlinPremierLeague2026,
   toppsFinestPremierLeague2026,
@@ -1238,6 +1347,7 @@ const catalogue = [
   toppsForeverFcBarcelona202526,
   toppsArgentinaTeamSet2026,
   toppsInceptionUcc202526,
+  toppsDecoUcc202526,
   toppsRealMadridTeamSet202526,
   toppsManchesterUnitedTeamSet202526,
 ];
