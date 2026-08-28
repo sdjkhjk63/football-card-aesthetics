@@ -1362,6 +1362,121 @@ export const toppsDecoUcc202526: CardSeries = {
   cardDesigns: decoUccCardDesigns,
 };
 
+type FocusLiverpoolCardInput = {
+  slug: string;
+  officialName: string;
+  zh: string;
+  es: string;
+  group?: CardDesign["group"];
+  section?: CardDesign["section"];
+  serial?: string;
+  displayParallelName?: string;
+  parallels: CardDesign["parallels"];
+  parallelCoverage?: CardDesign["parallelCoverage"];
+  layout?: CardDesign["layout"];
+};
+
+const focusLiverpoolBaseParallels: CardDesign["parallels"] = [
+  { name: "Shutter Speed", serial: null },
+  { name: "Blue Rainbow Foil", serial: "/150" },
+  { name: "Blue Anfield Starry Nights", serial: "/150" },
+  { name: "Green Rainbow Foil", serial: "/99" },
+  { name: "Green Anfield Starry Nights", serial: "/99" },
+  { name: "Purple Rainbow Foil", serial: "/75" },
+  { name: "Purple Anfield Starry Nights", serial: "/75" },
+  { name: "Gold Rainbow Foil", serial: "/50" },
+  { name: "Gold Anfield Starry Nights", serial: "/50" },
+  { name: "Orange Rainbow Foil", serial: "/25" },
+  { name: "Orange Anfield Starry Nights", serial: "/25" },
+  { name: "Black Rainbow Foil", serial: "/10" },
+  { name: "Black Anfield Starry Nights", serial: "/10" },
+  { name: "Red Rainbow Foil", serial: "/5" },
+  { name: "Red Anfield Starry Nights", serial: "/5" },
+  { name: "Gold FoilFractor", serial: "1/1" },
+];
+
+const focusLiverpoolAutographParallels: CardDesign["parallels"] = [
+  { name: "Blue Rainbow Foil", serial: "/150" },
+  { name: "Green Rainbow Foil", serial: "/99" },
+  { name: "Purple Rainbow Foil", serial: "/75" },
+  { name: "Gold Rainbow Foil", serial: "/50" },
+  { name: "Orange Rainbow Foil", serial: "/25" },
+  { name: "Black Rainbow Foil", serial: "/10" },
+  { name: "Red Rainbow Foil", serial: "/5" },
+  { name: "Gold FoilFractor", serial: "1/1" },
+];
+
+const focusLiverpoolCard = ({
+  slug,
+  officialName,
+  zh,
+  es,
+  group = "insert",
+  section = "rare-insert",
+  serial,
+  displayParallelName,
+  parallels,
+  parallelCoverage,
+  layout,
+}: FocusLiverpoolCardInput): CardDesign => ({
+  slug,
+  officialName,
+  name: names(zh, officialName, es),
+  group,
+  section,
+  serial: serial ?? null,
+  displayParallelName,
+  parallels,
+  parallelCoverage,
+  layout,
+  image: {
+    path: `images/topps-focus-liverpool-2025-26/cards/${slug}.webp`,
+    verification: "exact",
+    alt: names(
+      `2025/26 Topps Focus 利物浦 ${zh}代表卡`,
+      `Representative ${officialName} card from 2025/26 Topps Focus Liverpool`,
+      `Carta representativa ${es} de 2025/26 Topps Focus Liverpool`,
+    ),
+  },
+});
+
+const focusLiverpoolCardDesigns: CardDesign[] = [
+  focusLiverpoolCard({ slug: "snapshots", officialName: "Snapshots", zh: "镜头快照", es: "Instantáneas", group: "base", section: "base-unnumbered", parallels: focusLiverpoolBaseParallels }),
+  focusLiverpoolCard({ slug: "full-bleed", officialName: "Full Bleed", zh: "满版影像", es: "Sangrado completo", group: "base", section: "base-unnumbered", serial: "/25", displayParallelName: "Orange Anfield Starry Nights", parallels: focusLiverpoolBaseParallels }),
+  focusLiverpoolCard({ slug: "moments-in-time", officialName: "Moments in Time", zh: "时光瞬间", es: "Momentos en el tiempo", group: "base", section: "base-unnumbered", serial: "/75", displayParallelName: "Purple Rainbow Foil", parallels: focusLiverpoolBaseParallels }),
+  focusLiverpoolCard({ slug: "golden-hour", officialName: "Golden Hour", zh: "黄金时刻", es: "Hora dorada", group: "base", section: "base-unnumbered", parallels: focusLiverpoolBaseParallels }),
+  focusLiverpoolCard({ slug: "motion-blur", officialName: "Motion Blur", zh: "动态模糊", es: "Desenfoque de movimiento", parallels: [{ name: "Gold FoilFractor", serial: "1/1" }] }),
+  focusLiverpoolCard({ slug: "snapshots-autographs", officialName: "Snapshots Autographs", zh: "镜头快照签字", es: "Autógrafos de Instantáneas", serial: "/150", displayParallelName: "Blue Rainbow Foil", parallels: focusLiverpoolAutographParallels }),
+  focusLiverpoolCard({ slug: "viewfinder-autographs", officialName: "Viewfinder Autographs", zh: "取景器签字", es: "Autógrafos de visor", serial: "/50", displayParallelName: "Gold Rainbow Foil", parallels: focusLiverpoolAutographParallels }),
+  focusLiverpoolCard({ slug: "golden-hour-autographs", officialName: "Golden Hour Autographs", zh: "黄金时刻签字", es: "Autógrafos de Hora dorada", serial: "1/1", displayParallelName: "Gold FoilFractor", parallels: [{ name: "Gold FoilFractor", serial: "1/1" }] }),
+  focusLiverpoolCard({ slug: "synergy-dual-autographs", officialName: "Synergy Dual Autographs", zh: "默契双人签字", es: "Autógrafos dobles Synergy", serial: "1/1", displayParallelName: "Gold FoilFractor", parallels: [{ name: "Black Rainbow Foil", serial: "/10" }, { name: "Red Rainbow Foil", serial: "/5" }, { name: "Gold FoilFractor", serial: "1/1" }], layout: "landscape" }),
+  focusLiverpoolCard({ slug: "chromatic-distortion-autographs", officialName: "Chromatic Distortion Autographs", zh: "色散签字", es: "Autógrafos Distorsión cromática", serial: "1/1", displayParallelName: "Gold FoilFractor", parallels: [{ name: "Gold FoilFractor", serial: "1/1" }] }),
+  focusLiverpoolCard({ slug: "marks-of-excellence", officialName: "Marks of Excellence", zh: "卓越印记签字", es: "Marcas de excelencia", serial: "1/1", displayParallelName: "Black", parallels: [{ name: "Red", serial: "/5" }, { name: "Black", serial: "1/1" }], parallelCoverage: "confirmed" }),
+  focusLiverpoolCard({ slug: "cutaway-signatures", officialName: "Cutaway Signatures", zh: "剪切签字实物", es: "Firmas recortadas", serial: "1/1", displayParallelName: "Gold FoilFractor", parallels: [{ name: "Gold FoilFractor", serial: "1/1" }], layout: "landscape" }),
+];
+
+export const toppsFocusLiverpool202526: CardSeries = {
+  slug: "topps-focus-liverpool-2025-26",
+  manufacturer: "Topps",
+  season: "2025/26",
+  name: names(
+    "2025/26 Topps Focus 利物浦",
+    "2025/26 Topps Focus Liverpool",
+    "2025/26 Topps Focus Liverpool",
+  ),
+  packaging: {
+    path: "images/topps-focus-liverpool-2025-26/packaging.png",
+    verification: "exact",
+    alt: names(
+      "2025/26 Topps Focus 利物浦 Hobby 盒包装",
+      "2025/26 Topps Focus Liverpool Hobby box",
+      "Caja Hobby 2025/26 Topps Focus Liverpool",
+    ),
+  },
+  totalVariants: 12,
+  cardDesigns: focusLiverpoolCardDesigns,
+};
+
 const catalogue = [
   merlinPremierLeague2026,
   toppsFinestPremierLeague2026,
@@ -1369,6 +1484,7 @@ const catalogue = [
   toppsChromeSapphireBundesliga202526,
   toppsForeverFcBarcelona202526,
   toppsArgentinaTeamSet2026,
+  toppsFocusLiverpool202526,
   toppsInceptionUcc202526,
   toppsDecoUcc202526,
   toppsRealMadridTeamSet202526,

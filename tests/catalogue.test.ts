@@ -17,6 +17,7 @@ const barcelonaForeverSlug = "topps-forever-fc-barcelona-2025-26";
 const argentinaTeamSetSlug = "topps-argentina-team-set-2026";
 const inceptionUccSlug = "topps-inception-ucc-2025-26";
 const decoUccSlug = "topps-deco-ucc-2025-26";
+const focusLiverpoolSlug = "topps-focus-liverpool-2025-26";
 const realMadridTeamSetSlug = "topps-real-madrid-team-set-2025-26";
 const manchesterUnitedTeamSetSlug = "topps-manchester-united-team-set-2025-26";
 
@@ -178,6 +179,20 @@ const decoUccDesigns = [
 const decoLandscapeDesigns = [
   "dual-autographs",
   "antiquity-autograph-relics",
+];
+const focusLiverpoolDesigns = [
+  "snapshots",
+  "full-bleed",
+  "moments-in-time",
+  "golden-hour",
+  "motion-blur",
+  "snapshots-autographs",
+  "viewfinder-autographs",
+  "golden-hour-autographs",
+  "synergy-dual-autographs",
+  "chromatic-distortion-autographs",
+  "marks-of-excellence",
+  "cutaway-signatures",
 ];
 const argentinaBaseFamilies = [
   "first-team",
@@ -1284,6 +1299,101 @@ describe("Topps Deco UEFA Club Competitions 2025-26 catalogue", () => {
         ? { width: 1050, height: 750 }
         : { width: 750, height: 1050 };
       expect({ width: metadata.width, height: metadata.height }, card.slug).toEqual(expectedSize);
+    }
+  });
+});
+
+describe("Topps Focus Liverpool 2025-26 catalogue", () => {
+  it("publishes the 12 official visual families in checklist order", () => {
+    const series = getSeries(focusLiverpoolSlug);
+
+    expect(series?.cardDesigns.map((card) => card.slug)).toEqual(focusLiverpoolDesigns);
+    expect(series?.cardDesigns).toHaveLength(12);
+    expect(series?.totalVariants).toBe(12);
+    expect(series?.cardDesigns.slice(0, 4).every((card) => card.group === "base")).toBe(true);
+    expect(series?.cardDesigns.slice(4).every((card) => card.group === "insert")).toBe(true);
+    expect(validateSeries(series!)).toEqual([]);
+  });
+
+  it("records the distinct official parallel ladders without filling the Marks of Excellence TBA gap", () => {
+    const series = getSeries(focusLiverpoolSlug);
+    const cards = new Map(series?.cardDesigns.map((card) => [card.slug, card]));
+    const baseParallels = [
+      { name: "Shutter Speed", serial: null },
+      { name: "Blue Rainbow Foil", serial: "/150" },
+      { name: "Blue Anfield Starry Nights", serial: "/150" },
+      { name: "Green Rainbow Foil", serial: "/99" },
+      { name: "Green Anfield Starry Nights", serial: "/99" },
+      { name: "Purple Rainbow Foil", serial: "/75" },
+      { name: "Purple Anfield Starry Nights", serial: "/75" },
+      { name: "Gold Rainbow Foil", serial: "/50" },
+      { name: "Gold Anfield Starry Nights", serial: "/50" },
+      { name: "Orange Rainbow Foil", serial: "/25" },
+      { name: "Orange Anfield Starry Nights", serial: "/25" },
+      { name: "Black Rainbow Foil", serial: "/10" },
+      { name: "Black Anfield Starry Nights", serial: "/10" },
+      { name: "Red Rainbow Foil", serial: "/5" },
+      { name: "Red Anfield Starry Nights", serial: "/5" },
+      { name: "Gold FoilFractor", serial: "1/1" },
+    ];
+    const autographParallels = [
+      { name: "Blue Rainbow Foil", serial: "/150" },
+      { name: "Green Rainbow Foil", serial: "/99" },
+      { name: "Purple Rainbow Foil", serial: "/75" },
+      { name: "Gold Rainbow Foil", serial: "/50" },
+      { name: "Orange Rainbow Foil", serial: "/25" },
+      { name: "Black Rainbow Foil", serial: "/10" },
+      { name: "Red Rainbow Foil", serial: "/5" },
+      { name: "Gold FoilFractor", serial: "1/1" },
+    ];
+
+    for (const slug of focusLiverpoolDesigns.slice(0, 4)) {
+      expect(cards.get(slug)?.parallels, slug).toEqual(baseParallels);
+    }
+    for (const slug of ["snapshots-autographs", "viewfinder-autographs"]) {
+      expect(cards.get(slug)?.parallels, slug).toEqual(autographParallels);
+    }
+    expect(cards.get("motion-blur")?.parallels).toEqual([{ name: "Gold FoilFractor", serial: "1/1" }]);
+    expect(cards.get("golden-hour-autographs")?.parallels).toEqual([{ name: "Gold FoilFractor", serial: "1/1" }]);
+    expect(cards.get("synergy-dual-autographs")?.parallels).toEqual([
+      { name: "Black Rainbow Foil", serial: "/10" },
+      { name: "Red Rainbow Foil", serial: "/5" },
+      { name: "Gold FoilFractor", serial: "1/1" },
+    ]);
+    expect(cards.get("chromatic-distortion-autographs")?.parallels).toEqual([{ name: "Gold FoilFractor", serial: "1/1" }]);
+    expect(cards.get("cutaway-signatures")?.parallels).toEqual([{ name: "Gold FoilFractor", serial: "1/1" }]);
+    expect(cards.get("marks-of-excellence")).toMatchObject({
+      parallelCoverage: "confirmed",
+      parallels: [
+        { name: "Red", serial: "/5" },
+        { name: "Black", serial: "1/1" },
+      ],
+    });
+  });
+
+  it("uses normalized exact local images and preserves the two horizontal designs", async () => {
+    const series = getSeries(focusLiverpoolSlug);
+
+    expect(series).toBeDefined();
+    if (!series) return;
+
+    expect(series.packaging.verification).toBe("exact");
+    expect(series.cardDesigns.filter((card) => card.layout === "landscape").map((card) => card.slug)).toEqual([
+      "synergy-dual-autographs",
+      "cutaway-signatures",
+    ]);
+    const images = [series.packaging, ...series.cardDesigns.map((card) => card.image)];
+    for (const image of images) {
+      expect(image.verification).toBe("exact");
+      const imagePath = path.join(process.cwd(), "public", image.path);
+      expect(fs.existsSync(imagePath), image.path).toBe(true);
+      const metadata = await sharp(imagePath).metadata();
+      const isPackaging = image === series.packaging;
+      const card = series.cardDesigns.find((design) => design.image === image);
+      const expectedSize = isPackaging || card?.layout === "landscape"
+        ? { width: 1050, height: 750 }
+        : { width: 750, height: 1050 };
+      expect({ width: metadata.width, height: metadata.height }, image.path).toEqual(expectedSize);
     }
   });
 });
