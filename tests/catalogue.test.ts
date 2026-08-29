@@ -1538,6 +1538,16 @@ describe("Topps Lineage FC Bayern Munchen 2025-26 catalogue", () => {
         .toBuffer();
       expect(Math.max(...pixel), `artificial black letterbox edge at y=${top}`).toBeGreaterThan(20);
     }
+
+    for (const slug of ["historic-future-dual-autograph", "legends-autographs"]) {
+      const imagePath = path.join(
+        process.cwd(),
+        "public",
+        series.cardDesigns.find((card) => card.slug === slug)!.image.path,
+      );
+      const { sharpness } = await sharp(imagePath).stats();
+      expect(sharpness, `${slug} should match the clarity of the clean product renders`).toBeGreaterThanOrEqual(2.1);
+    }
   });
 });
 
