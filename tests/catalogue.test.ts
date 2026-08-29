@@ -1414,6 +1414,7 @@ describe("Topps Focus Liverpool 2025-26 catalogue", () => {
         : { width: 750, height: 1050 };
       expect({ width: metadata.width, height: metadata.height }, image.path).toEqual(expectedSize);
     }
+
   });
 });
 
@@ -1523,6 +1524,19 @@ describe("Topps Lineage FC Bayern Munchen 2025-26 catalogue", () => {
         ? { width: 1050, height: 750 }
         : { width: 750, height: 1050 };
       expect({ width: metadata.width, height: metadata.height }, image.path).toEqual(expectedSize);
+    }
+
+    const historicFuturePath = path.join(
+      process.cwd(),
+      "public",
+      series.cardDesigns.find((card) => card.slug === "historic-future-dual-autograph")!.image.path,
+    );
+    for (const top of [0, 749]) {
+      const pixel = await sharp(historicFuturePath)
+        .extract({ left: 525, top, width: 1, height: 1 })
+        .raw()
+        .toBuffer();
+      expect(Math.max(...pixel), `artificial black letterbox edge at y=${top}`).toBeGreaterThan(20);
     }
   });
 });

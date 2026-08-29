@@ -19,7 +19,7 @@ const assets = [
   ["es-mullert-autograph", `${collectoskRoot}/2025-26-topps-lineage-fc-bayern-munchen-es-mullert-autograph-foilfractor-parallel-muller.avif`, "cards/es-mullert-autograph.webp", "portrait"],
   ["meister-kane-autograph", `${collectoskRoot}/2025-26-topps-lineage-fc-bayern-munchen-meister-kane-autograph-red-parallel-kane.avif`, "cards/meister-kane-autograph.webp", "portrait"],
   ["triple-red-autographs", `${collectoskRoot}/2025-26-topps-lineage-fc-bayern-munchen-triple-red-autograph-black-parallel-breitner-scholl-matthaus.avif`, "cards/triple-red-autographs.webp", "portrait"],
-  ["historic-future-dual-autograph", "https://i.ebayimg.com/images/g/9gEAAeSwwQVqMIQK/s-l1600.webp", "cards/historic-future-dual-autograph.webp", "landscape-crop"],
+  ["historic-future-dual-autograph", "https://i.ebayimg.com/images/g/VeUAAeSwIwJqMIQU/s-l1600.webp", "cards/historic-future-dual-autograph.webp", "landscape-crop"],
   ["triple-winner-autographs", `${collectoskRoot}/2025-26-topps-lineage-fc-bayern-munchen-triple-winner-autograph-foilfractor-parallel-neuer-lahm-kroos.avif`, "cards/triple-winner-autographs.webp", "portrait"],
   ["nameplate-autograph-relics", `${collectoskRoot}/2025-26-topps-lineage-fc-bayern-munchen-nameplate-autograph-relic-foilfractor-parallel-pavlovic.avif`, "cards/nameplate-autograph-relics.webp", "portrait"],
   ["fc-bayern-autograph-relics", "https://i.ebayimg.com/images/g/2P8AAeSwFN5qePKx/s-l1600.jpg", "cards/fc-bayern-autograph-relics.webp", "portrait-front-crop"],
@@ -47,8 +47,8 @@ for (const [slug, sourceUrl, publicPath, layout] of assets) {
       .toFile(target);
   } else if (layout === "landscape-crop") {
     await sharp(source)
-      .extract({ left: 55, top: 635, width: 1070, height: 630 })
-      .resize({ width: 1050, height: 750, fit: "contain", background: "#050505" })
+      .extract({ left: 110, top: 690, width: 930, height: 630 })
+      .resize({ width: 1050, height: 750, fit: "fill" })
       .webp({ quality: 96, smartSubsample: true })
       .toFile(target);
   } else if (layout === "portrait-front-crop") {
