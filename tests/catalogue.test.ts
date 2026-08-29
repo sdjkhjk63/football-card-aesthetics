@@ -18,6 +18,7 @@ const argentinaTeamSetSlug = "topps-argentina-team-set-2026";
 const inceptionUccSlug = "topps-inception-ucc-2025-26";
 const decoUccSlug = "topps-deco-ucc-2025-26";
 const focusLiverpoolSlug = "topps-focus-liverpool-2025-26";
+const lineageBayernSlug = "topps-lineage-bayern-2025-26";
 const realMadridTeamSetSlug = "topps-real-madrid-team-set-2025-26";
 const manchesterUnitedTeamSetSlug = "topps-manchester-united-team-set-2025-26";
 
@@ -193,6 +194,24 @@ const focusLiverpoolDesigns = [
   "chromatic-distortion-autographs",
   "marks-of-excellence",
   "cutaway-signatures",
+];
+const lineageBayernDesigns = [
+  "fc-bayern-munchen-icons",
+  "fc-bayern-munchen-legends",
+  "mia-san-mia",
+  "badges-of-bavaria",
+  "icons-autograph-variations",
+  "legends-autographs",
+  "autogramm-karten",
+  "es-mullert-autograph",
+  "meister-kane-autograph",
+  "triple-red-autographs",
+  "historic-future-dual-autograph",
+  "triple-winner-autographs",
+  "nameplate-autograph-relics",
+  "fc-bayern-autograph-relics",
+  "the-500th-autograph-relic",
+  "the-karl-relic",
 ];
 const argentinaBaseFamilies = [
   "first-team",
@@ -1391,6 +1410,116 @@ describe("Topps Focus Liverpool 2025-26 catalogue", () => {
       const isPackaging = image === series.packaging;
       const card = series.cardDesigns.find((design) => design.image === image);
       const expectedSize = isPackaging || card?.layout === "landscape"
+        ? { width: 1050, height: 750 }
+        : { width: 750, height: 1050 };
+      expect({ width: metadata.width, height: metadata.height }, image.path).toEqual(expectedSize);
+    }
+  });
+});
+
+describe("Topps Lineage FC Bayern Munchen 2025-26 catalogue", () => {
+  it("publishes all 16 official visual families in checklist order", () => {
+    const series = getSeries(lineageBayernSlug);
+
+    expect(series?.cardDesigns.map((card) => card.slug)).toEqual(lineageBayernDesigns);
+    expect(series?.cardDesigns).toHaveLength(16);
+    expect(series?.totalVariants).toBe(16);
+    expect(series?.cardDesigns.slice(0, 2).every((card) => card.group === "base")).toBe(true);
+    expect(series?.cardDesigns.slice(2).every((card) => card.group === "insert")).toBe(true);
+    expect(validateSeries(series!)).toEqual([]);
+  });
+
+  it("records each official Lineage parallel ladder without merging card families", () => {
+    const series = getSeries(lineageBayernSlug);
+    const cards = new Map(series?.cardDesigns.map((card) => [card.slug, card]));
+    const baseParallels = [
+      { name: "Purple Foil", serial: "/75" },
+      { name: "Gold Foil", serial: "/50" },
+      { name: "Bavarian Blue", serial: "/34" },
+      { name: "Orange Foil", serial: "/25" },
+      { name: "Black Foil", serial: "/10" },
+      { name: "UCL Champions Blue", serial: "/6" },
+      { name: "Red Foil", serial: "/5" },
+      { name: "FoilFractor", serial: "1/1" },
+    ];
+    const insertParallels = [
+      { name: "Bavarian Blue", serial: "/34" },
+      { name: "Orange Foil", serial: "/25" },
+      { name: "Black Foil", serial: "/10" },
+      { name: "UCL Champions Blue", serial: "/6" },
+      { name: "Red Foil", serial: "/5" },
+      { name: "FoilFractor", serial: "1/1" },
+    ];
+    const autographParallels = [
+      { name: "Green Foil", serial: "/99" },
+      { name: "Purple Foil", serial: "/75" },
+      { name: "Gold Foil", serial: "/50" },
+      { name: "Bavarian Blue", serial: "/34" },
+      { name: "Orange Foil", serial: "/25" },
+      { name: "Black Foil", serial: "/10" },
+      { name: "UCL Champions Blue", serial: "/6" },
+      { name: "Red Foil", serial: "/5" },
+      { name: "FoilFractor", serial: "1/1" },
+    ];
+    const shortPrintAutographs = [
+      { name: "Black Foil", serial: "/10" },
+      { name: "Red Foil", serial: "/5" },
+      { name: "FoilFractor", serial: "1/1" },
+    ];
+
+    for (const slug of lineageBayernDesigns.slice(0, 2)) {
+      expect(cards.get(slug)?.parallels, slug).toEqual(baseParallels);
+    }
+    for (const slug of ["mia-san-mia", "badges-of-bavaria"]) {
+      expect(cards.get(slug)?.parallels, slug).toEqual(insertParallels);
+    }
+    for (const slug of ["icons-autograph-variations", "legends-autographs", "autogramm-karten"]) {
+      expect(cards.get(slug)?.parallels, slug).toEqual(autographParallels);
+    }
+    for (const slug of [
+      "es-mullert-autograph",
+      "meister-kane-autograph",
+      "triple-red-autographs",
+      "historic-future-dual-autograph",
+      "triple-winner-autographs",
+    ]) {
+      expect(cards.get(slug)?.parallels, slug).toEqual(shortPrintAutographs);
+    }
+    expect(cards.get("nameplate-autograph-relics")?.parallels).toEqual([
+      { name: "FoilFractor", serial: "1/1" },
+    ]);
+    expect(cards.get("fc-bayern-autograph-relics")?.parallels).toEqual([
+      { name: "Purple Foil", serial: "/15" },
+      { name: "Black Foil", serial: "/10" },
+      { name: "Red Foil", serial: "/5" },
+      { name: "FoilFractor", serial: "1/1" },
+    ]);
+    for (const slug of ["the-500th-autograph-relic", "the-karl-relic"]) {
+      expect(cards.get(slug)?.parallels, slug).toEqual([
+        { name: "Red Foil", serial: "/5" },
+        { name: "FoilFractor", serial: "1/1" },
+      ]);
+    }
+  });
+
+  it("uses normalized exact local images for the box and every representative card", async () => {
+    const series = getSeries(lineageBayernSlug);
+
+    expect(series).toBeDefined();
+    if (!series) return;
+
+    expect(series.packaging.verification).toBe("exact");
+    expect(series.cardDesigns.filter((card) => card.layout === "landscape").map((card) => card.slug)).toEqual([
+      "historic-future-dual-autograph",
+    ]);
+    const images = [series.packaging, ...series.cardDesigns.map((card) => card.image)];
+    for (const image of images) {
+      expect(image.verification).toBe("exact");
+      const imagePath = path.join(process.cwd(), "public", image.path);
+      expect(fs.existsSync(imagePath), image.path).toBe(true);
+      const metadata = await sharp(imagePath).metadata();
+      const card = series.cardDesigns.find((candidate) => candidate.image === image);
+      const expectedSize = image === series.packaging || card?.layout === "landscape"
         ? { width: 1050, height: 750 }
         : { width: 750, height: 1050 };
       expect({ width: metadata.width, height: metadata.height }, image.path).toEqual(expectedSize);

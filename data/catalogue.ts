@@ -1477,6 +1477,131 @@ export const toppsFocusLiverpool202526: CardSeries = {
   cardDesigns: focusLiverpoolCardDesigns,
 };
 
+type LineageBayernCardInput = {
+  slug: string;
+  officialName: string;
+  zh: string;
+  es: string;
+  group?: CardDesign["group"];
+  section?: CardDesign["section"];
+  serial?: string;
+  displayParallelName?: string;
+  parallels: CardDesign["parallels"];
+  layout?: CardDesign["layout"];
+};
+
+const lineageBayernBaseParallels: CardDesign["parallels"] = [
+  { name: "Purple Foil", serial: "/75" },
+  { name: "Gold Foil", serial: "/50" },
+  { name: "Bavarian Blue", serial: "/34" },
+  { name: "Orange Foil", serial: "/25" },
+  { name: "Black Foil", serial: "/10" },
+  { name: "UCL Champions Blue", serial: "/6" },
+  { name: "Red Foil", serial: "/5" },
+  { name: "FoilFractor", serial: "1/1" },
+];
+
+const lineageBayernInsertParallels: CardDesign["parallels"] = [
+  { name: "Bavarian Blue", serial: "/34" },
+  { name: "Orange Foil", serial: "/25" },
+  { name: "Black Foil", serial: "/10" },
+  { name: "UCL Champions Blue", serial: "/6" },
+  { name: "Red Foil", serial: "/5" },
+  { name: "FoilFractor", serial: "1/1" },
+];
+
+const lineageBayernAutographParallels: CardDesign["parallels"] = [
+  { name: "Green Foil", serial: "/99" },
+  { name: "Purple Foil", serial: "/75" },
+  { name: "Gold Foil", serial: "/50" },
+  { name: "Bavarian Blue", serial: "/34" },
+  { name: "Orange Foil", serial: "/25" },
+  { name: "Black Foil", serial: "/10" },
+  { name: "UCL Champions Blue", serial: "/6" },
+  { name: "Red Foil", serial: "/5" },
+  { name: "FoilFractor", serial: "1/1" },
+];
+
+const lineageBayernShortPrintAutographs: CardDesign["parallels"] = [
+  { name: "Black Foil", serial: "/10" },
+  { name: "Red Foil", serial: "/5" },
+  { name: "FoilFractor", serial: "1/1" },
+];
+
+const lineageBayernCard = ({
+  slug,
+  officialName,
+  zh,
+  es,
+  group = "insert",
+  section = "rare-insert",
+  serial,
+  displayParallelName,
+  parallels,
+  layout,
+}: LineageBayernCardInput): CardDesign => ({
+  slug,
+  officialName,
+  name: names(zh, officialName, es),
+  group,
+  section,
+  serial: serial ?? null,
+  displayParallelName,
+  parallels,
+  parallelCoverage: "complete",
+  layout,
+  image: {
+    path: `images/topps-lineage-bayern-2025-26/cards/${slug}.webp`,
+    verification: "exact",
+    alt: names(
+      `2025/26 Topps Lineage 拜仁慕尼黑 ${zh}代表卡`,
+      `Representative ${officialName} card from 2025/26 Topps Lineage FC Bayern München`,
+      `Carta representativa ${es} de 2025/26 Topps Lineage FC Bayern München`,
+    ),
+  },
+});
+
+const lineageBayernCardDesigns: CardDesign[] = [
+  lineageBayernCard({ slug: "fc-bayern-munchen-icons", officialName: "FC Bayern München Icons", zh: "拜仁现役群星", es: "Iconos del Bayern de Múnich", group: "base", section: "base-unnumbered", serial: "/34", displayParallelName: "Bavarian Blue", parallels: lineageBayernBaseParallels }),
+  lineageBayernCard({ slug: "fc-bayern-munchen-legends", officialName: "FC Bayern München Legends", zh: "拜仁传奇", es: "Leyendas del Bayern de Múnich", group: "base", section: "base-unnumbered", serial: "/25", displayParallelName: "Orange Foil", parallels: lineageBayernBaseParallels }),
+  lineageBayernCard({ slug: "mia-san-mia", officialName: "Mia san Mia", zh: "Mia san Mia · 我们就是我们", es: "Mia san Mia", section: "regular-insert", parallels: lineageBayernInsertParallels }),
+  lineageBayernCard({ slug: "badges-of-bavaria", officialName: "Badges of Bavaria", zh: "巴伐利亚徽章", es: "Escudos de Baviera", section: "regular-insert", serial: "/6", displayParallelName: "UCL Champions Blue", parallels: lineageBayernInsertParallels }),
+  lineageBayernCard({ slug: "icons-autograph-variations", officialName: "Icons Autograph Variations", zh: "现役群星签字变体", es: "Variaciones autografiadas de Iconos", serial: "1/1", displayParallelName: "FoilFractor", parallels: lineageBayernAutographParallels }),
+  lineageBayernCard({ slug: "legends-autographs", officialName: "Legends Autographs", zh: "传奇签字", es: "Autógrafos de Leyendas", serial: "/50", displayParallelName: "Gold Foil", parallels: lineageBayernAutographParallels }),
+  lineageBayernCard({ slug: "autogramm-karten", officialName: "Autogramm Karten", zh: "经典签名卡", es: "Cartas autografiadas", serial: "/50", displayParallelName: "Gold Foil", parallels: lineageBayernAutographParallels }),
+  lineageBayernCard({ slug: "es-mullert-autograph", officialName: "Es Müllert Autograph", zh: "穆勒式签字", es: "Autógrafo Es Müllert", serial: "1/1", displayParallelName: "FoilFractor", parallels: lineageBayernShortPrintAutographs }),
+  lineageBayernCard({ slug: "meister-kane-autograph", officialName: "Meister Kane Autograph", zh: "冠军凯恩签字", es: "Autógrafo Meister Kane", serial: "/5", displayParallelName: "Red Foil", parallels: lineageBayernShortPrintAutographs }),
+  lineageBayernCard({ slug: "triple-red-autographs", officialName: "Triple Red Autographs", zh: "三红三人签字", es: "Autógrafos triples rojos", serial: "/10", displayParallelName: "Black Foil", parallels: lineageBayernShortPrintAutographs }),
+  lineageBayernCard({ slug: "historic-future-dual-autograph", officialName: "Historic Future Dual Autograph", zh: "历史与未来双人签字", es: "Autógrafo doble Historia y Futuro", serial: "/5", displayParallelName: "Red Foil", parallels: lineageBayernShortPrintAutographs, layout: "landscape" }),
+  lineageBayernCard({ slug: "triple-winner-autographs", officialName: "Triple Winner Autographs", zh: "三冠王三人签字", es: "Autógrafos de triples campeones", serial: "1/1", displayParallelName: "FoilFractor", parallels: lineageBayernShortPrintAutographs }),
+  lineageBayernCard({ slug: "nameplate-autograph-relics", officialName: "Nameplate Autograph Relics", zh: "姓名字母签字实物", es: "Reliquias autografiadas Nameplate", serial: "1/1", displayParallelName: "FoilFractor", parallels: [{ name: "FoilFractor", serial: "1/1" }] }),
+  lineageBayernCard({ slug: "fc-bayern-autograph-relics", officialName: "FC Bayern Autograph Relics", zh: "拜仁签字实物", es: "Reliquias autografiadas del Bayern", serial: "/10", displayParallelName: "Black Foil", parallels: [{ name: "Purple Foil", serial: "/15" }, { name: "Black Foil", serial: "/10" }, { name: "Red Foil", serial: "/5" }, { name: "FoilFractor", serial: "1/1" }] }),
+  lineageBayernCard({ slug: "the-500th-autograph-relic", officialName: "The 500th Autograph Relic", zh: "第 500 场签字实物", es: "Reliquia autografiada The 500th", serial: "/5", displayParallelName: "Red Foil", parallels: [{ name: "Red Foil", serial: "/5" }, { name: "FoilFractor", serial: "1/1" }] }),
+  lineageBayernCard({ slug: "the-karl-relic", officialName: "The Karl Relic", zh: "卡尔球网实物", es: "Reliquia The Karl", serial: "1/1", displayParallelName: "FoilFractor", parallels: [{ name: "Red Foil", serial: "/5" }, { name: "FoilFractor", serial: "1/1" }] }),
+];
+
+export const toppsLineageBayern202526: CardSeries = {
+  slug: "topps-lineage-bayern-2025-26",
+  manufacturer: "Topps",
+  season: "2025/26",
+  name: names(
+    "2025/26 Topps Lineage 拜仁慕尼黑",
+    "2025/26 Topps Lineage FC Bayern München",
+    "2025/26 Topps Lineage FC Bayern München",
+  ),
+  packaging: {
+    path: "images/topps-lineage-bayern-2025-26/packaging.png",
+    verification: "exact",
+    alt: names(
+      "2025/26 Topps Lineage 拜仁慕尼黑 Hobby 盒包装",
+      "2025/26 Topps Lineage FC Bayern München Hobby box",
+      "Caja Hobby 2025/26 Topps Lineage FC Bayern München",
+    ),
+  },
+  totalVariants: 16,
+  cardDesigns: lineageBayernCardDesigns,
+};
+
 const catalogue = [
   merlinPremierLeague2026,
   toppsFinestPremierLeague2026,
@@ -1485,6 +1610,7 @@ const catalogue = [
   toppsForeverFcBarcelona202526,
   toppsArgentinaTeamSet2026,
   toppsFocusLiverpool202526,
+  toppsLineageBayern202526,
   toppsInceptionUcc202526,
   toppsDecoUcc202526,
   toppsRealMadridTeamSet202526,
