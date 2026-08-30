@@ -21,6 +21,7 @@ const focusLiverpoolSlug = "topps-focus-liverpool-2025-26";
 const lineageBayernSlug = "topps-lineage-bayern-2025-26";
 const realMadridTeamSetSlug = "topps-real-madrid-team-set-2025-26";
 const manchesterUnitedTeamSetSlug = "topps-manchester-united-team-set-2025-26";
+const barcelonaTeamSetSlug = "topps-fc-barcelona-team-set-2025-26";
 
 async function studioPackagingStats(imagePath: string) {
   const { data, info } = await sharp(imagePath).raw().toBuffer({ resolveWithObject: true });
@@ -95,6 +96,22 @@ const realMadridLandscapeDesigns = [
   "collectors-corner-base",
   "collectors-corner-halo",
   "collectors-corner-static",
+  "rainbow-flick",
+];
+const barcelonaTeamSetDesigns = [
+  ...["first-team", "bona-fide-baller", "pitch-pursuits", "collectors-corner", "we-want-the-ball"]
+    .flatMap((family) => ["base", "halo", "static"].map((suffix) => `${family}-${suffix}`)),
+  "rainbow-flick",
+  "base-autograph",
+  "bona-fide-baller-autograph",
+];
+const barcelonaLandscapeDesigns = [
+  "collectors-corner-base",
+  "collectors-corner-halo",
+  "collectors-corner-static",
+  "we-want-the-ball-base",
+  "we-want-the-ball-halo",
+  "we-want-the-ball-static",
   "rainbow-flick",
 ];
 const inceptionUccDesigns = [
@@ -1010,6 +1027,86 @@ describe("Topps Real Madrid Team Set 2025-26 catalogue", () => {
         .reduce((sum, channel) => sum + channel.mean, 0) / 3;
 
       expect(meanLuminance, `${slug} still includes the dark seller backdrop`).toBeGreaterThan(160);
+    }
+  });
+});
+
+describe("Topps FC Barcelona Team Set 2025-26 catalogue", () => {
+  it("publishes 18 display cards and all 1,337 physical variants without merging Barcelona Forever", () => {
+    const series = getSeries(barcelonaTeamSetSlug);
+    const forever = getSeries(barcelonaForeverSlug);
+
+    expect(series?.cardDesigns.map((card) => card.slug)).toEqual(barcelonaTeamSetDesigns);
+    expect(series?.cardDesigns).toHaveLength(18);
+    expect(series?.totalVariants).toBe(1337);
+    expect(series?.slug).not.toBe(forever?.slug);
+    expect(series?.name.en).toBe("2025-26 Topps FC Barcelona Team Set");
+  });
+
+  it("shows Halo and Static separately while keeping all 17 numbered base parallels and eight autograph parallels", () => {
+    const series = getSeries(barcelonaTeamSetSlug);
+    const cards = new Map(series?.cardDesigns.map((card) => [card.slug, card]));
+
+    expect(cards.get("first-team-base")?.parallels).toEqual([
+      { name: "Purple Rainbow Foil", serial: "/250" },
+      { name: "Purple Icy Foil", serial: "/250" },
+      { name: "Aqua Rainbow Foil", serial: "/199" },
+      { name: "Aqua Icy Foil", serial: "/199" },
+      { name: "Blue Rainbow Foil", serial: "/150" },
+      { name: "Blue Icy Foil", serial: "/150" },
+      { name: "Green Rainbow Foil", serial: "/99" },
+      { name: "Green Icy Foil", serial: "/99" },
+      { name: "Gold Rainbow Foil", serial: "/50" },
+      { name: "Gold Icy Foil", serial: "/50" },
+      { name: "Orange Rainbow Foil", serial: "/25" },
+      { name: "Orange Icy Foil", serial: "/25" },
+      { name: "Black Rainbow Foil", serial: "/10" },
+      { name: "Black Icy Foil", serial: "/10" },
+      { name: "Barça Red Rainbow Foil", serial: "/5" },
+      { name: "Barça Red Icy Foil", serial: "/5" },
+      { name: "Gold FoilFractor", serial: "1/1" },
+    ]);
+    expect(cards.get("base-autograph")?.parallels?.map((parallel) => parallel.serial)).toEqual([
+      "/150", "/99", "/75", "/50", "/25", "/10", "/5", "1/1",
+    ]);
+    expect(cards.get("bona-fide-baller-autograph")?.parallels).toHaveLength(8);
+  });
+
+  it("labels the numbered autograph examples shown in the images", () => {
+    const series = getSeries(barcelonaTeamSetSlug);
+    const cards = new Map(series?.cardDesigns.map((card) => [card.slug, card]));
+
+    expect({
+      serial: cards.get("base-autograph")?.serial,
+      displayParallelName: cards.get("base-autograph")?.displayParallelName,
+    }).toEqual({ serial: "/10", displayParallelName: "Black Rainbow Foil" });
+    expect({
+      serial: cards.get("bona-fide-baller-autograph")?.serial,
+      displayParallelName: cards.get("bona-fide-baller-autograph")?.displayParallelName,
+    }).toEqual({ serial: "/50", displayParallelName: "Gold Rainbow Foil" });
+  });
+
+  it("uses exact normalized local assets and marks every horizontal design", async () => {
+    const series = getSeries(barcelonaTeamSetSlug);
+
+    expect(series).toBeDefined();
+    if (!series) return;
+    expect(validateSeries(series)).toEqual([]);
+    expect(series.cardDesigns.filter((card) => card.layout === "landscape").map((card) => card.slug))
+      .toEqual(barcelonaLandscapeDesigns);
+
+    const images = [series.packaging.path, ...series.cardDesigns.map((card) => card.image.path)];
+    expect(new Set(images)).toHaveLength(19);
+    for (const image of images) {
+      expect(fs.existsSync(path.join(process.cwd(), "public", image)), image).toBe(true);
+    }
+    for (const card of series.cardDesigns) {
+      expect(card.image.verification, card.slug).toBe("exact");
+      const metadata = await sharp(path.join(process.cwd(), "public", card.image.path)).metadata();
+      const expected = card.layout === "landscape"
+        ? { width: 1050, height: 750 }
+        : { width: 750, height: 1050 };
+      expect({ width: metadata.width, height: metadata.height }, card.slug).toEqual(expected);
     }
   });
 });

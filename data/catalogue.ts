@@ -1082,6 +1082,136 @@ export const toppsManchesterUnitedTeamSet202526: CardSeries = {
   cardDesigns: manchesterUnitedTeamSetCardDesigns,
 };
 
+type BarcelonaTeamSetCardInput = {
+  slug: string;
+  officialName: string;
+  name: LocalizedText;
+  serial?: string;
+  displayParallelName?: string;
+  group?: CardGroup;
+  parallels?: CardDesign["parallels"];
+  layout?: CardDesign["layout"];
+};
+
+const barcelonaTeamSetCard = ({
+  slug,
+  officialName,
+  name,
+  serial,
+  displayParallelName,
+  group = "base",
+  parallels,
+  layout,
+}: BarcelonaTeamSetCardInput): CardDesign => ({
+  slug,
+  officialName,
+  name,
+  group,
+  section: group === "base" ? (serial ? numbered : unnumbered) : (serial ? rareInsert : regularInsert),
+  serial: serial ?? null,
+  displayParallelName,
+  parallels,
+  parallelCoverage: parallels ? "complete" : undefined,
+  layout,
+  image: {
+    path: `images/topps-fc-barcelona-team-set-2025-26/cards/${slug}.jpg`,
+    verification: "exact",
+    alt: names(
+      `2025-26 Topps 巴塞罗那球队套装 ${name["zh-CN"]}卡面示例`,
+      `2025-26 Topps FC Barcelona Team Set ${name.en} card example`,
+      `Ejemplo de carta ${name.es} de Topps FC Barcelona Team Set 2025-26`,
+    ),
+  },
+});
+
+const barcelonaTeamSetBaseParallels: CardDesign["parallels"] = [
+  { name: "Purple Rainbow Foil", serial: "/250" },
+  { name: "Purple Icy Foil", serial: "/250" },
+  { name: "Aqua Rainbow Foil", serial: "/199" },
+  { name: "Aqua Icy Foil", serial: "/199" },
+  { name: "Blue Rainbow Foil", serial: "/150" },
+  { name: "Blue Icy Foil", serial: "/150" },
+  { name: "Green Rainbow Foil", serial: "/99" },
+  { name: "Green Icy Foil", serial: "/99" },
+  { name: "Gold Rainbow Foil", serial: "/50" },
+  { name: "Gold Icy Foil", serial: "/50" },
+  { name: "Orange Rainbow Foil", serial: "/25" },
+  { name: "Orange Icy Foil", serial: "/25" },
+  { name: "Black Rainbow Foil", serial: "/10" },
+  { name: "Black Icy Foil", serial: "/10" },
+  { name: "Barça Red Rainbow Foil", serial: "/5" },
+  { name: "Barça Red Icy Foil", serial: "/5" },
+  { name: "Gold FoilFractor", serial: "1/1" },
+];
+
+const barcelonaTeamSetAutographParallels: CardDesign["parallels"] = [
+  { name: "Blue Rainbow Foil", serial: "/150" },
+  { name: "Green Rainbow Foil", serial: "/99" },
+  { name: "Purple Rainbow Foil", serial: "/75" },
+  { name: "Gold Rainbow Foil", serial: "/50" },
+  { name: "Orange Rainbow Foil", serial: "/25" },
+  { name: "Black Rainbow Foil", serial: "/10" },
+  { name: "Barça Red Rainbow Foil", serial: "/5" },
+  { name: "Gold FoilFractor", serial: "1/1" },
+];
+
+const barcelonaTeamSetBaseFamilies = [
+  { slug: "first-team", officialName: "First Team", zh: "一线队", es: "Primer equipo" },
+  { slug: "bona-fide-baller", officialName: "Bona Fide Baller", zh: "真格球星", es: "Bona Fide Baller" },
+  { slug: "pitch-pursuits", officialName: "Pitch Pursuits", zh: "球场追击", es: "Pitch Pursuits" },
+  { slug: "collectors-corner", officialName: "Collector's Corner", zh: "收藏家角旗区", es: "Rincón del coleccionista" },
+  { slug: "we-want-the-ball", officialName: "We Want the Ball", zh: "我们要球", es: "Queremos el balón" },
+] as const;
+
+const barcelonaTeamSetVersions = [
+  { suffix: "base", zh: "基础版", en: "Base", es: "Base" },
+  { suffix: "halo", zh: "Halo 光晕", en: "Halo", es: "Halo" },
+  { suffix: "static", zh: "Static 静电", en: "Static Foil", es: "Static Foil" },
+] as const;
+
+const barcelonaTeamSetCardDesigns: CardDesign[] = [
+  ...barcelonaTeamSetBaseFamilies.flatMap((family) => barcelonaTeamSetVersions.map((version, index) =>
+    barcelonaTeamSetCard({
+      slug: `${family.slug}-${version.suffix}`,
+      officialName: `${family.officialName} ${version.en}`,
+      name: names(
+        `${family.zh} · ${version.zh}`,
+        `${family.officialName} · ${version.en}`,
+        `${family.es} · ${version.es}`,
+      ),
+      parallels: index === 0 ? barcelonaTeamSetBaseParallels : undefined,
+      layout: family.slug === "collectors-corner" || family.slug === "we-want-the-ball"
+        ? "landscape"
+        : undefined,
+    }),
+  )),
+  barcelonaTeamSetCard({ slug: "rainbow-flick", officialName: "Rainbow Flick", name: names("彩虹挑球", "Rainbow Flick", "Regate arcoíris"), group: "insert", layout: "landscape" }),
+  barcelonaTeamSetCard({ slug: "base-autograph", officialName: "Base Cards Autograph Variation", name: names("基础卡签名", "Base Cards Autograph Variation", "Variación de autógrafo base"), serial: "/10", displayParallelName: "Black Rainbow Foil", group: "insert", parallels: barcelonaTeamSetAutographParallels }),
+  barcelonaTeamSetCard({ slug: "bona-fide-baller-autograph", officialName: "Bona Fide Baller Autograph Variation", name: names("真格球星签名", "Bona Fide Baller Autograph Variation", "Autógrafo Bona Fide Baller"), serial: "/50", displayParallelName: "Gold Rainbow Foil", group: "insert", parallels: barcelonaTeamSetAutographParallels }),
+];
+
+export const toppsFcBarcelonaTeamSet202526: CardSeries = {
+  slug: "topps-fc-barcelona-team-set-2025-26",
+  manufacturer: "Topps",
+  season: "2025/26",
+  name: names(
+    "2025-26 Topps 巴塞罗那球队套装",
+    "2025-26 Topps FC Barcelona Team Set",
+    "Topps FC Barcelona Team Set 2025-26",
+  ),
+  packaging: {
+    path: "images/topps-fc-barcelona-team-set-2025-26/packaging.jpg",
+    verification: "exact",
+    alt: names(
+      "2025-26 Topps 巴塞罗那球队套装盒装",
+      "2025-26 Topps FC Barcelona Team Set box",
+      "Caja Topps FC Barcelona Team Set 2025-26",
+    ),
+  },
+  totalVariants: 1337,
+  cardDesigns: barcelonaTeamSetCardDesigns,
+};
+
 type InceptionCardInput = {
   slug: string;
   officialName: string;
@@ -1615,6 +1745,7 @@ const catalogue = [
   toppsDecoUcc202526,
   toppsRealMadridTeamSet202526,
   toppsManchesterUnitedTeamSet202526,
+  toppsFcBarcelonaTeamSet202526,
 ];
 
 export function getCatalogue() {
