@@ -1109,6 +1109,29 @@ describe("Topps FC Barcelona Team Set 2025-26 catalogue", () => {
       expect({ width: metadata.width, height: metadata.height }, card.slug).toEqual(expected);
     }
   });
+
+  it("keeps the first nine catalogue cards legible instead of crushing their shadows", async () => {
+    const firstNine = barcelonaTeamSetDesigns.slice(0, 9);
+
+    for (const slug of firstNine) {
+      const imagePath = path.join(
+        process.cwd(),
+        "public/images/topps-fc-barcelona-team-set-2025-26/cards",
+        `${slug}.jpg`,
+      );
+      const { data, info } = await sharp(imagePath)
+        .resize(100, 100, { fit: "fill" })
+        .removeAlpha()
+        .raw()
+        .toBuffer({ resolveWithObject: true });
+      let luminance = 0;
+      for (let index = 0; index < data.length; index += info.channels) {
+        luminance += (0.2126 * data[index] + 0.7152 * data[index + 1] + 0.0722 * data[index + 2]) / 255;
+      }
+
+      expect(luminance / (info.width * info.height), `${slug} is still underexposed`).toBeGreaterThan(0.32);
+    }
+  });
 });
 
 describe("Topps Manchester United Team Set 2025-26 catalogue", () => {
