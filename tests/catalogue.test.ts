@@ -1892,14 +1892,17 @@ describe("Topps Gold Premier League 2025-26 catalogue", () => {
     }
     expect(cards.get("midas")).toMatchObject({
       serial: "/50",
-      displayParallelName: "Midas",
-      parallels: [{ name: "Midas", serial: "/50" }],
+      displayParallelName: "Purple",
+      parallels,
       parallelCoverage: "complete",
     });
     expect(cards.get("pl-originals")).toMatchObject({
       serial: "/100",
-      displayParallelName: "PL Originals",
-      parallels: [{ name: "PL Originals", serial: "/100" }],
+      displayParallelName: "Base",
+      parallels: [
+        { name: "Base", serial: "/100" },
+        ...parallels,
+      ],
       parallelCoverage: "complete",
     });
     expect(cards.get("current-stars-autographs")).toMatchObject({

@@ -2049,6 +2049,11 @@ const goldPremierLeagueParallels: CardDesign["parallels"] = [
   { name: "Gold", serial: "1/1" },
 ];
 
+const goldPremierLeagueOriginalsParallels: CardDesign["parallels"] = [
+  { name: "Base", serial: "/100" },
+  ...goldPremierLeagueParallels,
+];
+
 const goldPremierLeagueCard = ({
   slug,
   officialName,
@@ -2095,8 +2100,8 @@ const goldPremierLeagueCardDesigns: CardDesign[] = [
   goldPremierLeagueChecklistCard({ slug: "elite", officialName: "Elite", zh: "精英", es: "Élite", group: "base", section: "base-unnumbered" }),
   goldPremierLeagueChecklistCard({ slug: "future-stars", officialName: "Future Stars", zh: "未来之星", es: "Estrellas del futuro", group: "base", section: "base-unnumbered" }),
   goldPremierLeagueChecklistCard({ slug: "gold", officialName: "Gold", zh: "金色", es: "Oro", group: "base", section: "base-unnumbered", serial: "/50", displayParallelName: "Purple" }),
-  goldPremierLeagueCard({ slug: "midas", officialName: "Midas", zh: "点金术", es: "Midas", section: "regular-insert", serial: "/50", displayParallelName: "Midas", parallels: [{ name: "Midas", serial: "/50" }], parallelCoverage: "complete" }),
-  goldPremierLeagueCard({ slug: "pl-originals", officialName: "PL Originals", zh: "英超经典", es: "Originales de la Premier League", section: "regular-insert", serial: "/100", displayParallelName: "PL Originals", parallels: [{ name: "PL Originals", serial: "/100" }], parallelCoverage: "complete" }),
+  goldPremierLeagueCard({ slug: "midas", officialName: "Midas", zh: "点金术", es: "Midas", section: "regular-insert", serial: "/50", displayParallelName: "Purple", parallels: goldPremierLeagueParallels, parallelCoverage: "complete" }),
+  goldPremierLeagueCard({ slug: "pl-originals", officialName: "PL Originals", zh: "英超经典", es: "Originales de la Premier League", section: "regular-insert", serial: "/100", displayParallelName: "Base", parallels: goldPremierLeagueOriginalsParallels, parallelCoverage: "complete" }),
   goldPremierLeagueChecklistCard({ slug: "current-stars-autographs", officialName: "Current Stars Autographs", zh: "当前球星签字", es: "Autógrafos de estrellas actuales" }),
   goldPremierLeagueChecklistCard({ slug: "elite-autographs", officialName: "Elite Autographs", zh: "精英签字", es: "Autógrafos Élite", serial: "1/1", displayParallelName: "Gold" }),
   goldPremierLeagueChecklistCard({ slug: "future-stars-autographs", officialName: "Future Stars Autographs", zh: "未来之星签字", es: "Autógrafos de estrellas del futuro", serial: "1/1", displayParallelName: "Gold" }),
