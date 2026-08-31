@@ -2041,33 +2041,21 @@ describe("Topps UEFA Club Competitions Flagship 2025-26 catalogue", () => {
     ]);
   });
 
-  it("normalizes verified official images and keeps unreleased physical cards as explicit blank slots", async () => {
+  it("publishes every available flagship physical image and keeps the unreleased 1/1 milestone family explicit", async () => {
     const series = getSeries(uccFlagshipSlug);
 
     expect(series).toBeDefined();
     if (!series) return;
     expect(series.packaging.verification).toBe("exact");
     const exactCards = series.cardDesigns.filter((card) => card.image.verification === "exact");
-    expect(exactCards.map((card) => card.slug)).toEqual([
-      "veterans-and-rookies",
-      "roots",
-      "trophy-chasers",
-      "born-champ",
-      "8bit-shots",
-      "epicenter",
-      "home-pitch-advantage",
-      "mindgame",
-      "jigsaw",
-      "ultimate-stage-chrome",
-      "base-card-autograph-variation",
-      "teammates-dual-autographs",
-      "topps-1955-autographs",
-      "starball-commemorative-relics",
-      "topps-superstar-autographed-relics",
-    ]);
-    for (const card of series.cardDesigns.filter((card) => card.image.verification === "unverified")) {
-      expect(card.curatorNote?.["zh-CN"], card.slug).toContain("官方清单");
-    }
+    expect(exactCards.map((card) => card.slug)).toEqual(
+      uccFlagshipDesigns.filter((slug) => slug !== "griezmann-ucl-milestone-autograph-relic"),
+    );
+    const pendingMilestone = series.cardDesigns.find(
+      (card) => card.slug === "griezmann-ucl-milestone-autograph-relic",
+    );
+    expect(pendingMilestone?.image.verification).toBe("unverified");
+    expect(pendingMilestone?.curatorNote?.en).toContain("image slot remains blank");
     const normalizedImages = [
       { image: series.packaging, layout: "landscape" },
       ...exactCards.map((card) => ({ image: card.image, layout: card.layout ?? "portrait" })),
