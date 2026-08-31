@@ -2145,6 +2145,196 @@ export const toppsGoldPremierLeague202526: CardSeries = {
   cardDesigns: goldPremierLeagueCardDesigns,
 };
 
+type UccFlagshipCardInput = {
+  slug: string;
+  officialName: string;
+  zh: string;
+  es: string;
+  group?: CardGroup;
+  section?: CardSection;
+  parallels?: CardDesign["parallels"];
+  layout?: CardDesign["layout"];
+};
+
+const uccFlagshipExactCards = new Set([
+  "veterans-and-rookies",
+  "roots",
+  "home-pitch-advantage",
+  "jigsaw",
+  "ultimate-stage-chrome",
+  "base-card-autograph-variation",
+  "teammates-dual-autographs",
+  "topps-1955-autographs",
+  "topps-superstar-autographed-relics",
+]);
+
+const uccFlagshipStandardInsertParallels: CardDesign["parallels"] = [
+  { name: "Base", serial: null },
+  { name: "Green Foil", serial: "/99" },
+  { name: "Gold Foil", serial: "/50" },
+  { name: "Orange Foil", serial: "/25" },
+  { name: "Black Foil", serial: "/10" },
+  { name: "Red Foil", serial: "/5" },
+  { name: "FoilFractor", serial: "1/1" },
+];
+
+const uccFlagshipBaseParallels: CardDesign["parallels"] = [
+  { name: "Base", serial: null },
+  { name: "Aqua Foil", serial: null },
+  { name: "Raindrops", serial: null },
+  { name: "Neon Yellow FlowFractor", serial: null },
+  { name: "Neon Pink FlowFractor", serial: null },
+  { name: "Neon Blue FlowFractor", serial: null },
+  { name: "Neon Purple FlowFractor", serial: null },
+  { name: "Neon Green FlowFractor", serial: null },
+  { name: "Aqua Holo Foil", serial: null },
+  { name: "Pink Holo Foil", serial: null },
+  { name: "Yellow Holo Foil", serial: null },
+  { name: "Diamante", serial: null },
+  { name: "Pink Diamante", serial: null },
+  { name: "Yellow Inferno", serial: null },
+  { name: "Purple Inferno", serial: null },
+  { name: "Blue Inferno", serial: null },
+  { name: "Green Inferno", serial: null },
+  { name: "Gold Inferno", serial: null },
+  { name: "Orange Inferno", serial: null },
+  { name: "Black Inferno", serial: null },
+  { name: "Red Inferno", serial: null },
+  { name: "Team Logo Border Variation", serial: null },
+  { name: "Easter Egg Variation", serial: null },
+  { name: "Purple Foil", serial: "/250" },
+  { name: "Purple Raindrops", serial: "/250" },
+  { name: "Blue Foil", serial: "/150" },
+  { name: "Blue Raindrops", serial: "/150" },
+  { name: "Green Foil", serial: "/99" },
+  { name: "Green Raindrops", serial: "/99" },
+  { name: "Black and White Foil", serial: "/75" },
+  { name: "Black and White Raindrops", serial: "/75" },
+  { name: "Gold Foil", serial: "/50" },
+  { name: "Gold Raindrops", serial: "/50" },
+  { name: "Orange Foil", serial: "/25" },
+  { name: "Orange Raindrops", serial: "/25" },
+  { name: "Black Foil", serial: "/10" },
+  { name: "Black Raindrops", serial: "/10" },
+  { name: "Red Foil", serial: "/5" },
+  { name: "Red Raindrops", serial: "/5" },
+  { name: "FoilFractor", serial: "1/1" },
+  { name: "Printing Plates", serial: "1/1" },
+  { name: "First Card", serial: "1/1" },
+];
+
+const foilAutoParallels: CardDesign["parallels"] = [
+  { name: "Base", serial: null },
+  { name: "Blue Foil", serial: "/150" },
+  { name: "Green Foil", serial: "/99" },
+  { name: "Black and White Foil", serial: "/75" },
+  { name: "Gold Foil", serial: "/50" },
+  { name: "Orange Foil", serial: "/25" },
+  { name: "Black Foil", serial: "/10" },
+  { name: "Red Foil", serial: "/5" },
+  { name: "FoilFractor", serial: "1/1" },
+];
+
+const uccFlagshipCard = ({
+  slug,
+  officialName,
+  zh,
+  es,
+  group = "insert",
+  section = "regular-insert",
+  parallels,
+  layout,
+}: UccFlagshipCardInput): CardDesign => {
+  const exact = uccFlagshipExactCards.has(slug);
+  return {
+    slug,
+    officialName,
+    name: names(zh, officialName, es),
+    group,
+    section,
+    serial: null,
+    parallels,
+    parallelCoverage: parallels ? "complete" : undefined,
+    layout,
+    curatorNote: exact ? undefined : names(
+      "官方清单已确认此卡种；目前未找到可核验且清晰的实物正面图，因此暂时保留空图卡位。",
+      "The official checklist confirms this card type; no clear, verifiable physical front image is currently available, so its image slot remains blank.",
+      "La lista oficial confirma este tipo de carta; aún no hay una imagen frontal física clara y verificable, por lo que la imagen queda vacía.",
+    ),
+    image: {
+      path: `images/topps-uefa-club-competitions-2025-26/cards/${slug}.webp`,
+      verification: exact ? "exact" : "unverified",
+      alt: names(
+        `2025/26 Topps 欧足联俱乐部赛事 ${zh}代表卡`,
+        `Representative ${officialName} card from 2025/26 Topps UEFA Club Competitions`,
+        `Carta representativa ${es} de 2025/26 Topps UEFA Club Competitions`,
+      ),
+    },
+  };
+};
+
+const uccFlagshipCardDesigns: CardDesign[] = [
+  uccFlagshipCard({ slug: "veterans-and-rookies", officialName: "Veterans and Rookies", zh: "老将与新秀基础卡", es: "Veteranos y novatos", group: "base", section: "base-unnumbered", parallels: uccFlagshipBaseParallels }),
+  uccFlagshipCard({ slug: "future-stars", officialName: "Future Stars", zh: "未来之星基础卡", es: "Estrellas del futuro", group: "base", section: "base-unnumbered", parallels: uccFlagshipBaseParallels }),
+  uccFlagshipCard({ slug: "team-of-the-season", officialName: "UCL Team of the Season", zh: "欧冠赛季最佳阵容", es: "Equipo de la temporada UCL", group: "base", section: "base-unnumbered", parallels: uccFlagshipBaseParallels }),
+  uccFlagshipCard({ slug: "title-winners", officialName: "2024/25 Title Winners", zh: "2024/25 冠军球队", es: "Campeones 2024/25", group: "base", section: "base-unnumbered", parallels: uccFlagshipBaseParallels }),
+  uccFlagshipCard({ slug: "base-short-prints", officialName: "Base Card Short Prints", zh: "基础短印", es: "Variaciones cortas base", group: "base", section: "base-unnumbered" }),
+  uccFlagshipCard({ slug: "base-super-short-prints", officialName: "Base Card Super Short Prints", zh: "基础超短印", es: "Variaciones súper cortas base", group: "base", section: "base-unnumbered" }),
+  uccFlagshipCard({ slug: "roots", officialName: "Roots", zh: "根源", es: "Raíces", parallels: uccFlagshipStandardInsertParallels }),
+  uccFlagshipCard({ slug: "trophy-chasers", officialName: "Trophy Chasers", zh: "奖杯追逐者", es: "Cazadores de trofeos", parallels: uccFlagshipStandardInsertParallels }),
+  uccFlagshipCard({ slug: "best-of-the-best-legendary-numbers", officialName: "Best of the Best: Legendary Numbers", zh: "最佳中的最佳：传奇号码", es: "Lo mejor de lo mejor: números legendarios", parallels: uccFlagshipStandardInsertParallels }),
+  uccFlagshipCard({ slug: "born-champ", officialName: "Born Champ", zh: "天生冠军", es: "Campeón nato", parallels: uccFlagshipStandardInsertParallels }),
+  uccFlagshipCard({ slug: "8bit-shots", officialName: "8Bit Shots", zh: "8 位射门", es: "Tiros 8Bit", parallels: uccFlagshipStandardInsertParallels }),
+  uccFlagshipCard({ slug: "epicenter", officialName: "Epicenter", zh: "震中", es: "Epicentro", section: "rare-insert", parallels: [{ name: "Base", serial: null }, { name: "FoilFractor", serial: "1/1" }] }),
+  uccFlagshipCard({ slug: "home-pitch-advantage", officialName: "Home Pitch Advantage", zh: "主场优势", es: "Ventaja de campo", section: "rare-insert", parallels: [{ name: "Base", serial: null }, { name: "Red Foil", serial: "/5" }, { name: "FoilFractor", serial: "1/1" }] }),
+  uccFlagshipCard({ slug: "mindgame", officialName: "Mindgame", zh: "心理博弈", es: "Juego mental", section: "rare-insert" }),
+  uccFlagshipCard({ slug: "murals", officialName: "Murals", zh: "壁画", es: "Murales", section: "rare-insert" }),
+  uccFlagshipCard({ slug: "jigsaw", officialName: "Jigsaw", zh: "拼图", es: "Rompecabezas", section: "rare-insert" }),
+  uccFlagshipCard({ slug: "hype", officialName: "Hype", zh: "焦点新星", es: "Hype", section: "rare-insert" }),
+  uccFlagshipCard({ slug: "ultimate-stage-chrome", officialName: "Ultimate Stage Chrome Cards", zh: "终极舞台 Chrome", es: "Ultimate Stage Chrome", section: "rare-insert", parallels: [{ name: "Base", serial: null }, { name: "Aqua Refractor", serial: "/199" }, { name: "Blue Refractor", serial: "/150" }, { name: "Green Refractor", serial: "/99" }, { name: "Purple Refractor", serial: "/75" }, { name: "Gold Refractor", serial: "/50" }, { name: "Orange Refractor", serial: "/25" }, { name: "Black Refractor", serial: "/10" }, { name: "Red Refractor", serial: "/5" }, { name: "Superfractor", serial: "1/1" }] }),
+  uccFlagshipCard({ slug: "regency-chrome", officialName: "Regency Chrome Cards", zh: "摄政 Chrome", es: "Regency Chrome", section: "rare-insert", parallels: [{ name: "Base", serial: null }, { name: "Orange Refractor", serial: "/25" }, { name: "Black Refractor", serial: "/10" }, { name: "Red Refractor", serial: "/5" }, { name: "Superfractor", serial: "1/1" }] }),
+  uccFlagshipCard({ slug: "gold-framed-messi-anniversary-sketch-cards", officialName: "Gold Framed Messi Anniversary Sketch Cards", zh: "金框梅西周年手绘卡", es: "Bocetos aniversario de Messi con marco dorado", section: "rare-insert" }),
+  uccFlagshipCard({ slug: "topps-ucc-sketch-cards", officialName: "Topps UCC Sketch Cards", zh: "Topps UCC 手绘卡", es: "Bocetos Topps UCC", section: "rare-insert" }),
+  uccFlagshipCard({ slug: "the-grail", officialName: "The Grail", zh: "圣杯", es: "El Grial", section: "rare-insert" }),
+  uccFlagshipCard({ slug: "base-card-autograph-variation", officialName: "Base Card Autograph Variation", zh: "基础卡签字变体", es: "Variación autografiada base", section: "rare-insert", parallels: foilAutoParallels }),
+  uccFlagshipCard({ slug: "future-stars-autograph-variation", officialName: "Future Stars Autograph Variation", zh: "未来之星签字变体", es: "Variación autografiada Future Stars", section: "rare-insert", parallels: foilAutoParallels }),
+  uccFlagshipCard({ slug: "teammates-dual-autographs", officialName: "Teammates Dual Autographs", zh: "队友双人签字", es: "Autógrafos dobles de compañeros", section: "rare-insert", layout: "landscape", parallels: [{ name: "Base", serial: null }, { name: "Orange Foil", serial: "/25" }, { name: "Black Foil", serial: "/10" }, { name: "Red Foil", serial: "/5" }, { name: "FoilFractor", serial: "1/1" }] }),
+  uccFlagshipCard({ slug: "roots-autograph-variation", officialName: "Roots Autograph Variation", zh: "根源签字变体", es: "Variación autografiada Roots", section: "rare-insert", parallels: [{ name: "Base", serial: null }, { name: "FoilFractor", serial: "1/1" }] }),
+  uccFlagshipCard({ slug: "best-of-the-best-autograph-variation", officialName: "Best of the Best: Legendary Numbers Autograph Variation", zh: "传奇号码签字变体", es: "Variación autografiada Números legendarios", section: "rare-insert", parallels: [{ name: "Base", serial: null }, { name: "FoilFractor", serial: "1/1" }] }),
+  uccFlagshipCard({ slug: "topps-1955-autographs", officialName: "Topps 1955 Autographs", zh: "Topps 1955 签字", es: "Autógrafos Topps 1955", section: "rare-insert", layout: "landscape", parallels: [{ name: "Green Refractor", serial: "/99" }, { name: "Gold Refractor", serial: "/50" }, { name: "Orange Refractor", serial: "/25" }, { name: "Black Refractor", serial: "/10" }, { name: "Red Refractor", serial: "/5" }, { name: "Superfractor", serial: "1/1" }] }),
+  uccFlagshipCard({ slug: "ultimate-stage-chrome-autograph-variation", officialName: "Ultimate Stage Chrome Autograph Variation", zh: "终极舞台 Chrome 签字变体", es: "Variación autografiada Ultimate Stage Chrome", section: "rare-insert", parallels: [{ name: "Base", serial: null }, { name: "Red Refractor", serial: "/5" }, { name: "Superfractor", serial: "1/1" }] }),
+  uccFlagshipCard({ slug: "regency-chrome-autograph-variation", officialName: "Regency Chrome Autograph Variation", zh: "摄政 Chrome 签字变体", es: "Variación autografiada Regency Chrome", section: "rare-insert", parallels: [{ name: "Base", serial: null }, { name: "Red Refractor", serial: "/5" }, { name: "Superfractor", serial: "1/1" }] }),
+  uccFlagshipCard({ slug: "marks-of-excellence", officialName: "Marks of Excellence", zh: "卓越印记签字", es: "Marks of Excellence", section: "rare-insert", parallels: [{ name: "Green Foil", serial: "/99" }, { name: "Gold Foil", serial: "/50" }, { name: "Orange Foil", serial: "/25" }, { name: "Purple Foil", serial: "/10" }, { name: "Red Foil", serial: "/5" }, { name: "Black Foil", serial: "1/1" }] }),
+  uccFlagshipCard({ slug: "topps-superstar-relics", officialName: "Topps Superstar Relics", zh: "Topps 超级球星实物", es: "Reliquias Topps Superstar", section: "rare-insert", parallels: [{ name: "Base", serial: null }, { name: "Purple Foil", serial: "/250" }, { name: "Blue Foil", serial: "/150" }, { name: "Green Foil", serial: "/99" }, { name: "Gold Foil", serial: "/50" }, { name: "Orange Foil", serial: "/25" }, { name: "Black Foil", serial: "/10" }, { name: "Red Foil", serial: "/5" }, { name: "FoilFractor", serial: "1/1" }] }),
+  uccFlagshipCard({ slug: "premium-class-relics", officialName: "Premium Class Relics", zh: "尊贵级实物", es: "Reliquias Premium Class", section: "rare-insert", parallels: [{ name: "Base", serial: null }, { name: "Red Foil", serial: "/5" }, { name: "FoilFractor", serial: "1/1" }] }),
+  uccFlagshipCard({ slug: "starball-commemorative-relics", officialName: "Starball Commemorative Relics", zh: "星球纪念实物", es: "Reliquias conmemorativas Starball", section: "rare-insert", parallels: uccFlagshipStandardInsertParallels }),
+  uccFlagshipCard({ slug: "topps-superstar-autographed-relics", officialName: "Topps Superstar Autographed Relics", zh: "Topps 超级球星签字实物", es: "Reliquias autografiadas Topps Superstar", section: "rare-insert", layout: "landscape", parallels: uccFlagshipStandardInsertParallels }),
+  uccFlagshipCard({ slug: "premium-class-autograph-relics", officialName: "Premium Class Autograph Relics", zh: "尊贵级签字实物", es: "Reliquias autografiadas Premium Class", section: "rare-insert", parallels: [{ name: "Base", serial: null }, { name: "Red Foil", serial: "/5" }, { name: "FoilFractor", serial: "1/1" }] }),
+  uccFlagshipCard({ slug: "griezmann-ucl-milestone-autograph-relic", officialName: "Griezmann UCL Milestone Autograph Relic", zh: "格列兹曼欧冠里程碑签字实物", es: "Reliquia autografiada hito UCL de Griezmann", section: "rare-insert", parallels: [{ name: "Base", serial: null }, { name: "Club Logo", serial: "1/1" }, { name: "Starball", serial: "1/1" }, { name: "Laundry Tag", serial: "1/1" }] }),
+];
+
+export const toppsUefaClubCompetitions202526: CardSeries = {
+  slug: "topps-uefa-club-competitions-2025-26",
+  manufacturer: "Topps",
+  season: "2025/26",
+  name: names(
+    "2025/26 Topps 欧足联俱乐部赛事",
+    "2025/26 Topps UEFA Club Competitions",
+    "2025/26 Topps UEFA Club Competitions",
+  ),
+  packaging: {
+    path: "images/topps-uefa-club-competitions-2025-26/packaging.webp",
+    verification: "exact",
+    alt: names(
+      "2025/26 Topps 欧足联俱乐部赛事 Hobby 盒包装",
+      "2025/26 Topps UEFA Club Competitions Hobby box",
+      "Caja Hobby 2025/26 Topps UEFA Club Competitions",
+    ),
+  },
+  totalVariants: 37,
+  cardDesigns: uccFlagshipCardDesigns,
+};
+
 const catalogue = [
   merlinPremierLeague2026,
   toppsFinestPremierLeague2026,
@@ -2155,6 +2345,7 @@ const catalogue = [
   toppsFocusLiverpool202526,
   toppsLineageBayern202526,
   toppsGoldPremierLeague202526,
+  toppsUefaClubCompetitions202526,
   toppsInceptionUcc202526,
   toppsDecoUcc202526,
   toppsRealMadridTeamSet202526,

@@ -20,6 +20,7 @@ const decoUccSlug = "topps-deco-ucc-2025-26";
 const focusLiverpoolSlug = "topps-focus-liverpool-2025-26";
 const lineageBayernSlug = "topps-lineage-bayern-2025-26";
 const goldPremierLeagueSlug = "topps-gold-premier-league-2025-26";
+const uccFlagshipSlug = "topps-uefa-club-competitions-2025-26";
 const realMadridTeamSetSlug = "topps-real-madrid-team-set-2025-26";
 const manchesterUnitedTeamSetSlug = "topps-manchester-united-team-set-2025-26";
 const barcelonaTeamSetSlug = "topps-fc-barcelona-team-set-2025-26";
@@ -273,6 +274,45 @@ const goldPremierLeagueDesigns = [
   "future-stars-autographs",
   "gold-autographs",
   "only1-autographs",
+];
+const uccFlagshipDesigns = [
+  "veterans-and-rookies",
+  "future-stars",
+  "team-of-the-season",
+  "title-winners",
+  "base-short-prints",
+  "base-super-short-prints",
+  "roots",
+  "trophy-chasers",
+  "best-of-the-best-legendary-numbers",
+  "born-champ",
+  "8bit-shots",
+  "epicenter",
+  "home-pitch-advantage",
+  "mindgame",
+  "murals",
+  "jigsaw",
+  "hype",
+  "ultimate-stage-chrome",
+  "regency-chrome",
+  "gold-framed-messi-anniversary-sketch-cards",
+  "topps-ucc-sketch-cards",
+  "the-grail",
+  "base-card-autograph-variation",
+  "future-stars-autograph-variation",
+  "teammates-dual-autographs",
+  "roots-autograph-variation",
+  "best-of-the-best-autograph-variation",
+  "topps-1955-autographs",
+  "ultimate-stage-chrome-autograph-variation",
+  "regency-chrome-autograph-variation",
+  "marks-of-excellence",
+  "topps-superstar-relics",
+  "premium-class-relics",
+  "starball-commemorative-relics",
+  "topps-superstar-autographed-relics",
+  "premium-class-autograph-relics",
+  "griezmann-ucl-milestone-autograph-relic",
 ];
 const argentinaBaseFamilies = [
   "first-team",
@@ -1937,6 +1977,102 @@ describe("Topps Gold Premier League 2025-26 catalogue", () => {
         ? { width: 1050, height: 750 }
         : { width: 750, height: 1050 };
       expect({ width: metadata.width, height: metadata.height }, image.path).toEqual(expectedSize);
+    }
+  });
+});
+
+describe("Topps UEFA Club Competitions Flagship 2025-26 catalogue", () => {
+  it("publishes every official visual family in checklist order", () => {
+    const series = getSeries(uccFlagshipSlug);
+
+    expect(series?.cardDesigns.map((card) => card.slug)).toEqual(uccFlagshipDesigns);
+    expect(series?.cardDesigns).toHaveLength(37);
+    expect(series?.totalVariants).toBe(37);
+    expect(series?.cardDesigns.slice(0, 6).every((card) => card.group === "base")).toBe(true);
+    expect(series?.cardDesigns.slice(6).every((card) => card.group === "insert")).toBe(true);
+    expect(validateSeries(series!)).toEqual([]);
+  });
+
+  it("records the official flagship parallel ladders through one-of-one cards", () => {
+    const cards = new Map(getSeries(uccFlagshipSlug)?.cardDesigns.map((card) => [card.slug, card]));
+    const standardInsertParallels = [
+      { name: "Base", serial: null },
+      { name: "Green Foil", serial: "/99" },
+      { name: "Gold Foil", serial: "/50" },
+      { name: "Orange Foil", serial: "/25" },
+      { name: "Black Foil", serial: "/10" },
+      { name: "Red Foil", serial: "/5" },
+      { name: "FoilFractor", serial: "1/1" },
+    ];
+
+    for (const slug of ["roots", "trophy-chasers", "best-of-the-best-legendary-numbers", "born-champ", "8bit-shots"]) {
+      expect(cards.get(slug)?.parallels, slug).toEqual(standardInsertParallels);
+      expect(cards.get(slug)?.parallelCoverage, slug).toBe("complete");
+    }
+    expect(cards.get("home-pitch-advantage")?.parallels).toEqual([
+      { name: "Base", serial: null },
+      { name: "Red Foil", serial: "/5" },
+      { name: "FoilFractor", serial: "1/1" },
+    ]);
+    expect(cards.get("ultimate-stage-chrome")?.parallels).toEqual([
+      { name: "Base", serial: null },
+      { name: "Aqua Refractor", serial: "/199" },
+      { name: "Blue Refractor", serial: "/150" },
+      { name: "Green Refractor", serial: "/99" },
+      { name: "Purple Refractor", serial: "/75" },
+      { name: "Gold Refractor", serial: "/50" },
+      { name: "Orange Refractor", serial: "/25" },
+      { name: "Black Refractor", serial: "/10" },
+      { name: "Red Refractor", serial: "/5" },
+      { name: "Superfractor", serial: "1/1" },
+    ]);
+    expect(cards.get("teammates-dual-autographs")?.parallels).toEqual([
+      { name: "Base", serial: null },
+      { name: "Orange Foil", serial: "/25" },
+      { name: "Black Foil", serial: "/10" },
+      { name: "Red Foil", serial: "/5" },
+      { name: "FoilFractor", serial: "1/1" },
+    ]);
+    expect(cards.get("griezmann-ucl-milestone-autograph-relic")?.parallels).toEqual([
+      { name: "Base", serial: null },
+      { name: "Club Logo", serial: "1/1" },
+      { name: "Starball", serial: "1/1" },
+      { name: "Laundry Tag", serial: "1/1" },
+    ]);
+  });
+
+  it("normalizes verified official images and keeps unreleased physical cards as explicit blank slots", async () => {
+    const series = getSeries(uccFlagshipSlug);
+
+    expect(series).toBeDefined();
+    if (!series) return;
+    expect(series.packaging.verification).toBe("exact");
+    const exactCards = series.cardDesigns.filter((card) => card.image.verification === "exact");
+    expect(exactCards.map((card) => card.slug)).toEqual([
+      "veterans-and-rookies",
+      "roots",
+      "home-pitch-advantage",
+      "jigsaw",
+      "ultimate-stage-chrome",
+      "base-card-autograph-variation",
+      "teammates-dual-autographs",
+      "topps-1955-autographs",
+      "topps-superstar-autographed-relics",
+    ]);
+    for (const card of series.cardDesigns.filter((card) => card.image.verification === "unverified")) {
+      expect(card.curatorNote?.["zh-CN"], card.slug).toContain("官方清单");
+    }
+    const normalizedImages = [
+      { image: series.packaging, layout: "landscape" },
+      ...exactCards.map((card) => ({ image: card.image, layout: card.layout ?? "portrait" })),
+    ];
+    for (const { image, layout } of normalizedImages) {
+      const imagePath = path.join(process.cwd(), "public", image.path);
+      expect(fs.existsSync(imagePath), image.path).toBe(true);
+      const metadata = await sharp(imagePath).metadata();
+      expect({ width: metadata.width, height: metadata.height }, image.path).toEqual(
+        layout === "landscape" ? { width: 1050, height: 750 } : { width: 750, height: 1050 },
+      );
     }
   });
 });
