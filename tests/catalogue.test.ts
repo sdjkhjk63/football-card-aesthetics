@@ -19,6 +19,7 @@ const inceptionUccSlug = "topps-inception-ucc-2025-26";
 const decoUccSlug = "topps-deco-ucc-2025-26";
 const focusLiverpoolSlug = "topps-focus-liverpool-2025-26";
 const lineageBayernSlug = "topps-lineage-bayern-2025-26";
+const goldPremierLeagueSlug = "topps-gold-premier-league-2025-26";
 const realMadridTeamSetSlug = "topps-real-madrid-team-set-2025-26";
 const manchesterUnitedTeamSetSlug = "topps-manchester-united-team-set-2025-26";
 const barcelonaTeamSetSlug = "topps-fc-barcelona-team-set-2025-26";
@@ -259,6 +260,19 @@ const lineageBayernDesigns = [
   "fc-bayern-autograph-relics",
   "the-500th-autograph-relic",
   "the-karl-relic",
+];
+const goldPremierLeagueDesigns = [
+  "current-stars",
+  "elite",
+  "future-stars",
+  "gold",
+  "midas",
+  "pl-originals",
+  "current-stars-autographs",
+  "elite-autographs",
+  "future-stars-autographs",
+  "gold-autographs",
+  "only1-autographs",
 ];
 const argentinaBaseFamilies = [
   "first-team",
@@ -1840,6 +1854,72 @@ describe("Topps Lineage FC Bayern Munchen 2025-26 catalogue", () => {
       );
       const { sharpness } = await sharp(imagePath).stats();
       expect(sharpness, `${slug} should match the clarity of the clean product renders`).toBeGreaterThanOrEqual(2.1);
+    }
+  });
+});
+
+describe("Topps Gold Premier League 2025-26 catalogue", () => {
+  it("publishes all 11 official visual families in checklist order", () => {
+    const series = getSeries(goldPremierLeagueSlug);
+
+    expect(series?.cardDesigns.map((card) => card.slug)).toEqual(goldPremierLeagueDesigns);
+    expect(series?.cardDesigns).toHaveLength(11);
+    expect(series?.totalVariants).toBe(11);
+    expect(series?.cardDesigns.slice(0, 4).every((card) => card.group === "base")).toBe(true);
+    expect(series?.cardDesigns.slice(4).every((card) => card.group === "insert")).toBe(true);
+    expect(validateSeries(series!)).toEqual([]);
+  });
+
+  it("records the complete base and autograph parallel ladders and fixed insert numbering", () => {
+    const series = getSeries(goldPremierLeagueSlug);
+    const cards = new Map(series?.cardDesigns.map((card) => [card.slug, card]));
+    const parallels = [
+      { name: "Blue", serial: "/99" },
+      { name: "Green", serial: "/75" },
+      { name: "Purple", serial: "/50" },
+      { name: "Orange", serial: "/25" },
+      { name: "Black", serial: "/10" },
+      { name: "Red", serial: "/5" },
+      { name: "Gold", serial: "1/1" },
+    ];
+
+    for (const slug of [
+      ...goldPremierLeagueDesigns.slice(0, 4),
+      ...goldPremierLeagueDesigns.slice(6, 10),
+    ]) {
+      expect(cards.get(slug)?.parallels, slug).toEqual(parallels);
+      expect(cards.get(slug)?.parallelCoverage, slug).toBe("complete");
+    }
+    expect(cards.get("midas")?.serial).toBe("/50");
+    expect(cards.get("pl-originals")?.serial).toBe("/100");
+    expect(cards.get("only1-autographs")).toMatchObject({
+      serial: "1/1",
+      parallels: [{ name: "Only1", serial: "1/1" }],
+      image: { verification: "unverified" },
+    });
+  });
+
+  it("uses normalized exact local images where a physical card is verified and leaves Only1 blank", async () => {
+    const series = getSeries(goldPremierLeagueSlug);
+
+    expect(series).toBeDefined();
+    if (!series) return;
+
+    expect(series.packaging.verification).toBe("exact");
+    const unverified = series.cardDesigns
+      .filter((card) => card.image.verification === "unverified")
+      .map((card) => card.slug);
+    expect(unverified).toEqual(["only1-autographs"]);
+
+    const images = [series.packaging, ...series.cardDesigns.filter((card) => card.image.verification === "exact").map((card) => card.image)];
+    for (const image of images) {
+      const imagePath = path.join(process.cwd(), "public", image.path);
+      expect(fs.existsSync(imagePath), image.path).toBe(true);
+      const metadata = await sharp(imagePath).metadata();
+      const expectedSize = image === series.packaging
+        ? { width: 1050, height: 750 }
+        : { width: 750, height: 1050 };
+      expect({ width: metadata.width, height: metadata.height }, image.path).toEqual(expectedSize);
     }
   });
 });

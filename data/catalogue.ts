@@ -2024,6 +2024,122 @@ export const toppsLineageBayern202526: CardSeries = {
   cardDesigns: lineageBayernCardDesigns,
 };
 
+type GoldPremierLeagueCardInput = {
+  slug: string;
+  officialName: string;
+  zh: string;
+  es: string;
+  group?: CardDesign["group"];
+  section?: CardDesign["section"];
+  serial?: string;
+  displayParallelName?: string;
+  parallels?: CardDesign["parallels"];
+  parallelCoverage?: CardDesign["parallelCoverage"];
+  verification?: "exact" | "unverified";
+  curatorNote?: LocalizedText;
+};
+
+const goldPremierLeagueParallels: CardDesign["parallels"] = [
+  { name: "Blue", serial: "/99" },
+  { name: "Green", serial: "/75" },
+  { name: "Purple", serial: "/50" },
+  { name: "Orange", serial: "/25" },
+  { name: "Black", serial: "/10" },
+  { name: "Red", serial: "/5" },
+  { name: "Gold", serial: "1/1" },
+];
+
+const goldPremierLeagueCard = ({
+  slug,
+  officialName,
+  zh,
+  es,
+  group = "insert",
+  section = "rare-insert",
+  serial,
+  displayParallelName,
+  parallels,
+  parallelCoverage,
+  verification = "exact",
+  curatorNote,
+}: GoldPremierLeagueCardInput): CardDesign => ({
+  slug,
+  officialName,
+  name: names(zh, officialName, es),
+  group,
+  section,
+  serial: serial ?? null,
+  displayParallelName,
+  parallels,
+  parallelCoverage,
+  curatorNote,
+  image: {
+    path: `images/topps-gold-premier-league-2025-26/cards/${slug}.webp`,
+    verification,
+    alt: names(
+      `2025/26 Topps Gold 英超 ${zh}代表卡`,
+      `Representative ${officialName} card from 2025/26 Topps Gold Premier League`,
+      `Carta representativa ${es} de 2025/26 Topps Gold Premier League`,
+    ),
+  },
+});
+
+const goldPremierLeagueChecklistCard = (input: GoldPremierLeagueCardInput): CardDesign => goldPremierLeagueCard({
+  ...input,
+  parallels: goldPremierLeagueParallels,
+  parallelCoverage: "complete",
+});
+
+const goldPremierLeagueCardDesigns: CardDesign[] = [
+  goldPremierLeagueChecklistCard({ slug: "current-stars", officialName: "Current Stars", zh: "当前球星", es: "Estrellas actuales", group: "base", section: "base-unnumbered" }),
+  goldPremierLeagueChecklistCard({ slug: "elite", officialName: "Elite", zh: "精英", es: "Élite", group: "base", section: "base-unnumbered" }),
+  goldPremierLeagueChecklistCard({ slug: "future-stars", officialName: "Future Stars", zh: "未来之星", es: "Estrellas del futuro", group: "base", section: "base-unnumbered" }),
+  goldPremierLeagueChecklistCard({ slug: "gold", officialName: "Gold", zh: "金色", es: "Oro", group: "base", section: "base-unnumbered", serial: "/50", displayParallelName: "Purple" }),
+  goldPremierLeagueCard({ slug: "midas", officialName: "Midas", zh: "点金术", es: "Midas", section: "regular-insert", serial: "/50" }),
+  goldPremierLeagueCard({ slug: "pl-originals", officialName: "PL Originals", zh: "英超经典", es: "Originales de la Premier League", section: "regular-insert", serial: "/100" }),
+  goldPremierLeagueChecklistCard({ slug: "current-stars-autographs", officialName: "Current Stars Autographs", zh: "当前球星签字", es: "Autógrafos de estrellas actuales", serial: "/50", displayParallelName: "Purple" }),
+  goldPremierLeagueChecklistCard({ slug: "elite-autographs", officialName: "Elite Autographs", zh: "精英签字", es: "Autógrafos Élite", serial: "1/1", displayParallelName: "Gold" }),
+  goldPremierLeagueChecklistCard({ slug: "future-stars-autographs", officialName: "Future Stars Autographs", zh: "未来之星签字", es: "Autógrafos de estrellas del futuro", serial: "1/1", displayParallelName: "Gold" }),
+  goldPremierLeagueChecklistCard({ slug: "gold-autographs", officialName: "Gold Autographs", zh: "金色签字", es: "Autógrafos Oro", serial: "/25", displayParallelName: "Orange" }),
+  goldPremierLeagueCard({
+    slug: "only1-autographs",
+    officialName: "Only1 Autographs",
+    zh: "Only1 唯一签字",
+    es: "Autógrafos Only1",
+    serial: "1/1",
+    displayParallelName: "Only1",
+    parallels: [{ name: "Only1", serial: "1/1" }],
+    verification: "unverified",
+    curatorNote: names(
+      "官方已确认该超稀有 1/1 卡种，但人物与实卡图尚未公开。",
+      "Topps has confirmed this ultra-rare 1/1 card type, but its subject and physical card image have not been revealed.",
+      "Topps ha confirmado este tipo de carta ultrarrara 1/1, pero aún no se han revelado su protagonista ni una imagen de la carta física.",
+    ),
+  }),
+];
+
+export const toppsGoldPremierLeague202526: CardSeries = {
+  slug: "topps-gold-premier-league-2025-26",
+  manufacturer: "Topps",
+  season: "2025/26",
+  name: names(
+    "2025/26 Topps Gold 英超",
+    "2025/26 Topps Gold Premier League",
+    "2025/26 Topps Gold Premier League",
+  ),
+  packaging: {
+    path: "images/topps-gold-premier-league-2025-26/packaging.webp",
+    verification: "exact",
+    alt: names(
+      "2025/26 Topps Gold 英超 Hobby 盒包装",
+      "2025/26 Topps Gold Premier League Hobby box",
+      "Caja Hobby 2025/26 Topps Gold Premier League",
+    ),
+  },
+  totalVariants: 11,
+  cardDesigns: goldPremierLeagueCardDesigns,
+};
+
 const catalogue = [
   merlinPremierLeague2026,
   toppsFinestPremierLeague2026,
@@ -2033,6 +2149,7 @@ const catalogue = [
   toppsArgentinaTeamSet2026,
   toppsFocusLiverpool202526,
   toppsLineageBayern202526,
+  toppsGoldPremierLeague202526,
   toppsInceptionUcc202526,
   toppsDecoUcc202526,
   toppsRealMadridTeamSet202526,
