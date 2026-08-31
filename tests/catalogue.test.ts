@@ -23,6 +23,7 @@ const realMadridTeamSetSlug = "topps-real-madrid-team-set-2025-26";
 const manchesterUnitedTeamSetSlug = "topps-manchester-united-team-set-2025-26";
 const barcelonaTeamSetSlug = "topps-fc-barcelona-team-set-2025-26";
 const juventusTeamSetSlug = "topps-juventus-team-set-2025-26";
+const manchesterCityTeamSetSlug = "topps-manchester-city-team-set-2025-26";
 
 async function studioPackagingStats(imagePath: string) {
   const { data, info } = await sharp(imagePath).raw().toBuffer({ resolveWithObject: true });
@@ -128,6 +129,23 @@ const juventusLandscapeDesigns = [
   "collectors-corner-static",
   "rainbow-flick",
 ];
+const manchesterCityTeamSetDesigns = [
+  ...["first-team", "bona-fide-baller", "pitch-pursuits", "collectors-corner", "1894"]
+    .flatMap((family) => ["base", "halo", "static"].map((suffix) => `${family}-${suffix}`)),
+  "rainbow-flick",
+  "base-autograph",
+  "bona-fide-baller-autograph",
+];
+const manchesterCityLandscapeDesigns = [
+  "collectors-corner-base",
+  "collectors-corner-halo",
+  "collectors-corner-static",
+  "rainbow-flick",
+];
+
+const manchesterCityVerifiedDesigns = manchesterCityTeamSetDesigns.filter(
+  (slug) => !["bona-fide-baller-static", "1894-static"].includes(slug),
+);
 const inceptionUccDesigns = [
   "first-xi",
   "emerging-stars",
@@ -1215,6 +1233,81 @@ describe("Topps Juventus Team Set 2025-26 catalogue", () => {
   });
 });
 
+describe("Topps Manchester City Team Set 2025-26 catalogue", () => {
+  it("publishes 18 display cards and all 1,137 physical variants", () => {
+    const series = getSeries(manchesterCityTeamSetSlug);
+
+    expect(series?.cardDesigns.map((card) => card.slug)).toEqual(manchesterCityTeamSetDesigns);
+    expect(series?.cardDesigns).toHaveLength(18);
+    expect(series?.totalVariants).toBe(1137);
+    expect(series?.name.en).toBe("2025-26 Topps Manchester City Team Set");
+  });
+
+  it("keeps Halo and Static separate and publishes the complete City parallel ladder", () => {
+    const series = getSeries(manchesterCityTeamSetSlug);
+    const cards = new Map(series?.cardDesigns.map((card) => [card.slug, card]));
+
+    expect(cards.get("first-team-base")?.parallels).toEqual([
+      { name: "Blue Rainbow Foil", serial: "/150" },
+      { name: "Blue Icy Foil", serial: "/150" },
+      { name: "Green Rainbow Foil", serial: "/99" },
+      { name: "Green Icy Foil", serial: "/99" },
+      { name: "Gold Rainbow Foil", serial: "/50" },
+      { name: "Gold Icy Foil", serial: "/50" },
+      { name: "Orange Rainbow Foil", serial: "/25" },
+      { name: "Orange Icy Foil", serial: "/25" },
+      { name: "Black Rainbow Foil", serial: "/10" },
+      { name: "Black Icy Foil", serial: "/10" },
+      { name: "Man City Sky Blue Rainbow Foil", serial: "/5" },
+      { name: "Man City Sky Blue Icy Foil", serial: "/5" },
+      { name: "Gold FoilFractor", serial: "1/1" },
+    ]);
+    expect(cards.get("base-autograph")?.parallels).toEqual([
+      { name: "Blue Rainbow Foil", serial: "/150" },
+      { name: "Green Rainbow Foil", serial: "/99" },
+      { name: "Gold Rainbow Foil", serial: "/50" },
+      { name: "Orange Rainbow Foil", serial: "/25" },
+      { name: "Black Rainbow Foil", serial: "/10" },
+      { name: "Man City Sky Blue Rainbow Foil", serial: "/5" },
+      { name: "Gold FoilFractor", serial: "1/1" },
+    ]);
+    expect({
+      serial: cards.get("base-autograph")?.serial,
+      displayParallelName: cards.get("base-autograph")?.displayParallelName,
+    }).toEqual({ serial: "/10", displayParallelName: "Black Rainbow Foil" });
+    expect({
+      serial: cards.get("bona-fide-baller-autograph")?.serial,
+      displayParallelName: cards.get("bona-fide-baller-autograph")?.displayParallelName,
+    }).toEqual({ serial: "1/1", displayParallelName: "Gold FoilFractor" });
+  });
+
+  it("uses exact normalized local assets where a matching card was found and preserves two missing slots", async () => {
+    const series = getSeries(manchesterCityTeamSetSlug);
+
+    expect(series).toBeDefined();
+    if (!series) return;
+    expect(validateSeries(series)).toEqual([]);
+    expect(series.packaging.verification).toBe("exact");
+    expect(fs.existsSync(path.join(process.cwd(), "public", series.packaging.path))).toBe(true);
+    expect(series.cardDesigns.filter((card) => card.layout === "landscape").map((card) => card.slug))
+      .toEqual(manchesterCityLandscapeDesigns);
+
+    const verified = series.cardDesigns.filter((card) => card.image.verification === "exact");
+    expect(verified.map((card) => card.slug)).toEqual(manchesterCityVerifiedDesigns);
+    expect(series.cardDesigns.filter((card) => card.image.verification === "unverified").map((card) => card.slug))
+      .toEqual(["bona-fide-baller-static", "1894-static"]);
+    for (const card of verified) {
+      const imagePath = path.join(process.cwd(), "public", card.image.path);
+      expect(fs.existsSync(imagePath), card.slug).toBe(true);
+      const metadata = await sharp(imagePath).metadata();
+      const expected = card.layout === "landscape"
+        ? { width: 1050, height: 750 }
+        : { width: 750, height: 1050 };
+      expect({ width: metadata.width, height: metadata.height }, card.slug).toEqual(expected);
+    }
+  });
+});
+
 describe("Topps Manchester United Team Set 2025-26 catalogue", () => {
   it("publishes the 18 independently rateable displays and all 1,377 physical variants", () => {
     const series = getSeries(manchesterUnitedTeamSetSlug);
@@ -1302,6 +1395,7 @@ it("does not repeat independently rated Halo or Static cards under their Base ca
   const independentlyRatedFamilies = [
     { seriesSlug: argentinaTeamSetSlug, families: argentinaBaseFamilies },
     { seriesSlug: realMadridTeamSetSlug, families: realMadridBaseFamilies },
+    { seriesSlug: manchesterCityTeamSetSlug, families: ["first-team", "bona-fide-baller", "pitch-pursuits", "collectors-corner", "1894"] },
     { seriesSlug: manchesterUnitedTeamSetSlug, families: manchesterUnitedBaseFamilies },
   ];
 

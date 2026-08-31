@@ -1357,6 +1357,151 @@ export const toppsJuventusTeamSet202526: CardSeries = {
   cardDesigns: juventusTeamSetCardDesigns,
 };
 
+type ManchesterCityTeamSetCardInput = {
+  slug: string;
+  officialName: string;
+  name: LocalizedText;
+  serial?: string;
+  displayParallelName?: string;
+  group?: CardGroup;
+  parallels?: CardDesign["parallels"];
+  layout?: CardDesign["layout"];
+  verification?: "exact" | "unverified";
+};
+
+const manchesterCityTeamSetCard = ({
+  slug,
+  officialName,
+  name,
+  serial,
+  displayParallelName,
+  group = "base",
+  parallels,
+  layout,
+  verification = "unverified",
+}: ManchesterCityTeamSetCardInput): CardDesign => ({
+  slug,
+  officialName,
+  name,
+  group,
+  section: group === "base" ? (serial ? numbered : unnumbered) : (serial ? rareInsert : regularInsert),
+  serial: serial ?? null,
+  displayParallelName,
+  parallels,
+  parallelCoverage: parallels ? "complete" : undefined,
+  layout,
+  image: {
+    path: `images/topps-manchester-city-team-set-2025-26/cards/${slug}.jpg`,
+    verification,
+    alt: names(
+      `2025-26 Topps 曼城球队套装 ${name["zh-CN"]}卡面示例`,
+      `2025-26 Topps Manchester City Team Set ${name.en} card example`,
+      `Ejemplo de carta ${name.es} de Topps Manchester City Team Set 2025-26`,
+    ),
+  },
+});
+
+const manchesterCityTeamSetBaseParallels: CardDesign["parallels"] = [
+  { name: "Blue Rainbow Foil", serial: "/150" },
+  { name: "Blue Icy Foil", serial: "/150" },
+  { name: "Green Rainbow Foil", serial: "/99" },
+  { name: "Green Icy Foil", serial: "/99" },
+  { name: "Gold Rainbow Foil", serial: "/50" },
+  { name: "Gold Icy Foil", serial: "/50" },
+  { name: "Orange Rainbow Foil", serial: "/25" },
+  { name: "Orange Icy Foil", serial: "/25" },
+  { name: "Black Rainbow Foil", serial: "/10" },
+  { name: "Black Icy Foil", serial: "/10" },
+  { name: "Man City Sky Blue Rainbow Foil", serial: "/5" },
+  { name: "Man City Sky Blue Icy Foil", serial: "/5" },
+  { name: "Gold FoilFractor", serial: "1/1" },
+];
+
+const manchesterCityTeamSetAutographParallels: CardDesign["parallels"] = [
+  { name: "Blue Rainbow Foil", serial: "/150" },
+  { name: "Green Rainbow Foil", serial: "/99" },
+  { name: "Gold Rainbow Foil", serial: "/50" },
+  { name: "Orange Rainbow Foil", serial: "/25" },
+  { name: "Black Rainbow Foil", serial: "/10" },
+  { name: "Man City Sky Blue Rainbow Foil", serial: "/5" },
+  { name: "Gold FoilFractor", serial: "1/1" },
+];
+
+const manchesterCityTeamSetBaseFamilies = [
+  { slug: "first-team", officialName: "First Team", zh: "一线队", es: "Primer equipo" },
+  { slug: "bona-fide-baller", officialName: "Bona Fide Baller", zh: "真格球星", es: "Bona Fide Baller" },
+  { slug: "pitch-pursuits", officialName: "Pitch Pursuits", zh: "球场追击", es: "Pitch Pursuits" },
+  { slug: "collectors-corner", officialName: "Collector's Corner", zh: "收藏家角旗区", es: "Rincón del coleccionista" },
+  { slug: "1894", officialName: "1894", zh: "1894 城市纪元", es: "1894" },
+] as const;
+
+const manchesterCityVerifiedSlugs = new Set([
+  "first-team-base",
+  "first-team-halo",
+  "first-team-static",
+  "bona-fide-baller-base",
+  "bona-fide-baller-halo",
+  "pitch-pursuits-base",
+  "pitch-pursuits-halo",
+  "pitch-pursuits-static",
+  "collectors-corner-base",
+  "collectors-corner-halo",
+  "collectors-corner-static",
+  "1894-base",
+  "1894-halo",
+  "rainbow-flick",
+  "base-autograph",
+  "bona-fide-baller-autograph",
+]);
+
+const manchesterCityTeamSetVersions = [
+  { suffix: "base", zh: "基础版", en: "Base", es: "Base" },
+  { suffix: "halo", zh: "Halo 光晕", en: "Halo", es: "Halo" },
+  { suffix: "static", zh: "Static 静电", en: "Static Foil", es: "Static Foil" },
+] as const;
+
+const manchesterCityTeamSetCardDesigns: CardDesign[] = [
+  ...manchesterCityTeamSetBaseFamilies.flatMap((family) =>
+    manchesterCityTeamSetVersions.map((version, index) => manchesterCityTeamSetCard({
+      slug: `${family.slug}-${version.suffix}`,
+      officialName: `${family.officialName} ${version.en}`,
+      name: names(
+        `${family.zh} · ${version.zh}`,
+        `${family.officialName} · ${version.en}`,
+        `${family.es} · ${version.es}`,
+      ),
+      parallels: index === 0 ? manchesterCityTeamSetBaseParallels : undefined,
+      layout: family.slug === "collectors-corner" ? "landscape" : undefined,
+      verification: manchesterCityVerifiedSlugs.has(`${family.slug}-${version.suffix}`) ? "exact" : "unverified",
+    })),
+  ),
+  manchesterCityTeamSetCard({ slug: "rainbow-flick", officialName: "Rainbow Flick", name: names("彩虹挑球", "Rainbow Flick", "Regate arcoíris"), group: "insert", layout: "landscape", verification: "exact" }),
+  manchesterCityTeamSetCard({ slug: "base-autograph", officialName: "Base Cards Autograph Variation", name: names("基础卡签名", "Base Cards Autograph Variation", "Variación de autógrafo base"), serial: "/10", displayParallelName: "Black Rainbow Foil", group: "insert", parallels: manchesterCityTeamSetAutographParallels, verification: "exact" }),
+  manchesterCityTeamSetCard({ slug: "bona-fide-baller-autograph", officialName: "Bona Fide Baller Autograph Variation", name: names("真格球星签名", "Bona Fide Baller Autograph Variation", "Autógrafo Bona Fide Baller"), serial: "1/1", displayParallelName: "Gold FoilFractor", group: "insert", parallels: manchesterCityTeamSetAutographParallels, verification: "exact" }),
+];
+
+export const toppsManchesterCityTeamSet202526: CardSeries = {
+  slug: "topps-manchester-city-team-set-2025-26",
+  manufacturer: "Topps",
+  season: "2025/26",
+  name: names(
+    "2025-26 Topps 曼城球队套装",
+    "2025-26 Topps Manchester City Team Set",
+    "Topps Manchester City Team Set 2025-26",
+  ),
+  packaging: {
+    path: "images/topps-manchester-city-team-set-2025-26/packaging.jpg",
+    verification: "exact",
+    alt: names(
+      "2025-26 Topps 曼城球队套装盒装",
+      "2025-26 Topps Manchester City Team Set box",
+      "Caja Topps Manchester City Team Set 2025-26",
+    ),
+  },
+  totalVariants: 1137,
+  cardDesigns: manchesterCityTeamSetCardDesigns,
+};
+
 type InceptionCardInput = {
   slug: string;
   officialName: string;
@@ -1892,6 +2037,7 @@ const catalogue = [
   toppsManchesterUnitedTeamSet202526,
   toppsFcBarcelonaTeamSet202526,
   toppsJuventusTeamSet202526,
+  toppsManchesterCityTeamSet202526,
 ];
 
 export function getCatalogue() {
