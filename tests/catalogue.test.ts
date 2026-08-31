@@ -2051,12 +2051,18 @@ describe("Topps UEFA Club Competitions Flagship 2025-26 catalogue", () => {
     expect(exactCards.map((card) => card.slug)).toEqual([
       "veterans-and-rookies",
       "roots",
+      "trophy-chasers",
+      "born-champ",
+      "8bit-shots",
+      "epicenter",
       "home-pitch-advantage",
+      "mindgame",
       "jigsaw",
       "ultimate-stage-chrome",
       "base-card-autograph-variation",
       "teammates-dual-autographs",
       "topps-1955-autographs",
+      "starball-commemorative-relics",
       "topps-superstar-autographed-relics",
     ]);
     for (const card of series.cardDesigns.filter((card) => card.image.verification === "unverified")) {
