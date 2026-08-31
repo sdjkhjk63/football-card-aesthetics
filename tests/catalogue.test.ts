@@ -2041,6 +2041,31 @@ describe("Topps UEFA Club Competitions Flagship 2025-26 catalogue", () => {
     ]);
   });
 
+  it("labels the exact parallel shown in each numbered flagship representative photo", () => {
+    const cards = new Map(getSeries(uccFlagshipSlug)?.cardDesigns.map((card) => [card.slug, card]));
+    const picturedParallels = [
+      ["base-card-autograph-variation", "FoilFractor", "1/1"],
+      ["future-stars-autograph-variation", "Black Foil", "/10"],
+      ["regency-chrome", "Superfractor", "1/1"],
+      ["topps-1955-autographs", "Gold Refractor", "/50"],
+      ["regency-chrome-autograph-variation", "Superfractor", "1/1"],
+      ["marks-of-excellence", "Purple Foil", "/10"],
+      ["topps-superstar-relics", "Blue Foil", "/150"],
+      ["premium-class-relics", "Base", "/25"],
+      ["starball-commemorative-relics", "Gold Foil", "/50"],
+      ["topps-superstar-autographed-relics", "Red Foil", "/5"],
+      ["premium-class-autograph-relics", "Base", "/25"],
+    ] as const;
+
+    for (const [slug, displayParallelName, serial] of picturedParallels) {
+      expect({
+        displayParallelName: cards.get(slug)?.displayParallelName,
+        serial: cards.get(slug)?.serial,
+      }, slug).toEqual({ displayParallelName, serial });
+      expect(cards.get(slug)?.parallels, slug).toContainEqual({ name: displayParallelName, serial });
+    }
+  });
+
   it("publishes every available flagship physical image and keeps the unreleased 1/1 milestone family explicit", async () => {
     const series = getSeries(uccFlagshipSlug);
 

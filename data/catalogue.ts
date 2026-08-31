@@ -2150,6 +2150,8 @@ type UccFlagshipCardInput = {
   officialName: string;
   zh: string;
   es: string;
+  serial?: string | null;
+  displayParallelName?: string;
   group?: CardGroup;
   section?: CardSection;
   parallels?: CardDesign["parallels"];
@@ -2267,6 +2269,8 @@ const uccFlagshipCard = ({
   officialName,
   zh,
   es,
+  serial = null,
+  displayParallelName,
   group = "insert",
   section = "regular-insert",
   parallels,
@@ -2279,7 +2283,8 @@ const uccFlagshipCard = ({
     name: names(zh, officialName, es),
     group,
     section,
-    serial: null,
+    serial,
+    displayParallelName,
     parallels,
     parallelCoverage: parallels ? "complete" : undefined,
     layout,
@@ -2319,24 +2324,24 @@ const uccFlagshipCardDesigns: CardDesign[] = [
   uccFlagshipCard({ slug: "jigsaw", officialName: "Jigsaw", zh: "拼图", es: "Rompecabezas", section: "rare-insert" }),
   uccFlagshipCard({ slug: "hype", officialName: "Hype", zh: "焦点新星", es: "Hype", section: "rare-insert" }),
   uccFlagshipCard({ slug: "ultimate-stage-chrome", officialName: "Ultimate Stage Chrome Cards", zh: "终极舞台 Chrome", es: "Ultimate Stage Chrome", section: "rare-insert", parallels: [{ name: "Base", serial: null }, { name: "Aqua Refractor", serial: "/199" }, { name: "Blue Refractor", serial: "/150" }, { name: "Green Refractor", serial: "/99" }, { name: "Purple Refractor", serial: "/75" }, { name: "Gold Refractor", serial: "/50" }, { name: "Orange Refractor", serial: "/25" }, { name: "Black Refractor", serial: "/10" }, { name: "Red Refractor", serial: "/5" }, { name: "Superfractor", serial: "1/1" }] }),
-  uccFlagshipCard({ slug: "regency-chrome", officialName: "Regency Chrome Cards", zh: "摄政 Chrome", es: "Regency Chrome", section: "rare-insert", parallels: [{ name: "Base", serial: null }, { name: "Orange Refractor", serial: "/25" }, { name: "Black Refractor", serial: "/10" }, { name: "Red Refractor", serial: "/5" }, { name: "Superfractor", serial: "1/1" }] }),
+  uccFlagshipCard({ slug: "regency-chrome", officialName: "Regency Chrome Cards", zh: "摄政 Chrome", es: "Regency Chrome", section: "rare-insert", serial: "1/1", displayParallelName: "Superfractor", parallels: [{ name: "Base", serial: null }, { name: "Orange Refractor", serial: "/25" }, { name: "Black Refractor", serial: "/10" }, { name: "Red Refractor", serial: "/5" }, { name: "Superfractor", serial: "1/1" }] }),
   uccFlagshipCard({ slug: "gold-framed-messi-anniversary-sketch-cards", officialName: "Gold Framed Messi Anniversary Sketch Cards", zh: "金框梅西周年手绘卡", es: "Bocetos aniversario de Messi con marco dorado", section: "rare-insert" }),
   uccFlagshipCard({ slug: "topps-ucc-sketch-cards", officialName: "Topps UCC Sketch Cards", zh: "Topps UCC 手绘卡", es: "Bocetos Topps UCC", section: "rare-insert" }),
   uccFlagshipCard({ slug: "the-grail", officialName: "The Grail", zh: "圣杯", es: "El Grial", section: "rare-insert" }),
-  uccFlagshipCard({ slug: "base-card-autograph-variation", officialName: "Base Card Autograph Variation", zh: "基础卡签字变体", es: "Variación autografiada base", section: "rare-insert", parallels: foilAutoParallels }),
-  uccFlagshipCard({ slug: "future-stars-autograph-variation", officialName: "Future Stars Autograph Variation", zh: "未来之星签字变体", es: "Variación autografiada Future Stars", section: "rare-insert", parallels: foilAutoParallels }),
+  uccFlagshipCard({ slug: "base-card-autograph-variation", officialName: "Base Card Autograph Variation", zh: "基础卡签字变体", es: "Variación autografiada base", section: "rare-insert", serial: "1/1", displayParallelName: "FoilFractor", parallels: foilAutoParallels }),
+  uccFlagshipCard({ slug: "future-stars-autograph-variation", officialName: "Future Stars Autograph Variation", zh: "未来之星签字变体", es: "Variación autografiada Future Stars", section: "rare-insert", serial: "/10", displayParallelName: "Black Foil", parallels: foilAutoParallels }),
   uccFlagshipCard({ slug: "teammates-dual-autographs", officialName: "Teammates Dual Autographs", zh: "队友双人签字", es: "Autógrafos dobles de compañeros", section: "rare-insert", layout: "landscape", parallels: [{ name: "Base", serial: null }, { name: "Orange Foil", serial: "/25" }, { name: "Black Foil", serial: "/10" }, { name: "Red Foil", serial: "/5" }, { name: "FoilFractor", serial: "1/1" }] }),
   uccFlagshipCard({ slug: "roots-autograph-variation", officialName: "Roots Autograph Variation", zh: "根源签字变体", es: "Variación autografiada Roots", section: "rare-insert", parallels: [{ name: "Base", serial: null }, { name: "FoilFractor", serial: "1/1" }] }),
   uccFlagshipCard({ slug: "best-of-the-best-autograph-variation", officialName: "Best of the Best: Legendary Numbers Autograph Variation", zh: "传奇号码签字变体", es: "Variación autografiada Números legendarios", section: "rare-insert", parallels: [{ name: "Base", serial: null }, { name: "FoilFractor", serial: "1/1" }] }),
-  uccFlagshipCard({ slug: "topps-1955-autographs", officialName: "Topps 1955 Autographs", zh: "Topps 1955 签字", es: "Autógrafos Topps 1955", section: "rare-insert", layout: "landscape", parallels: [{ name: "Green Refractor", serial: "/99" }, { name: "Gold Refractor", serial: "/50" }, { name: "Orange Refractor", serial: "/25" }, { name: "Black Refractor", serial: "/10" }, { name: "Red Refractor", serial: "/5" }, { name: "Superfractor", serial: "1/1" }] }),
+  uccFlagshipCard({ slug: "topps-1955-autographs", officialName: "Topps 1955 Autographs", zh: "Topps 1955 签字", es: "Autógrafos Topps 1955", section: "rare-insert", layout: "landscape", serial: "/50", displayParallelName: "Gold Refractor", parallels: [{ name: "Green Refractor", serial: "/99" }, { name: "Gold Refractor", serial: "/50" }, { name: "Orange Refractor", serial: "/25" }, { name: "Black Refractor", serial: "/10" }, { name: "Red Refractor", serial: "/5" }, { name: "Superfractor", serial: "1/1" }] }),
   uccFlagshipCard({ slug: "ultimate-stage-chrome-autograph-variation", officialName: "Ultimate Stage Chrome Autograph Variation", zh: "终极舞台 Chrome 签字变体", es: "Variación autografiada Ultimate Stage Chrome", section: "rare-insert", parallels: [{ name: "Base", serial: null }, { name: "Red Refractor", serial: "/5" }, { name: "Superfractor", serial: "1/1" }] }),
-  uccFlagshipCard({ slug: "regency-chrome-autograph-variation", officialName: "Regency Chrome Autograph Variation", zh: "摄政 Chrome 签字变体", es: "Variación autografiada Regency Chrome", section: "rare-insert", parallels: [{ name: "Base", serial: null }, { name: "Red Refractor", serial: "/5" }, { name: "Superfractor", serial: "1/1" }] }),
-  uccFlagshipCard({ slug: "marks-of-excellence", officialName: "Marks of Excellence", zh: "卓越印记签字", es: "Marks of Excellence", section: "rare-insert", parallels: [{ name: "Green Foil", serial: "/99" }, { name: "Gold Foil", serial: "/50" }, { name: "Orange Foil", serial: "/25" }, { name: "Purple Foil", serial: "/10" }, { name: "Red Foil", serial: "/5" }, { name: "Black Foil", serial: "1/1" }] }),
-  uccFlagshipCard({ slug: "topps-superstar-relics", officialName: "Topps Superstar Relics", zh: "Topps 超级球星实物", es: "Reliquias Topps Superstar", section: "rare-insert", layout: "landscape", parallels: [{ name: "Base", serial: null }, { name: "Purple Foil", serial: "/250" }, { name: "Blue Foil", serial: "/150" }, { name: "Green Foil", serial: "/99" }, { name: "Gold Foil", serial: "/50" }, { name: "Orange Foil", serial: "/25" }, { name: "Black Foil", serial: "/10" }, { name: "Red Foil", serial: "/5" }, { name: "FoilFractor", serial: "1/1" }] }),
-  uccFlagshipCard({ slug: "premium-class-relics", officialName: "Premium Class Relics", zh: "尊贵级实物", es: "Reliquias Premium Class", section: "rare-insert", layout: "landscape", parallels: [{ name: "Base", serial: null }, { name: "Red Foil", serial: "/5" }, { name: "FoilFractor", serial: "1/1" }] }),
-  uccFlagshipCard({ slug: "starball-commemorative-relics", officialName: "Starball Commemorative Relics", zh: "星球纪念实物", es: "Reliquias conmemorativas Starball", section: "rare-insert", layout: "landscape", parallels: uccFlagshipStandardInsertParallels }),
-  uccFlagshipCard({ slug: "topps-superstar-autographed-relics", officialName: "Topps Superstar Autographed Relics", zh: "Topps 超级球星签字实物", es: "Reliquias autografiadas Topps Superstar", section: "rare-insert", layout: "landscape", parallels: uccFlagshipStandardInsertParallels }),
-  uccFlagshipCard({ slug: "premium-class-autograph-relics", officialName: "Premium Class Autograph Relics", zh: "尊贵级签字实物", es: "Reliquias autografiadas Premium Class", section: "rare-insert", layout: "landscape", parallels: [{ name: "Base", serial: null }, { name: "Red Foil", serial: "/5" }, { name: "FoilFractor", serial: "1/1" }] }),
+  uccFlagshipCard({ slug: "regency-chrome-autograph-variation", officialName: "Regency Chrome Autograph Variation", zh: "摄政 Chrome 签字变体", es: "Variación autografiada Regency Chrome", section: "rare-insert", serial: "1/1", displayParallelName: "Superfractor", parallels: [{ name: "Base", serial: null }, { name: "Red Refractor", serial: "/5" }, { name: "Superfractor", serial: "1/1" }] }),
+  uccFlagshipCard({ slug: "marks-of-excellence", officialName: "Marks of Excellence", zh: "卓越印记签字", es: "Marks of Excellence", section: "rare-insert", serial: "/10", displayParallelName: "Purple Foil", parallels: [{ name: "Green Foil", serial: "/99" }, { name: "Gold Foil", serial: "/50" }, { name: "Orange Foil", serial: "/25" }, { name: "Purple Foil", serial: "/10" }, { name: "Red Foil", serial: "/5" }, { name: "Black Foil", serial: "1/1" }] }),
+  uccFlagshipCard({ slug: "topps-superstar-relics", officialName: "Topps Superstar Relics", zh: "Topps 超级球星实物", es: "Reliquias Topps Superstar", section: "rare-insert", layout: "landscape", serial: "/150", displayParallelName: "Blue Foil", parallels: [{ name: "Base", serial: null }, { name: "Purple Foil", serial: "/250" }, { name: "Blue Foil", serial: "/150" }, { name: "Green Foil", serial: "/99" }, { name: "Gold Foil", serial: "/50" }, { name: "Orange Foil", serial: "/25" }, { name: "Black Foil", serial: "/10" }, { name: "Red Foil", serial: "/5" }, { name: "FoilFractor", serial: "1/1" }] }),
+  uccFlagshipCard({ slug: "premium-class-relics", officialName: "Premium Class Relics", zh: "尊贵级实物", es: "Reliquias Premium Class", section: "rare-insert", layout: "landscape", serial: "/25", displayParallelName: "Base", parallels: [{ name: "Base", serial: "/25" }, { name: "Red Foil", serial: "/5" }, { name: "FoilFractor", serial: "1/1" }] }),
+  uccFlagshipCard({ slug: "starball-commemorative-relics", officialName: "Starball Commemorative Relics", zh: "星球纪念实物", es: "Reliquias conmemorativas Starball", section: "rare-insert", layout: "landscape", serial: "/50", displayParallelName: "Gold Foil", parallels: uccFlagshipStandardInsertParallels }),
+  uccFlagshipCard({ slug: "topps-superstar-autographed-relics", officialName: "Topps Superstar Autographed Relics", zh: "Topps 超级球星签字实物", es: "Reliquias autografiadas Topps Superstar", section: "rare-insert", layout: "landscape", serial: "/5", displayParallelName: "Red Foil", parallels: uccFlagshipStandardInsertParallels }),
+  uccFlagshipCard({ slug: "premium-class-autograph-relics", officialName: "Premium Class Autograph Relics", zh: "尊贵级签字实物", es: "Reliquias autografiadas Premium Class", section: "rare-insert", layout: "landscape", serial: "/25", displayParallelName: "Base", parallels: [{ name: "Base", serial: "/25" }, { name: "Red Foil", serial: "/5" }, { name: "FoilFractor", serial: "1/1" }] }),
   uccFlagshipCard({ slug: "griezmann-ucl-milestone-autograph-relic", officialName: "Griezmann UCL Milestone Autograph Relic", zh: "格列兹曼欧冠里程碑签字实物", es: "Reliquia autografiada hito UCL de Griezmann", section: "rare-insert", parallels: [{ name: "Base", serial: null }, { name: "Club Logo", serial: "1/1" }, { name: "Starball", serial: "1/1" }, { name: "Laundry Tag", serial: "1/1" }] }),
 ];
 
