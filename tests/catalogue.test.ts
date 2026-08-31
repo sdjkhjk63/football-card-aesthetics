@@ -22,6 +22,7 @@ const lineageBayernSlug = "topps-lineage-bayern-2025-26";
 const realMadridTeamSetSlug = "topps-real-madrid-team-set-2025-26";
 const manchesterUnitedTeamSetSlug = "topps-manchester-united-team-set-2025-26";
 const barcelonaTeamSetSlug = "topps-fc-barcelona-team-set-2025-26";
+const juventusTeamSetSlug = "topps-juventus-team-set-2025-26";
 
 async function studioPackagingStats(imagePath: string) {
   const { data, info } = await sharp(imagePath).raw().toBuffer({ resolveWithObject: true });
@@ -112,6 +113,19 @@ const barcelonaLandscapeDesigns = [
   "we-want-the-ball-base",
   "we-want-the-ball-halo",
   "we-want-the-ball-static",
+  "rainbow-flick",
+];
+const juventusTeamSetDesigns = [
+  ...["first-team", "bona-fide-baller", "pitch-pursuits", "collectors-corner", "bicolore"]
+    .flatMap((family) => ["base", "halo", "static"].map((suffix) => `${family}-${suffix}`)),
+  "rainbow-flick",
+  "base-autograph",
+  "bona-fide-baller-autograph",
+];
+const juventusLandscapeDesigns = [
+  "collectors-corner-base",
+  "collectors-corner-halo",
+  "collectors-corner-static",
   "rainbow-flick",
 ];
 const inceptionUccDesigns = [
@@ -1130,6 +1144,93 @@ describe("Topps FC Barcelona Team Set 2025-26 catalogue", () => {
       }
 
       expect(luminance / (info.width * info.height), `${slug} is still underexposed`).toBeGreaterThan(0.32);
+    }
+  });
+});
+
+describe("Topps Juventus Team Set 2025-26 catalogue", () => {
+  it("publishes 18 display cards and all 1,193 physical variants", () => {
+    const series = getSeries(juventusTeamSetSlug);
+
+    expect(series?.cardDesigns.map((card) => card.slug)).toEqual(juventusTeamSetDesigns);
+    expect(series?.cardDesigns).toHaveLength(18);
+    expect(series?.totalVariants).toBe(1193);
+    expect(series?.name.en).toBe("2025-26 Topps Juventus Team Set");
+  });
+
+  it("shows Halo and Static separately while keeping all 13 numbered base parallels", () => {
+    const series = getSeries(juventusTeamSetSlug);
+    const cards = new Map(series?.cardDesigns.map((card) => [card.slug, card]));
+
+    expect(cards.get("first-team-base")?.parallels).toEqual([
+      { name: "Blue Rainbow Foil", serial: "/150" },
+      { name: "Blue Icy Foil", serial: "/150" },
+      { name: "Green Rainbow Foil", serial: "/99" },
+      { name: "Green Icy Foil", serial: "/99" },
+      { name: "Gold Rainbow Foil", serial: "/50" },
+      { name: "Gold Icy Foil", serial: "/50" },
+      { name: "Orange Rainbow Foil", serial: "/25" },
+      { name: "Orange Icy Foil", serial: "/25" },
+      { name: "Black Rainbow Foil", serial: "/10" },
+      { name: "Black Icy Foil", serial: "/10" },
+      { name: "Red Rainbow Foil", serial: "/5" },
+      { name: "Red Icy Foil", serial: "/5" },
+      { name: "Gold FoilFractor", serial: "1/1" },
+    ]);
+    expect(cards.get("base-autograph")?.parallels?.map((parallel) => parallel.serial)).toEqual([
+      "/150", "/99", "/50", "/25", "/10", "/5", "1/1",
+    ]);
+    expect(cards.get("bona-fide-baller-autograph")?.parallels).toHaveLength(7);
+  });
+
+  it("uses placeholders instead of passing unrelated card photos off as exact variants", () => {
+    const series = getSeries(juventusTeamSetSlug);
+    const unverified = series?.cardDesigns
+      .filter((card) => card.image.verification === "unverified")
+      .map((card) => card.slug);
+
+    expect(unverified).toEqual([
+      "first-team-base",
+      "first-team-static",
+      "bona-fide-baller-halo",
+      "pitch-pursuits-halo",
+      "pitch-pursuits-static",
+      "collectors-corner-halo",
+      "collectors-corner-static",
+      "bicolore-base",
+      "bicolore-halo",
+      "bicolore-static",
+    ]);
+  });
+
+  it("uses normalized local assets for every verified image and marks horizontal designs", async () => {
+    const series = getSeries(juventusTeamSetSlug);
+
+    expect(series).toBeDefined();
+    if (!series) return;
+    expect(validateSeries(series)).toEqual([]);
+    expect(series.cardDesigns.filter((card) => card.layout === "landscape").map((card) => card.slug))
+      .toEqual(juventusLandscapeDesigns);
+
+    const verified = series.cardDesigns.filter((card) => card.image.verification === "exact");
+    expect(verified.map((card) => card.slug)).toEqual([
+      "first-team-halo",
+      "bona-fide-baller-base",
+      "bona-fide-baller-static",
+      "pitch-pursuits-base",
+      "collectors-corner-base",
+      "rainbow-flick",
+      "base-autograph",
+      "bona-fide-baller-autograph",
+    ]);
+    for (const card of verified) {
+      const imagePath = path.join(process.cwd(), "public", card.image.path);
+      expect(fs.existsSync(imagePath), card.slug).toBe(true);
+      const metadata = await sharp(imagePath).metadata();
+      const expected = card.layout === "landscape"
+        ? { width: 1050, height: 750 }
+        : { width: 750, height: 1050 };
+      expect({ width: metadata.width, height: metadata.height }, card.slug).toEqual(expected);
     }
   });
 });
