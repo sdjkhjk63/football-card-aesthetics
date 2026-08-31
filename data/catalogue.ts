@@ -1283,11 +1283,21 @@ const juventusTeamSetAutographParallels: CardDesign["parallels"] = [
 ];
 
 const juventusVerifiedSlugs = new Set([
+  "first-team-base",
   "first-team-halo",
+  "first-team-static",
   "bona-fide-baller-base",
+  "bona-fide-baller-halo",
   "bona-fide-baller-static",
   "pitch-pursuits-base",
+  "pitch-pursuits-halo",
+  "pitch-pursuits-static",
   "collectors-corner-base",
+  "collectors-corner-halo",
+  "collectors-corner-static",
+  "bicolore-base",
+  "bicolore-halo",
+  "bicolore-static",
 ]);
 
 const juventusTeamSetBaseFamilies = [

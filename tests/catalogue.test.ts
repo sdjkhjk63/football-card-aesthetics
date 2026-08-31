@@ -1183,24 +1183,13 @@ describe("Topps Juventus Team Set 2025-26 catalogue", () => {
     expect(cards.get("bona-fide-baller-autograph")?.parallels).toHaveLength(7);
   });
 
-  it("uses placeholders instead of passing unrelated card photos off as exact variants", () => {
+  it("uses verified physical examples for every published design", () => {
     const series = getSeries(juventusTeamSetSlug);
     const unverified = series?.cardDesigns
       .filter((card) => card.image.verification === "unverified")
       .map((card) => card.slug);
 
-    expect(unverified).toEqual([
-      "first-team-base",
-      "first-team-static",
-      "bona-fide-baller-halo",
-      "pitch-pursuits-halo",
-      "pitch-pursuits-static",
-      "collectors-corner-halo",
-      "collectors-corner-static",
-      "bicolore-base",
-      "bicolore-halo",
-      "bicolore-static",
-    ]);
+    expect(unverified).toEqual([]);
   });
 
   it("uses normalized local assets for every verified image and marks horizontal designs", async () => {
@@ -1213,16 +1202,7 @@ describe("Topps Juventus Team Set 2025-26 catalogue", () => {
       .toEqual(juventusLandscapeDesigns);
 
     const verified = series.cardDesigns.filter((card) => card.image.verification === "exact");
-    expect(verified.map((card) => card.slug)).toEqual([
-      "first-team-halo",
-      "bona-fide-baller-base",
-      "bona-fide-baller-static",
-      "pitch-pursuits-base",
-      "collectors-corner-base",
-      "rainbow-flick",
-      "base-autograph",
-      "bona-fide-baller-autograph",
-    ]);
+    expect(verified.map((card) => card.slug)).toEqual(juventusTeamSetDesigns);
     for (const card of verified) {
       const imagePath = path.join(process.cwd(), "public", card.image.path);
       expect(fs.existsSync(imagePath), card.slug).toBe(true);
