@@ -143,9 +143,7 @@ const manchesterCityLandscapeDesigns = [
   "rainbow-flick",
 ];
 
-const manchesterCityVerifiedDesigns = manchesterCityTeamSetDesigns.filter(
-  (slug) => !["bona-fide-baller-static", "1894-static"].includes(slug),
-);
+const manchesterCityVerifiedDesigns = manchesterCityTeamSetDesigns;
 const inceptionUccDesigns = [
   "first-xi",
   "emerging-stars",
@@ -1281,7 +1279,7 @@ describe("Topps Manchester City Team Set 2025-26 catalogue", () => {
     }).toEqual({ serial: "1/1", displayParallelName: "Gold FoilFractor" });
   });
 
-  it("uses exact normalized local assets where a matching card was found and preserves two missing slots", async () => {
+  it("uses exact normalized local assets for every Manchester City design", async () => {
     const series = getSeries(manchesterCityTeamSetSlug);
 
     expect(series).toBeDefined();
@@ -1295,7 +1293,7 @@ describe("Topps Manchester City Team Set 2025-26 catalogue", () => {
     const verified = series.cardDesigns.filter((card) => card.image.verification === "exact");
     expect(verified.map((card) => card.slug)).toEqual(manchesterCityVerifiedDesigns);
     expect(series.cardDesigns.filter((card) => card.image.verification === "unverified").map((card) => card.slug))
-      .toEqual(["bona-fide-baller-static", "1894-static"]);
+      .toEqual([]);
     for (const card of verified) {
       const imagePath = path.join(process.cwd(), "public", card.image.path);
       expect(fs.existsSync(imagePath), card.slug).toBe(true);
