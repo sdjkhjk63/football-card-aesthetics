@@ -1890,8 +1890,22 @@ describe("Topps Gold Premier League 2025-26 catalogue", () => {
       expect(cards.get(slug)?.parallels, slug).toEqual(parallels);
       expect(cards.get(slug)?.parallelCoverage, slug).toBe("complete");
     }
-    expect(cards.get("midas")?.serial).toBe("/50");
-    expect(cards.get("pl-originals")?.serial).toBe("/100");
+    expect(cards.get("midas")).toMatchObject({
+      serial: "/50",
+      displayParallelName: "Midas",
+      parallels: [{ name: "Midas", serial: "/50" }],
+      parallelCoverage: "complete",
+    });
+    expect(cards.get("pl-originals")).toMatchObject({
+      serial: "/100",
+      displayParallelName: "PL Originals",
+      parallels: [{ name: "PL Originals", serial: "/100" }],
+      parallelCoverage: "complete",
+    });
+    expect(cards.get("current-stars-autographs")).toMatchObject({
+      serial: null,
+      image: { verification: "exact" },
+    });
     expect(cards.get("only1-autographs")).toMatchObject({
       serial: "1/1",
       parallels: [{ name: "Only1", serial: "1/1" }],
