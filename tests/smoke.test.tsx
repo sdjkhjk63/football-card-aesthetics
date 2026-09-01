@@ -26,7 +26,7 @@ it("previews a series in the hero when its rail card is hovered", async () => {
     "href",
     "/series/topps-chrome-arsenal-2025-26",
   );
-  expect(screen.getByText("CURATED RELEASE · 003")).toBeVisible();
+  expect(screen.getByText("CURATED RELEASE · 004")).toBeVisible();
 });
 
 it("previews a series in the hero when its rail card receives keyboard focus", () => {
