@@ -21,6 +21,7 @@ const focusLiverpoolSlug = "topps-focus-liverpool-2025-26";
 const lineageBayernSlug = "topps-lineage-bayern-2025-26";
 const goldPremierLeagueSlug = "topps-gold-premier-league-2025-26";
 const uccFlagshipSlug = "topps-uefa-club-competitions-2025-26";
+const uccSapphireSlug = "topps-chrome-ucc-sapphire-2025-26";
 const realMadridTeamSetSlug = "topps-real-madrid-team-set-2025-26";
 const manchesterUnitedTeamSetSlug = "topps-manchester-united-team-set-2025-26";
 const barcelonaTeamSetSlug = "topps-fc-barcelona-team-set-2025-26";
@@ -2091,6 +2092,88 @@ describe("Topps UEFA Club Competitions Flagship 2025-26 catalogue", () => {
       const metadata = await sharp(imagePath).metadata();
       expect({ width: metadata.width, height: metadata.height }, image.path).toEqual(
         layout === "landscape" ? { width: 1050, height: 750 } : { width: 750, height: 1050 },
+      );
+    }
+  });
+});
+
+describe("Topps Chrome UCC Sapphire 2025-26 catalogue", () => {
+  const expectedDesigns = [
+    "veterans-and-rookies",
+    "future-stars",
+    "sapphire-selections",
+    "infinite-sapphire",
+    "chrome-autographs",
+    "chrome-legends-autographs",
+    "future-stars-autograph-variation",
+    "sapphire-selections-autograph-variation",
+  ];
+
+  it("publishes all eight official visual families in checklist order", () => {
+    const series = getSeries(uccSapphireSlug);
+
+    expect(series?.cardDesigns.map((card) => card.slug)).toEqual(expectedDesigns);
+    expect(series?.totalVariants).toBe(8);
+    expect(series?.cardDesigns.slice(0, 2).every((card) => card.group === "base")).toBe(true);
+    expect(series?.cardDesigns.slice(2).every((card) => card.group === "insert")).toBe(true);
+    expect(validateSeries(series!)).toEqual([]);
+  });
+
+  it("records every Sapphire parallel through the one-of-one", () => {
+    const cards = new Map(getSeries(uccSapphireSlug)?.cardDesigns.map((card) => [card.slug, card]));
+    const baseAndChromeAutoParallels = [
+      { name: "Sapphire", serial: null },
+      { name: "Green Sapphire", serial: "/99" },
+      { name: "Purple Sapphire", serial: "/75" },
+      { name: "Gold Sapphire", serial: "/50" },
+      { name: "Orange Sapphire", serial: "/25" },
+      { name: "Black Sapphire", serial: "/10" },
+      { name: "Red Sapphire", serial: "/5" },
+      { name: "Padparadscha", serial: "1/1" },
+    ];
+
+    for (const slug of ["veterans-and-rookies", "future-stars", "chrome-autographs", "chrome-legends-autographs"]) {
+      expect(cards.get(slug)?.parallels, slug).toEqual(baseAndChromeAutoParallels);
+      expect(cards.get(slug)?.parallelCoverage, slug).toBe("complete");
+    }
+    expect(cards.get("sapphire-selections")?.parallels).toEqual([
+      { name: "Sapphire", serial: null },
+      { name: "Orange Sapphire", serial: "/25" },
+      { name: "Black Sapphire", serial: "/10" },
+      { name: "Red Sapphire", serial: "/5" },
+      { name: "Padparadscha", serial: "1/1" },
+    ]);
+    expect(cards.get("infinite-sapphire")?.parallels).toEqual([
+      { name: "Sapphire", serial: null },
+      { name: "Padparadscha", serial: "1/1" },
+    ]);
+    expect(cards.get("future-stars-autograph-variation")?.parallels).toEqual([
+      { name: "Gold Sapphire", serial: "/50" },
+      { name: "Orange Sapphire", serial: "/25" },
+      { name: "Black Sapphire", serial: "/10" },
+      { name: "Red Sapphire", serial: "/5" },
+      { name: "Padparadscha", serial: "1/1" },
+    ]);
+    expect(cards.get("sapphire-selections-autograph-variation")?.parallels).toEqual([
+      { name: "Sapphire", serial: null },
+      { name: "Black Sapphire", serial: "/10" },
+      { name: "Red Sapphire", serial: "/5" },
+      { name: "Padparadscha", serial: "1/1" },
+    ]);
+  });
+
+  it("uses normalized exact local photos and leaves genuinely missing physical cards blank", async () => {
+    const series = getSeries(uccSapphireSlug);
+    expect(series).toBeDefined();
+    if (!series) return;
+
+    expect(series.packaging.verification).toBe("exact");
+    for (const image of [series.packaging, ...series.cardDesigns.filter((card) => card.image.verification === "exact").map((card) => card.image)]) {
+      const imagePath = path.join(process.cwd(), "public", image.path);
+      expect(fs.existsSync(imagePath), image.path).toBe(true);
+      const metadata = await sharp(imagePath).metadata();
+      expect({ width: metadata.width, height: metadata.height }, image.path).toEqual(
+        image === series.packaging ? { width: 1050, height: 750 } : { width: 750, height: 1050 },
       );
     }
   });

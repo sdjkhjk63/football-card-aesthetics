@@ -14,6 +14,7 @@ it("enumerates the complete desktop route set", async () => {
     { seriesSlug: "topps-lineage-bayern-2025-26" },
     { seriesSlug: "topps-gold-premier-league-2025-26" },
     { seriesSlug: "topps-uefa-club-competitions-2025-26" },
+    { seriesSlug: "topps-chrome-ucc-sapphire-2025-26" },
     { seriesSlug: "topps-inception-ucc-2025-26" },
     { seriesSlug: "topps-deco-ucc-2025-26" },
     { seriesSlug: "topps-real-madrid-team-set-2025-26" },
@@ -24,7 +25,7 @@ it("enumerates the complete desktop route set", async () => {
   ]);
 
   const cards = await cardParams();
-  expect(cards).toHaveLength(394);
+  expect(cards).toHaveLength(402);
   expect(cards).toContainEqual({
     seriesSlug: "topps-merlin-premier-league-2026",
     cardSlug: "red-mojo",
@@ -80,6 +81,10 @@ it("enumerates the complete desktop route set", async () => {
   expect(cards).toContainEqual({
     seriesSlug: "topps-uefa-club-competitions-2025-26",
     cardSlug: "griezmann-ucl-milestone-autograph-relic",
+  });
+  expect(cards).toContainEqual({
+    seriesSlug: "topps-chrome-ucc-sapphire-2025-26",
+    cardSlug: "infinite-sapphire",
   });
   expect(cards).toContainEqual({
     seriesSlug: "topps-inception-ucc-2025-26",

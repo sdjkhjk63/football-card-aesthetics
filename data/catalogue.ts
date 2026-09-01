@@ -2367,6 +2367,113 @@ export const toppsUefaClubCompetitions202526: CardSeries = {
   cardDesigns: uccFlagshipCardDesigns,
 };
 
+const uccSapphireBaseAndAutoParallels: CardDesign["parallels"] = [
+  { name: "Sapphire", serial: null },
+  { name: "Green Sapphire", serial: "/99" },
+  { name: "Purple Sapphire", serial: "/75" },
+  { name: "Gold Sapphire", serial: "/50" },
+  { name: "Orange Sapphire", serial: "/25" },
+  { name: "Black Sapphire", serial: "/10" },
+  { name: "Red Sapphire", serial: "/5" },
+  { name: "Padparadscha", serial: "1/1" },
+];
+
+const uccSapphireSelectionsParallels: CardDesign["parallels"] = [
+  { name: "Sapphire", serial: null },
+  { name: "Orange Sapphire", serial: "/25" },
+  { name: "Black Sapphire", serial: "/10" },
+  { name: "Red Sapphire", serial: "/5" },
+  { name: "Padparadscha", serial: "1/1" },
+];
+
+const uccSapphireExactCards = new Set([
+  "sapphire-selections",
+  "chrome-autographs",
+  "chrome-legends-autographs",
+]);
+
+const uccSapphireCard = ({
+  slug,
+  officialName,
+  zh,
+  es,
+  group = "insert",
+  section = "rare-insert",
+  serial = null,
+  displayParallelName,
+  parallels,
+}: {
+  slug: string;
+  officialName: string;
+  zh: string;
+  es: string;
+  group?: CardDesign["group"];
+  section?: CardDesign["section"];
+  serial?: CardDesign["serial"];
+  displayParallelName?: string;
+  parallels: CardDesign["parallels"];
+}): CardDesign => {
+  const exact = uccSapphireExactCards.has(slug);
+  return {
+    slug,
+    officialName,
+    name: names(zh, officialName, es),
+    group,
+    section,
+    serial,
+    displayParallelName,
+    parallels,
+    parallelCoverage: "complete",
+    curatorNote: exact ? undefined : names(
+      "官方清单已确认此卡种；目前未找到可核验且清晰的同年实物正面图，因此暂时保留空图卡位。",
+      "The official checklist confirms this card type; no clear, verifiable physical front from this release is currently available, so its image slot remains blank.",
+      "La lista oficial confirma este tipo de carta; todavía no hay una imagen frontal física clara y verificable de esta edición, por lo que la imagen queda vacía.",
+    ),
+    image: {
+      path: `images/topps-chrome-ucc-sapphire-2025-26/cards/${slug}.webp`,
+      verification: exact ? "exact" : "unverified",
+      alt: names(
+        `2025/26 Topps Chrome UCC Sapphire ${zh}代表卡`,
+        `Representative ${officialName} card from 2025/26 Topps Chrome UCC Sapphire`,
+        `Carta representativa ${es} de 2025/26 Topps Chrome UCC Sapphire`,
+      ),
+    },
+  };
+};
+
+const uccSapphireCardDesigns: CardDesign[] = [
+  uccSapphireCard({ slug: "veterans-and-rookies", officialName: "Veterans and Rookies", zh: "老将与新秀基础卡", es: "Veteranos y novatos", group: "base", section: "base-unnumbered", parallels: uccSapphireBaseAndAutoParallels }),
+  uccSapphireCard({ slug: "future-stars", officialName: "Future Stars", zh: "未来之星基础卡", es: "Estrellas del futuro", group: "base", section: "base-unnumbered", parallels: uccSapphireBaseAndAutoParallels }),
+  uccSapphireCard({ slug: "sapphire-selections", officialName: "Sapphire Selections", zh: "蓝宝石精选", es: "Selecciones Sapphire", section: "regular-insert", displayParallelName: "Sapphire", parallels: uccSapphireSelectionsParallels }),
+  uccSapphireCard({ slug: "infinite-sapphire", officialName: "Infinite Sapphire", zh: "无限蓝宝石", es: "Sapphire infinito", section: "regular-insert", parallels: [{ name: "Sapphire", serial: null }, { name: "Padparadscha", serial: "1/1" }] }),
+  uccSapphireCard({ slug: "chrome-autographs", officialName: "Chrome Autograph Cards", zh: "Chrome 签字", es: "Autógrafos Chrome", serial: "/25", displayParallelName: "Orange Sapphire", parallels: uccSapphireBaseAndAutoParallels }),
+  uccSapphireCard({ slug: "chrome-legends-autographs", officialName: "Chrome Legends Autograph Cards", zh: "Chrome 传奇签字", es: "Autógrafos Chrome de leyendas", serial: "/25", displayParallelName: "Orange Sapphire", parallels: uccSapphireBaseAndAutoParallels }),
+  uccSapphireCard({ slug: "future-stars-autograph-variation", officialName: "Future Stars Autograph Variation", zh: "未来之星签字变体", es: "Variación autografiada Future Stars", parallels: [{ name: "Gold Sapphire", serial: "/50" }, { name: "Orange Sapphire", serial: "/25" }, { name: "Black Sapphire", serial: "/10" }, { name: "Red Sapphire", serial: "/5" }, { name: "Padparadscha", serial: "1/1" }] }),
+  uccSapphireCard({ slug: "sapphire-selections-autograph-variation", officialName: "Sapphire Selections Autograph Variation", zh: "蓝宝石精选签字变体", es: "Variación autografiada Selecciones Sapphire", parallels: [{ name: "Sapphire", serial: null }, { name: "Black Sapphire", serial: "/10" }, { name: "Red Sapphire", serial: "/5" }, { name: "Padparadscha", serial: "1/1" }] }),
+];
+
+export const toppsChromeUccSapphire202526: CardSeries = {
+  slug: "topps-chrome-ucc-sapphire-2025-26",
+  manufacturer: "Topps",
+  season: "2025/26",
+  name: names(
+    "2025/26 Topps Chrome UCC 蓝宝石",
+    "2025/26 Topps Chrome UCC Sapphire",
+    "2025/26 Topps Chrome UCC Sapphire",
+  ),
+  packaging: {
+    path: "images/topps-chrome-ucc-sapphire-2025-26/packaging.webp",
+    verification: "exact",
+    alt: names(
+      "2025/26 Topps Chrome UCC Sapphire Hobby 盒包装",
+      "2025/26 Topps Chrome UCC Sapphire Hobby box",
+      "Caja Hobby 2025/26 Topps Chrome UCC Sapphire",
+    ),
+  },
+  totalVariants: 8,
+  cardDesigns: uccSapphireCardDesigns,
+};
+
 const catalogue = [
   merlinPremierLeague2026,
   toppsFinestPremierLeague2026,
@@ -2378,6 +2485,7 @@ const catalogue = [
   toppsLineageBayern202526,
   toppsGoldPremierLeague202526,
   toppsUefaClubCompetitions202526,
+  toppsChromeUccSapphire202526,
   toppsInceptionUcc202526,
   toppsDecoUcc202526,
   toppsRealMadridTeamSet202526,
