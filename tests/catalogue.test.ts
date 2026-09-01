@@ -2098,9 +2098,19 @@ describe("Topps UEFA Club Competitions Flagship 2025-26 catalogue", () => {
 });
 
 describe("Topps Chrome UCC Sapphire 2025-26 catalogue", () => {
+  const baseParallelSuffixes = [
+    "sapphire",
+    "green-sapphire",
+    "purple-sapphire",
+    "gold-sapphire",
+    "orange-sapphire",
+    "black-sapphire",
+    "red-sapphire",
+    "padparadscha",
+  ];
   const expectedDesigns = [
-    "veterans-and-rookies",
-    "future-stars",
+    ...baseParallelSuffixes.map((suffix) => `veterans-and-rookies-${suffix}`),
+    ...baseParallelSuffixes.map((suffix) => `future-stars-${suffix}`),
     "sapphire-selections",
     "infinite-sapphire",
     "chrome-autographs",
@@ -2109,13 +2119,13 @@ describe("Topps Chrome UCC Sapphire 2025-26 catalogue", () => {
     "sapphire-selections-autograph-variation",
   ];
 
-  it("publishes all eight official visual families in checklist order", () => {
+  it("publishes all eight official visual families while showing every base parallel separately", () => {
     const series = getSeries(uccSapphireSlug);
 
     expect(series?.cardDesigns.map((card) => card.slug)).toEqual(expectedDesigns);
-    expect(series?.totalVariants).toBe(8);
-    expect(series?.cardDesigns.slice(0, 2).every((card) => card.group === "base")).toBe(true);
-    expect(series?.cardDesigns.slice(2).every((card) => card.group === "insert")).toBe(true);
+    expect(series?.totalVariants).toBe(22);
+    expect(series?.cardDesigns.slice(0, 16).every((card) => card.group === "base")).toBe(true);
+    expect(series?.cardDesigns.slice(16).every((card) => card.group === "insert")).toBe(true);
     expect(validateSeries(series!)).toEqual([]);
   });
 
@@ -2132,9 +2142,17 @@ describe("Topps Chrome UCC Sapphire 2025-26 catalogue", () => {
       { name: "Padparadscha", serial: "1/1" },
     ];
 
-    for (const slug of ["veterans-and-rookies", "future-stars", "chrome-autographs", "chrome-legends-autographs"]) {
+    for (const slug of ["veterans-and-rookies-sapphire", "future-stars-sapphire", "chrome-autographs", "chrome-legends-autographs"]) {
       expect(cards.get(slug)?.parallels, slug).toEqual(baseAndChromeAutoParallels);
       expect(cards.get(slug)?.parallelCoverage, slug).toBe("complete");
+    }
+
+    for (const family of ["veterans-and-rookies", "future-stars"]) {
+      const versions = baseParallelSuffixes.map((suffix) => cards.get(`${family}-${suffix}`));
+      expect(versions.map((card) => [card?.displayParallelName, card?.serial])).toEqual(
+        baseAndChromeAutoParallels.map((parallel) => [parallel.name, parallel.serial]),
+      );
+      expect(versions.every((card) => card?.image.verification === "exact")).toBe(true);
     }
     expect(cards.get("sapphire-selections")?.parallels).toEqual([
       { name: "Sapphire", serial: null },
@@ -2162,18 +2180,20 @@ describe("Topps Chrome UCC Sapphire 2025-26 catalogue", () => {
     ]);
   });
 
-  it("uses normalized exact local photos and leaves genuinely missing physical cards blank", async () => {
+  it("uses normalized exact local photos for every displayed card", async () => {
     const series = getSeries(uccSapphireSlug);
     expect(series).toBeDefined();
     if (!series) return;
 
     expect(series.packaging.verification).toBe("exact");
-    for (const image of [series.packaging, ...series.cardDesigns.filter((card) => card.image.verification === "exact").map((card) => card.image)]) {
+    expect(series.cardDesigns.every((card) => card.image.verification === "exact")).toBe(true);
+    for (const image of [series.packaging, ...series.cardDesigns.map((card) => card.image)]) {
       const imagePath = path.join(process.cwd(), "public", image.path);
       expect(fs.existsSync(imagePath), image.path).toBe(true);
       const metadata = await sharp(imagePath).metadata();
+      const isLandscape = image === series.packaging || image.path.endsWith("/infinite-sapphire.webp");
       expect({ width: metadata.width, height: metadata.height }, image.path).toEqual(
-        image === series.packaging ? { width: 1050, height: 750 } : { width: 750, height: 1050 },
+        isLandscape ? { width: 1050, height: 750 } : { width: 750, height: 1050 },
       );
     }
   });

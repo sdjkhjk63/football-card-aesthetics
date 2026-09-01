@@ -32,7 +32,7 @@ export function CardDesignTile({ seriesSlug, design, locale, rating }: { seriesS
         <p>{design.officialName}</p>
         {design.parallels?.length ? (
           <div className="parallel-block">
-            {design.displayParallelName && design.serial ? <strong className="displayed-parallel">{displayedLabel}：{design.displayParallelName} {design.serial}</strong> : null}
+            {design.displayParallelName ? <strong className="displayed-parallel">{displayedLabel}：{design.displayParallelName}{design.serial ? ` ${design.serial}` : ""}</strong> : null}
             <div className="parallel-summary">{parallelsLabel} {design.parallels.length} {countSuffix}</div>
             <div className="parallel-strip" aria-label="Parallels">
               {design.parallels.map((parallel) => {

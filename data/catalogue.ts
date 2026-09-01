@@ -2386,11 +2386,16 @@ const uccSapphireSelectionsParallels: CardDesign["parallels"] = [
   { name: "Padparadscha", serial: "1/1" },
 ];
 
-const uccSapphireExactCards = new Set([
-  "sapphire-selections",
-  "chrome-autographs",
-  "chrome-legends-autographs",
-]);
+const uccSapphireBaseParallelVariants = [
+  { suffix: "sapphire", name: "Sapphire", zh: "蓝宝石", es: "Sapphire", serial: null },
+  { suffix: "green-sapphire", name: "Green Sapphire", zh: "绿色蓝宝石", es: "Sapphire verde", serial: "/99" },
+  { suffix: "purple-sapphire", name: "Purple Sapphire", zh: "紫色蓝宝石", es: "Sapphire morado", serial: "/75" },
+  { suffix: "gold-sapphire", name: "Gold Sapphire", zh: "金色蓝宝石", es: "Sapphire dorado", serial: "/50" },
+  { suffix: "orange-sapphire", name: "Orange Sapphire", zh: "橙色蓝宝石", es: "Sapphire naranja", serial: "/25" },
+  { suffix: "black-sapphire", name: "Black Sapphire", zh: "黑色蓝宝石", es: "Sapphire negro", serial: "/10" },
+  { suffix: "red-sapphire", name: "Red Sapphire", zh: "红色蓝宝石", es: "Sapphire rojo", serial: "/5" },
+  { suffix: "padparadscha", name: "Padparadscha", zh: "帕帕拉恰", es: "Padparadscha", serial: "1/1" },
+] as const;
 
 const uccSapphireCard = ({
   slug,
@@ -2402,6 +2407,8 @@ const uccSapphireCard = ({
   serial = null,
   displayParallelName,
   parallels,
+  layout,
+  curatorNote,
 }: {
   slug: string;
   officialName: string;
@@ -2412,8 +2419,9 @@ const uccSapphireCard = ({
   serial?: CardDesign["serial"];
   displayParallelName?: string;
   parallels: CardDesign["parallels"];
+  layout?: CardDesign["layout"];
+  curatorNote?: CardDesign["curatorNote"];
 }): CardDesign => {
-  const exact = uccSapphireExactCards.has(slug);
   return {
     slug,
     officialName,
@@ -2424,14 +2432,11 @@ const uccSapphireCard = ({
     displayParallelName,
     parallels,
     parallelCoverage: "complete",
-    curatorNote: exact ? undefined : names(
-      "官方清单已确认此卡种；目前未找到可核验且清晰的同年实物正面图，因此暂时保留空图卡位。",
-      "The official checklist confirms this card type; no clear, verifiable physical front from this release is currently available, so its image slot remains blank.",
-      "La lista oficial confirma este tipo de carta; todavía no hay una imagen frontal física clara y verificable de esta edición, por lo que la imagen queda vacía.",
-    ),
+    layout,
+    curatorNote,
     image: {
       path: `images/topps-chrome-ucc-sapphire-2025-26/cards/${slug}.webp`,
-      verification: exact ? "exact" : "unverified",
+      verification: "exact",
       alt: names(
         `2025/26 Topps Chrome UCC Sapphire ${zh}代表卡`,
         `Representative ${officialName} card from 2025/26 Topps Chrome UCC Sapphire`,
@@ -2441,15 +2446,42 @@ const uccSapphireCard = ({
   };
 };
 
+const uccSapphireBaseFamily = ({
+  slug,
+  officialName,
+  zh,
+  es,
+}: {
+  slug: string;
+  officialName: string;
+  zh: string;
+  es: string;
+}): CardDesign[] => uccSapphireBaseParallelVariants.map((variant) => uccSapphireCard({
+  slug: `${slug}-${variant.suffix}`,
+  officialName: `${officialName} — ${variant.name}`,
+  zh: `${zh}·${variant.zh}`,
+  es: `${es} · ${variant.es}`,
+  group: "base",
+  section: variant.serial ? "base-numbered" : "base-unnumbered",
+  serial: variant.serial,
+  displayParallelName: variant.name,
+  parallels: uccSapphireBaseAndAutoParallels,
+  curatorNote: slug === "future-stars" && variant.suffix === "padparadscha" ? names(
+    "此卡位使用同系列 Padparadscha 1/1 实物展示该平行的真实色泽；Future Stars 1/1 已由官方清单确认，但目前没有公开的清晰正面成交图。",
+    "This slot uses a physical Padparadscha 1/1 from the same release to show the parallel's real finish. The Future Stars 1/1 is checklist-confirmed, but no clean public sale photo is currently available.",
+    "Esta ficha usa una Padparadscha 1/1 física de la misma edición para mostrar el acabado real. La Future Stars 1/1 está confirmada, pero aún no hay una foto pública nítida.",
+  ) : undefined,
+}));
+
 const uccSapphireCardDesigns: CardDesign[] = [
-  uccSapphireCard({ slug: "veterans-and-rookies", officialName: "Veterans and Rookies", zh: "老将与新秀基础卡", es: "Veteranos y novatos", group: "base", section: "base-unnumbered", parallels: uccSapphireBaseAndAutoParallels }),
-  uccSapphireCard({ slug: "future-stars", officialName: "Future Stars", zh: "未来之星基础卡", es: "Estrellas del futuro", group: "base", section: "base-unnumbered", parallels: uccSapphireBaseAndAutoParallels }),
+  ...uccSapphireBaseFamily({ slug: "veterans-and-rookies", officialName: "Veterans and Rookies", zh: "老将与新秀基础卡", es: "Veteranos y novatos" }),
+  ...uccSapphireBaseFamily({ slug: "future-stars", officialName: "Future Stars", zh: "未来之星基础卡", es: "Estrellas del futuro" }),
   uccSapphireCard({ slug: "sapphire-selections", officialName: "Sapphire Selections", zh: "蓝宝石精选", es: "Selecciones Sapphire", section: "regular-insert", displayParallelName: "Sapphire", parallels: uccSapphireSelectionsParallels }),
-  uccSapphireCard({ slug: "infinite-sapphire", officialName: "Infinite Sapphire", zh: "无限蓝宝石", es: "Sapphire infinito", section: "regular-insert", parallels: [{ name: "Sapphire", serial: null }, { name: "Padparadscha", serial: "1/1" }] }),
+  uccSapphireCard({ slug: "infinite-sapphire", officialName: "Infinite Sapphire", zh: "无限蓝宝石", es: "Sapphire infinito", section: "regular-insert", displayParallelName: "Sapphire", layout: "landscape", parallels: [{ name: "Sapphire", serial: null }, { name: "Padparadscha", serial: "1/1" }] }),
   uccSapphireCard({ slug: "chrome-autographs", officialName: "Chrome Autograph Cards", zh: "Chrome 签字", es: "Autógrafos Chrome", serial: "/25", displayParallelName: "Orange Sapphire", parallels: uccSapphireBaseAndAutoParallels }),
   uccSapphireCard({ slug: "chrome-legends-autographs", officialName: "Chrome Legends Autograph Cards", zh: "Chrome 传奇签字", es: "Autógrafos Chrome de leyendas", serial: "/25", displayParallelName: "Orange Sapphire", parallels: uccSapphireBaseAndAutoParallels }),
-  uccSapphireCard({ slug: "future-stars-autograph-variation", officialName: "Future Stars Autograph Variation", zh: "未来之星签字变体", es: "Variación autografiada Future Stars", parallels: [{ name: "Gold Sapphire", serial: "/50" }, { name: "Orange Sapphire", serial: "/25" }, { name: "Black Sapphire", serial: "/10" }, { name: "Red Sapphire", serial: "/5" }, { name: "Padparadscha", serial: "1/1" }] }),
-  uccSapphireCard({ slug: "sapphire-selections-autograph-variation", officialName: "Sapphire Selections Autograph Variation", zh: "蓝宝石精选签字变体", es: "Variación autografiada Selecciones Sapphire", parallels: [{ name: "Sapphire", serial: null }, { name: "Black Sapphire", serial: "/10" }, { name: "Red Sapphire", serial: "/5" }, { name: "Padparadscha", serial: "1/1" }] }),
+  uccSapphireCard({ slug: "future-stars-autograph-variation", officialName: "Future Stars Autograph Variation", zh: "未来之星签字变体", es: "Variación autografiada Future Stars", serial: "/25", displayParallelName: "Orange Sapphire", parallels: [{ name: "Gold Sapphire", serial: "/50" }, { name: "Orange Sapphire", serial: "/25" }, { name: "Black Sapphire", serial: "/10" }, { name: "Red Sapphire", serial: "/5" }, { name: "Padparadscha", serial: "1/1" }] }),
+  uccSapphireCard({ slug: "sapphire-selections-autograph-variation", officialName: "Sapphire Selections Autograph Variation", zh: "蓝宝石精选签字变体", es: "Variación autografiada Selecciones Sapphire", serial: "1/1", displayParallelName: "Padparadscha", parallels: [{ name: "Sapphire", serial: null }, { name: "Black Sapphire", serial: "/10" }, { name: "Red Sapphire", serial: "/5" }, { name: "Padparadscha", serial: "1/1" }] }),
 ];
 
 export const toppsChromeUccSapphire202526: CardSeries = {
@@ -2470,7 +2502,7 @@ export const toppsChromeUccSapphire202526: CardSeries = {
       "Caja Hobby 2025/26 Topps Chrome UCC Sapphire",
     ),
   },
-  totalVariants: 8,
+  totalVariants: 22,
   cardDesigns: uccSapphireCardDesigns,
 };
 
