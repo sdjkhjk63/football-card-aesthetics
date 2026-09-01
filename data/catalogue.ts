@@ -2367,6 +2367,209 @@ export const toppsUefaClubCompetitions202526: CardSeries = {
   cardDesigns: uccFlagshipCardDesigns,
 };
 
+const pristineBaseParallels: CardDesign["parallels"] = [
+  { name: "Refractor", serial: null },
+  { name: "Top Corner", serial: null },
+  { name: "Blue Refractor", serial: "/75" },
+  { name: "Gold Refractor", serial: "/50" },
+  { name: "Orange Refractor", serial: "/25" },
+  { name: "Pink Refractor", serial: "/15" },
+  { name: "PL Trophy Malachite Refractor", serial: "/10" },
+  { name: "Red Refractor", serial: "/5" },
+  { name: "Superfractor", serial: "1/1" },
+];
+
+const pristineCommonInsertParallels: CardDesign["parallels"] = [
+  { name: "Refractor", serial: null },
+  { name: "Red Refractor", serial: "/5" },
+  { name: "Superfractor", serial: "1/1" },
+];
+
+const pristineShortPrintParallels: CardDesign["parallels"] = [
+  { name: "Refractor", serial: null },
+  { name: "Superfractor", serial: "1/1" },
+];
+
+const pristineAutographParallels: CardDesign["parallels"] = [
+  { name: "Pristine Refractor", serial: null },
+  { name: "Green Refractor", serial: "/150" },
+  { name: "Purple Refractor", serial: "/99" },
+  { name: "Blue Refractor", serial: "/75" },
+  { name: "Gold Refractor", serial: "/50" },
+  { name: "Orange Refractor", serial: "/25" },
+  { name: "Pink Refractor", serial: "/15" },
+  { name: "PL Trophy Malachite Refractor", serial: "/10" },
+  { name: "Red Refractor", serial: "/5" },
+  { name: "Black Refractor", serial: "1/1" },
+];
+
+const pristinePremiumAutographParallels: CardDesign["parallels"] = [
+  { name: "Pristine Refractor", serial: null },
+  { name: "PL Trophy Malachite Refractor", serial: "/10" },
+  { name: "Red Refractor", serial: "/5" },
+  { name: "Superfractor", serial: "1/1" },
+];
+
+const pristineLegacyParallels: CardDesign["parallels"] = [
+  { name: "Pristine Refractor", serial: null },
+  { name: "Gold Refractor", serial: "/50" },
+  { name: "Orange Refractor", serial: "/25" },
+  { name: "Pink Refractor", serial: "/15" },
+  { name: "PL Trophy Malachite Refractor", serial: "/10" },
+  { name: "Red Refractor", serial: "/5" },
+  { name: "Superfractor", serial: "1/1" },
+];
+
+const pristineAutographRelicParallels: CardDesign["parallels"] = [
+  { name: "Pristine Refractor", serial: null },
+  { name: "Purple Refractor", serial: "/99" },
+  { name: "Blue Refractor", serial: "/75" },
+  { name: "Gold Refractor", serial: "/50" },
+  { name: "Orange Refractor", serial: "/25" },
+  { name: "Pink Refractor", serial: "/15" },
+  { name: "PL Trophy Malachite Refractor", serial: "/10" },
+  { name: "Red Refractor", serial: "/5" },
+  { name: "Black Refractor", serial: "1/1" },
+];
+
+const pristineLimitedRelicParallels: CardDesign["parallels"] = [
+  { name: "Pristine Refractor", serial: null },
+  { name: "PL Trophy Malachite Refractor", serial: "/10" },
+  { name: "Red Refractor", serial: "/5" },
+  { name: "Black Refractor", serial: "1/1" },
+];
+
+const pristineCard = ({
+  slug,
+  officialName,
+  zh,
+  es,
+  group = "insert",
+  section = "rare-insert",
+  serial = null,
+  displayParallelName,
+  parallels,
+  layout,
+  verification = "exact",
+  curatorNote,
+}: {
+  slug: string;
+  officialName: string;
+  zh: string;
+  es: string;
+  group?: CardDesign["group"];
+  section?: CardDesign["section"];
+  serial?: CardDesign["serial"];
+  displayParallelName?: string;
+  parallels: CardDesign["parallels"];
+  layout?: CardDesign["layout"];
+  verification?: CardDesign["image"]["verification"];
+  curatorNote?: CardDesign["curatorNote"];
+}): CardDesign => ({
+  slug,
+  officialName,
+  name: names(zh, officialName, es),
+  group,
+  section,
+  serial,
+  displayParallelName,
+  parallels,
+  parallelCoverage: "complete",
+  layout,
+  curatorNote,
+  image: {
+    path: `images/topps-pristine-premier-league-2025-26/cards/${slug}.webp`,
+    verification,
+    alt: names(
+      `2025/26 Topps Pristine Premier League ${zh}代表卡`,
+      `Representative ${officialName} card from 2025/26 Topps Pristine Premier League`,
+      `Carta representativa ${es} de 2025/26 Topps Pristine Premier League`,
+    ),
+  },
+});
+
+const pristineBaseVariants = [
+  ["base-refractor", "Base — Refractor", "基础卡·折射", "Base · Refractor", "Refractor", null],
+  ["base-top-corner", "Base — Top Corner", "基础卡·Top Corner", "Base · Top Corner", "Top Corner", null],
+  ["base-blue-refractor", "Base — Blue Refractor", "基础卡·蓝色折射", "Base · Refractor azul", "Blue Refractor", "/75"],
+  ["base-gold-refractor", "Base — Gold Refractor", "基础卡·金色折射", "Base · Refractor dorado", "Gold Refractor", "/50"],
+  ["base-orange-refractor", "Base — Orange Refractor", "基础卡·橙色折射", "Base · Refractor naranja", "Orange Refractor", "/25"],
+  ["base-pink-refractor", "Base — Pink Refractor", "基础卡·粉色折射", "Base · Refractor rosa", "Pink Refractor", "/15"],
+  ["base-pl-trophy-malachite", "Base — PL Trophy Malachite Refractor", "基础卡·英超奖杯孔雀石折射", "Base · Refractor malaquita Trofeo PL", "PL Trophy Malachite Refractor", "/10"],
+  ["base-red-refractor", "Base — Red Refractor", "基础卡·红色折射", "Base · Refractor rojo", "Red Refractor", "/5"],
+  ["base-superfractor", "Base — Superfractor", "基础卡·超级折射", "Base · Superfractor", "Superfractor", "1/1"],
+] as const;
+
+const pristineCardDesigns: CardDesign[] = [
+  ...pristineBaseVariants.map(([slug, officialName, zh, es, displayParallelName, serial]) => pristineCard({
+    slug,
+    officialName,
+    zh,
+    es,
+    group: "base",
+    section: serial ? "base-numbered" : "base-unnumbered",
+    serial,
+    displayParallelName,
+    parallels: pristineBaseParallels,
+  })),
+  pristineCard({ slug: "precisionaries", officialName: "Precisionaries", zh: "精准射手", es: "Precisionaries", section: "regular-insert", displayParallelName: "Refractor", parallels: pristineCommonInsertParallels }),
+  pristineCard({ slug: "pure-strike", officialName: "Pure Strike", zh: "纯粹射门", es: "Pure Strike", section: "regular-insert", displayParallelName: "Refractor", parallels: pristineCommonInsertParallels }),
+  pristineCard({ slug: "generational", officialName: "Generational", zh: "世代传承", es: "Generational", section: "regular-insert", serial: "/5", displayParallelName: "Red Refractor", parallels: pristineCommonInsertParallels }),
+  pristineCard({ slug: "perseverance", officialName: "Perseverance", zh: "坚韧不拔", es: "Perseverance", section: "regular-insert", displayParallelName: "Refractor", parallels: pristineCommonInsertParallels }),
+  pristineCard({ slug: "amped", officialName: "Amped", zh: "高能脉冲", es: "Amped", layout: "landscape", displayParallelName: "Refractor", parallels: pristineShortPrintParallels }),
+  pristineCard({ slug: "pearlescent", officialName: "Pearlescent", zh: "珍珠幻彩", es: "Pearlescent", displayParallelName: "Refractor", parallels: pristineShortPrintParallels }),
+  pristineCard({ slug: "pristine-seasons", officialName: "Pristine Seasons", zh: "Pristine 赛季", es: "Pristine Seasons", layout: "landscape", displayParallelName: "Refractor", parallels: pristineShortPrintParallels }),
+  pristineCard({ slug: "glacier", officialName: "Glacier", zh: "冰川", es: "Glacier", displayParallelName: "Refractor", parallels: pristineShortPrintParallels }),
+  pristineCard({ slug: "pristine-ivory", officialName: "Pristine Ivory", zh: "Pristine 象牙", es: "Pristine Ivory", serial: "1/1", displayParallelName: "Superfractor", parallels: pristineShortPrintParallels }),
+  pristineCard({ slug: "the-grail", officialName: "The Grail", zh: "圣杯", es: "The Grail", displayParallelName: "Refractor", parallels: [{ name: "Refractor", serial: null }] }),
+  pristineCard({ slug: "pristine-autographs", officialName: "Pristine Autographs", zh: "Pristine 签字", es: "Autógrafos Pristine", serial: "/5", displayParallelName: "Red Refractor", parallels: pristineAutographParallels }),
+  pristineCard({ slug: "pristine-pairs-dual-autographs", officialName: "Pristine Pairs Dual Autographs", zh: "Pristine 双人签字", es: "Autógrafos dobles Pristine Pairs", serial: "/10", displayParallelName: "PL Trophy Malachite Refractor", layout: "landscape", parallels: pristinePremiumAutographParallels }),
+  pristineCard({ slug: "pristine-legacy-autographs", officialName: "Pristine Legacy Autographs", zh: "Pristine 传奇签字", es: "Autógrafos Pristine Legacy", serial: "/25", displayParallelName: "Orange Refractor", layout: "landscape", parallels: pristineLegacyParallels }),
+  pristineCard({ slug: "pristine-seasons-autograph-edition", officialName: "Pristine Seasons Autograph Edition", zh: "Pristine 赛季签字", es: "Pristine Seasons Autograph Edition", displayParallelName: "Pristine Refractor", layout: "landscape", parallels: pristinePremiumAutographParallels }),
+  pristineCard({
+    slug: "pristine-personal-endorsements-autographs",
+    officialName: "Pristine Personal Endorsements Autographs",
+    zh: "Pristine 个人背书签字",
+    es: "Autógrafos Pristine Personal Endorsements",
+    displayParallelName: "Pristine Refractor",
+    parallels: pristinePremiumAutographParallels,
+    verification: "unverified",
+    curatorNote: names(
+      "官方清单确认该卡种存在，但目前未找到可核实且足够清晰的实物正面图；卡位先保留，实物图暂空。",
+      "The official checklist confirms this subset, but no verifiable high-resolution physical front is currently available, so the image slot remains blank.",
+      "La lista oficial confirma este subconjunto, pero aún no hay una imagen frontal física verificable y nítida; la imagen queda pendiente.",
+    ),
+  }),
+  pristineCard({ slug: "pristine-bianco", officialName: "Pristine Bianco", zh: "Pristine Bianco 1/1", es: "Pristine Bianco", serial: "1/1", displayParallelName: "Bianco", parallels: [{ name: "Bianco", serial: "1/1" }] }),
+  pristineCard({ slug: "popular-demand-autograph-relics", officialName: "Popular Demand Autograph Relics", zh: "热门需求签字实物", es: "Reliquias autografiadas Popular Demand", serial: "/75", displayParallelName: "Blue Refractor", layout: "landscape", parallels: pristineAutographRelicParallels }),
+  pristineCard({ slug: "pristine-pieces-autograph-relics", officialName: "Pristine Pieces Autograph Relics", zh: "Pristine Pieces 签字实物", es: "Reliquias autografiadas Pristine Pieces", serial: "/50", displayParallelName: "Gold Refractor", parallels: pristineAutographRelicParallels }),
+  pristineCard({ slug: "pristine-from-the-pitch", officialName: "Pristine From The Pitch", zh: "Pristine 场上实物签字", es: "Pristine From The Pitch", serial: "/5", displayParallelName: "Red Refractor", layout: "landscape", parallels: pristineLimitedRelicParallels }),
+  pristineCard({ slug: "rookie-jumbo-relic-autographs", officialName: "Rookie Jumbo Relic Autographs", zh: "新秀 Jumbo 实物签字", es: "Autógrafos Rookie Jumbo Relic", serial: "1/1", displayParallelName: "Black Refractor", parallels: pristineLimitedRelicParallels }),
+  pristineCard({ slug: "day-1-pristine", officialName: "Day 1 Pristine", zh: "Day 1 Pristine 首秀实物签字", es: "Day 1 Pristine", serial: "/10", displayParallelName: "PL Trophy Malachite Refractor", parallels: pristineLimitedRelicParallels }),
+];
+
+export const toppsPristinePremierLeague202526: CardSeries = {
+  slug: "topps-pristine-premier-league-2025-26",
+  manufacturer: "Topps",
+  season: "2025/26",
+  name: names(
+    "2025/26 Topps Pristine 英超",
+    "2025/26 Topps Pristine Premier League",
+    "2025/26 Topps Pristine Premier League",
+  ),
+  packaging: {
+    path: "images/topps-pristine-premier-league-2025-26/packaging.webp",
+    verification: "exact",
+    alt: names(
+      "2025/26 Topps Pristine Premier League Hobby 盒包装",
+      "2025/26 Topps Pristine Premier League Hobby box",
+      "Caja Hobby 2025/26 Topps Pristine Premier League",
+    ),
+  },
+  totalVariants: 30,
+  cardDesigns: pristineCardDesigns,
+};
+
 const uccSapphireBaseAndAutoParallels: CardDesign["parallels"] = [
   { name: "Sapphire", serial: null },
   { name: "Green Sapphire", serial: "/99" },
@@ -2507,6 +2710,7 @@ export const toppsChromeUccSapphire202526: CardSeries = {
 };
 
 const catalogue = [
+  toppsPristinePremierLeague202526,
   merlinPremierLeague2026,
   toppsFinestPremierLeague2026,
   toppsChromeArsenal202526,

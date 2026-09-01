@@ -22,6 +22,7 @@ const lineageBayernSlug = "topps-lineage-bayern-2025-26";
 const goldPremierLeagueSlug = "topps-gold-premier-league-2025-26";
 const uccFlagshipSlug = "topps-uefa-club-competitions-2025-26";
 const uccSapphireSlug = "topps-chrome-ucc-sapphire-2025-26";
+const pristinePremierLeagueSlug = "topps-pristine-premier-league-2025-26";
 const realMadridTeamSetSlug = "topps-real-madrid-team-set-2025-26";
 const manchesterUnitedTeamSetSlug = "topps-manchester-united-team-set-2025-26";
 const barcelonaTeamSetSlug = "topps-fc-barcelona-team-set-2025-26";
@@ -2194,6 +2195,94 @@ describe("Topps Chrome UCC Sapphire 2025-26 catalogue", () => {
       const isLandscape = image === series.packaging || image.path.endsWith("/infinite-sapphire.webp");
       expect({ width: metadata.width, height: metadata.height }, image.path).toEqual(
         isLandscape ? { width: 1050, height: 750 } : { width: 750, height: 1050 },
+      );
+    }
+  });
+});
+
+describe("Topps Pristine Premier League 2025-26 catalogue", () => {
+  const baseParallelSlugs = [
+    "base-refractor",
+    "base-top-corner",
+    "base-blue-refractor",
+    "base-gold-refractor",
+    "base-orange-refractor",
+    "base-pink-refractor",
+    "base-pl-trophy-malachite",
+    "base-red-refractor",
+    "base-superfractor",
+  ];
+  const subsetSlugs = [
+    "precisionaries",
+    "pure-strike",
+    "generational",
+    "perseverance",
+    "amped",
+    "pearlescent",
+    "pristine-seasons",
+    "glacier",
+    "pristine-ivory",
+    "the-grail",
+    "pristine-autographs",
+    "pristine-pairs-dual-autographs",
+    "pristine-legacy-autographs",
+    "pristine-seasons-autograph-edition",
+    "pristine-personal-endorsements-autographs",
+    "pristine-bianco",
+    "popular-demand-autograph-relics",
+    "pristine-pieces-autograph-relics",
+    "pristine-from-the-pitch",
+    "rookie-jumbo-relic-autographs",
+    "day-1-pristine",
+  ];
+
+  it("publishes every official subset and shows every base parallel separately", () => {
+    const series = getSeries(pristinePremierLeagueSlug);
+
+    expect(series?.cardDesigns.map((card) => card.slug)).toEqual([...baseParallelSlugs, ...subsetSlugs]);
+    expect(series?.totalVariants).toBe(30);
+    expect(series?.cardDesigns.slice(0, 9).every((card) => card.group === "base")).toBe(true);
+    expect(validateSeries(series!)).toEqual([]);
+  });
+
+  it("records the full official base parallel ladder through the one-of-one", () => {
+    const series = getSeries(pristinePremierLeagueSlug);
+    const expectedParallels = [
+      { name: "Refractor", serial: null },
+      { name: "Top Corner", serial: null },
+      { name: "Blue Refractor", serial: "/75" },
+      { name: "Gold Refractor", serial: "/50" },
+      { name: "Orange Refractor", serial: "/25" },
+      { name: "Pink Refractor", serial: "/15" },
+      { name: "PL Trophy Malachite Refractor", serial: "/10" },
+      { name: "Red Refractor", serial: "/5" },
+      { name: "Superfractor", serial: "1/1" },
+    ];
+
+    expect(series?.cardDesigns.slice(0, 9).map((card) => [card.displayParallelName, card.serial])).toEqual(
+      expectedParallels.map((parallel) => [parallel.name, parallel.serial]),
+    );
+    for (const card of series?.cardDesigns.slice(0, 9) ?? []) {
+      expect(card.parallels).toEqual(expectedParallels);
+      expect(card.parallelCoverage).toBe("complete");
+    }
+  });
+
+  it("uses normalized local images wherever a verified front is available and keeps missing fronts explicit", async () => {
+    const series = getSeries(pristinePremierLeagueSlug);
+    expect(series).toBeDefined();
+    if (!series) return;
+
+    expect(series.packaging.verification).toBe("exact");
+    const pending = series.cardDesigns.filter((card) => card.image.verification === "unverified");
+    expect(pending.map((card) => card.slug)).toEqual(["pristine-personal-endorsements-autographs"]);
+    expect(pending[0]?.curatorNote?.en).toContain("image slot remains blank");
+    for (const card of series.cardDesigns.filter((candidate) => candidate.image.verification === "exact")) {
+      const imagePath = path.join(process.cwd(), "public", card.image.path);
+      expect(fs.existsSync(imagePath), card.image.path).toBe(true);
+      const metadata = await sharp(imagePath).metadata();
+      expect({ width: metadata.width, height: metadata.height }, card.image.path).toEqual(
+        card.layout === "landscape" ? { width: 1050, height: 750 } : { width: 750, height: 1050 },
       );
     }
   });

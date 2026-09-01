@@ -4,6 +4,7 @@ import { generateStaticParams as cardParams } from "@/app/series/[seriesSlug]/ca
 
 it("enumerates the complete desktop route set", async () => {
   expect(await seriesParams()).toEqual([
+    { seriesSlug: "topps-pristine-premier-league-2025-26" },
     { seriesSlug: "topps-merlin-premier-league-2026" },
     { seriesSlug: "topps-finest-premier-league-2026" },
     { seriesSlug: "topps-chrome-arsenal-2025-26" },
@@ -25,7 +26,15 @@ it("enumerates the complete desktop route set", async () => {
   ]);
 
   const cards = await cardParams();
-  expect(cards).toHaveLength(416);
+  expect(cards).toHaveLength(446);
+  expect(cards).toContainEqual({
+    seriesSlug: "topps-pristine-premier-league-2025-26",
+    cardSlug: "base-superfractor",
+  });
+  expect(cards).toContainEqual({
+    seriesSlug: "topps-pristine-premier-league-2025-26",
+    cardSlug: "day-1-pristine",
+  });
   expect(cards).toContainEqual({
     seriesSlug: "topps-merlin-premier-league-2026",
     cardSlug: "red-mojo",
